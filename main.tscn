@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://fq4dg2mjn4d"]
+
+[ext_resource type="Script" uid="uid://ya3q0vjml76l" path="res://main.gd" id="1_ig7tw"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_ig7tw")
+
+[node name="BackgroundLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="BackgroundLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer"]
+offset_left = 384.0
+offset_top = 16.0
+offset_right = 624.0
+offset_bottom = 48.0
+item_count = 3
+popup/item_0/text = "MysteryDungeon"
+popup/item_0/id = 0
+popup/item_1/text = "BinarySpacePartition"
+popup/item_1/id = 1
+popup/item_2/text = "Isaac"
+popup/item_2/id = 2
+
+[node name="GenerateButton" type="Button" parent="CanvasLayer"]
+offset_left = 528.0
+offset_top = 64.0
+offset_right = 625.0
+offset_bottom = 95.0
+text = "Generate"
+
+[node name="FloorVisualContainer" type="Node2D" parent="."]
+metadata/_edit_lock_ = true

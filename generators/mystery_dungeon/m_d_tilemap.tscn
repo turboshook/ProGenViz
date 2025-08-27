@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4jn1tujmqmur"]
+
+[ext_resource type="Texture2D" uid="uid://nk1m24631g8f" path="res://generators/mystery_dungeon/tiles.png" id="1_73my2"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kk2tp"]
+texture = ExtResource("1_73my2")
+texture_region_size = Vector2i(6, 6)
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_ghlwg"]
+tile_size = Vector2i(6, 6)
+sources/0 = SubResource("TileSetAtlasSource_kk2tp")
+
+[node name="MDTilemap" type="TileMapLayer"]
+tile_set = SubResource("TileSet_ghlwg")
