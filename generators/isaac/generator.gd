@@ -9,6 +9,7 @@ const FLOOR_GENERATION_DATA: Dictionary = {
 	"max_give_ups": 3
 }
 
+	# Template Data #
 const EMPTY_FLOORPLAN: Dictionary = {
 	"start_room": -1,
 	"end_room": -1,

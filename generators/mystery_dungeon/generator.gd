@@ -12,6 +12,8 @@ const FLOOR_GENERATION_DATA: Dictionary = {
 		"sector_size": Vector2i(10, 8),
 		"sector_border": 3
 	}
+
+	# Template Data #
 const ROOM_GENERATION_DATA: Dictionary = {
 		"rect" = Rect2i(0, 0, 0, 0),
 		"sector" = Rect2i(0, 0, 0, 0),

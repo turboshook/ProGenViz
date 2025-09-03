@@ -23,13 +23,15 @@ offset_left = 384.0
 offset_top = 16.0
 offset_right = 624.0
 offset_bottom = 48.0
-item_count = 3
-popup/item_0/text = "MysteryDungeon"
+item_count = 4
+popup/item_0/text = "SimpleRoomPlacement"
 popup/item_0/id = 0
-popup/item_1/text = "BinarySpacePartition"
+popup/item_1/text = "MysteryDungeon"
 popup/item_1/id = 1
-popup/item_2/text = "Isaac"
+popup/item_2/text = "BinarySpacePartition"
 popup/item_2/id = 2
+popup/item_3/text = "Isaac"
+popup/item_3/id = 3
 
 [node name="GenerateButton" type="Button" parent="CanvasLayer"]
 offset_left = 528.0

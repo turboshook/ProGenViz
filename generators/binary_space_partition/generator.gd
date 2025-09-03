@@ -14,6 +14,7 @@ const FLOOR_GENERATION_DATA: Dictionary = {
 	"min_room_size": Vector2i(3, 3)
 }
 
+	# Template Data #
 const PARTITION_DICTIONARY: Dictionary = {
 	"origin": Vector2i(-1, -1),
 	"height": 0,
@@ -26,7 +27,6 @@ const PARTITION_DICTIONARY: Dictionary = {
 	},
 	"room": {}
 }
-
 const ROOM_DICTIONARY: Dictionary = {
 	"origin": Vector2i(-1, -1),
 	"height": 0,
