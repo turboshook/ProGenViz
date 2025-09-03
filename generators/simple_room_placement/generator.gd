@@ -1,17 +1,16 @@
 extends FloorGenerator
 
 	# Initialization Data #
-const GENERATION_DATA: Dictionary = {
+const PARAMETERS: Dictionary = {
 	"floor_size": Vector2i(60, 60),
-	"min_room_count": 4,
 	"max_room_count": 12,
-	"retry_threshold": 6, 
 	"min_room_size": Vector2i(4, 4),
 	"max_room_size": Vector2i(8, 8),
-	"room_padding": Vector2i(1, 1)
+	"room_padding": Vector2i(1, 1),
+	"retry_threshold": 6 
 }
 
-func generate(generation_data: Dictionary = GENERATION_DATA) -> Dictionary:
+func generate(parameters: Dictionary) -> Dictionary:
 	var floor_data: Dictionary = {
 		"rooms": [],
 		"hallways": []
@@ -22,13 +21,13 @@ func generate(generation_data: Dictionary = GENERATION_DATA) -> Dictionary:
 	
 	while !placement_complete:
 		
-		var new_room: Rect2i = _get_random_rect(generation_data)
+		var new_room: Rect2i = _get_random_rect(parameters)
 		var new_room_overlaps: bool = false
 		
 		for room: Rect2i in rooms:
 			var virtual_room: Rect2i = Rect2i(
-				room.position - generation_data.room_padding,
-				(room.position + room.size) + generation_data.room_padding
+				room.position - parameters.room_padding,
+				(room.position + room.size) + parameters.room_padding
 			)
 			if not new_room.intersects(virtual_room): continue
 			retries += 1
@@ -38,11 +37,8 @@ func generate(generation_data: Dictionary = GENERATION_DATA) -> Dictionary:
 		if not new_room_overlaps: rooms.append(new_room)
 		
 		placement_complete = (
-			rooms.size() >= generation_data.max_room_count or
-			(
-				rooms.size() >= generation_data.min_room_count and
-				retries >= generation_data.retry_threshold
-			)
+			rooms.size() >= parameters.max_room_count or
+			retries >= parameters.retry_threshold
 		)
 	
 	var hallways: Array[Array] = []
@@ -72,6 +68,9 @@ func _get_random_rect(generation_data: Dictionary) -> Rect2i:
 		randi_range(0, generation_data.floor_size.y - room_size.y)
 	)
 	return Rect2i(room_position, room_size)
+
+func get_parameter_interface() -> GeneratorParameterInterface:
+	return load("res://generators/simple_room_placement/parameter_interface.tscn").instantiate()
 
 func get_visual_representation(floorplan: Dictionary) -> Node2D:
 	var tile_map: TileMapLayer = load("res://generators/simple_room_placement/s_r_p_tile_map.tscn").instantiate()

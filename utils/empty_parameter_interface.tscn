@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://cpy0k5171uwid"]
+
+[node name="EmptyParameterInterface" type="PanelContainer"]
+offset_right = 256.0
+offset_bottom = 46.0
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 0
+offset_right = 256.0
+offset_bottom = 45.0
+text = "No generator selected."
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true

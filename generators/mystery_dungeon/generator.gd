@@ -4,7 +4,7 @@ const NULL_TILE: Vector2i = Vector2i(-1, -1)
 const OUT_OF_BOUNDS_BUFFER: Vector2i = Vector2i(4, 2)
 
 	# Initialization Data #
-const FLOOR_GENERATION_DATA: Dictionary = {
+const PARAMETERS: Dictionary = {
 		"x_sectors": 4,
 		"y_sectors": 3,
 		"room_size_min": Vector2i(4, 3),
@@ -34,11 +34,11 @@ const HALLWAY_GENERATION_DATA: Dictionary = {
 
 const TILEMAP_PATH: String = "res://generators/mystery_dungeon/m_d_tilemap.tscn"
 
-func generate(generation_data: Dictionary = FLOOR_GENERATION_DATA) -> Dictionary:
+func generate(parameters: Dictionary) -> Dictionary:
 	
 	# initialize return dictionary 
 	var floorplan: Dictionary = {
-		"generation_data": {},
+		"parameters": {},
 		"rooms": {},
 		"hallways": {},
 		"meta": {
@@ -46,29 +46,29 @@ func generate(generation_data: Dictionary = FLOOR_GENERATION_DATA) -> Dictionary
 			"floor_exit": NULL_TILE
 		}
 	}
-	floorplan["generation_data"] = generation_data
+	floorplan["parameters"] = parameters
 	
 	# begin generating rooms within sectors
 	var sector_key: int = 0
-	for x_sector in range(generation_data.x_sectors):
-		for y_sector in range(generation_data.y_sectors):
+	for x_sector in range(parameters.x_sectors):
+		for y_sector in range(parameters.y_sectors):
 			
 			# define the sector in 2D tile space
 			var sector_origin: Vector2i = Vector2i(
-				x_sector * (generation_data.sector_size.x + generation_data.sector_border) + OUT_OF_BOUNDS_BUFFER.x,
-				y_sector * (generation_data.sector_size.y + generation_data.sector_border) + OUT_OF_BOUNDS_BUFFER.y
+				x_sector * (parameters.sector_size.x + parameters.sector_border) + OUT_OF_BOUNDS_BUFFER.x,
+				y_sector * (parameters.sector_size.y + parameters.sector_border) + OUT_OF_BOUNDS_BUFFER.y
 			) # TODO look at this once its all running again, do I want the border here all the time?
-			var sector_rect: Rect2i = Rect2i(sector_origin, generation_data.sector_size)
+			var sector_rect: Rect2i = Rect2i(sector_origin, parameters.sector_size)
 			
 			# determine the size of the room
 			var room_rect: Rect2i = Rect2i(0, 0, 0, 0)
 			room_rect.size.x = randi_range(
-				generation_data.room_size_min.x, 
-				generation_data.room_size_max.x
+				parameters.room_size_min.x, 
+				parameters.room_size_max.x
 			)
 			room_rect.size.y = randi_range(
-				generation_data.room_size_min.y, 
-				generation_data.room_size_max.y
+				parameters.room_size_min.y, 
+				parameters.room_size_max.y
 			)
 			
 			# calculate the amount of free space available to the room in its sector
@@ -89,10 +89,10 @@ func generate(generation_data: Dictionary = FLOOR_GENERATION_DATA) -> Dictionary
 			if y_sector > 0:
 				var north_entrance_position: Vector2i = room_rect.position + Vector2i(randi_range(0, room_rect.size.x - 1), -1)
 				room_data.entrances.north.append(north_entrance_position)
-			if y_sector < generation_data.y_sectors - 1:
+			if y_sector < parameters.y_sectors - 1:
 				var south_entrance_position: Vector2i = room_rect.position + Vector2i(randi_range(0, room_rect.size.x - 1), room_rect.size.y) 
 				room_data.entrances.south.append(south_entrance_position)
-			if x_sector < generation_data.x_sectors - 1:
+			if x_sector < parameters.x_sectors - 1:
 				var east_entrance_position: Vector2i = room_rect.position + Vector2i(room_rect.size.x, randi_range(0, room_rect.size.y - 1)) 
 				room_data.entrances.east.append(east_entrance_position)
 			if x_sector > 0:
@@ -119,7 +119,7 @@ func generate(generation_data: Dictionary = FLOOR_GENERATION_DATA) -> Dictionary
 			hallway_key += 1
 
 		if not this_room_data.entrances.east.is_empty():
-			var target_room_data: Dictionary = floorplan.rooms[sector + generation_data.y_sectors]
+			var target_room_data: Dictionary = floorplan.rooms[sector + parameters.y_sectors]
 			var hallway_data: Dictionary = HALLWAY_GENERATION_DATA.duplicate(true)
 			hallway_data.start_position = this_room_data.entrances.east[0]
 			hallway_data.end_position = target_room_data.entrances.west[0]
@@ -196,6 +196,9 @@ func _get_random_tile(room_rect: Rect2i) -> Vector2i:
 	var random_x: int = range(room_rect.size.x).pick_random()
 	var random_y: int = range(room_rect.size.y).pick_random()
 	return room_rect.position + Vector2i(random_x, random_y)
+
+func get_parameter_interface() -> GeneratorParameterInterface:
+	return load("res://generators/mystery_dungeon/parameter_interface.tscn").instantiate()
 
 func get_visual_representation(floorplan: Dictionary) -> Node2D:
 	var tilemap: TileMapLayer = load(TILEMAP_PATH).instantiate()

@@ -3,7 +3,7 @@ extends FloorGenerator
 const TILEMAP_PATH: String = "res://generators/binary_space_partition/b_s_p_tilemap.tscn"
 
 	# Initialization Data #
-const FLOOR_GENERATION_DATA: Dictionary = {
+const PARAMETERS: Dictionary = {
 	"floor_tile_width": 36, 
 	"floor_tile_height": 36,
 	"partition_border": Vector2i(2, 2),
@@ -60,8 +60,8 @@ const HALLWAY_DICTIONARY: Dictionary = {
 
 var gen_data: Dictionary = {}
 
-func generate(generation_data: Dictionary = FLOOR_GENERATION_DATA) -> Dictionary:
-	gen_data = generation_data
+func generate(parameters: Dictionary) -> Dictionary:
+	gen_data = parameters
 	var partitions: Array[Dictionary] = _generate_partitions()
 	_generate_rooms(partitions)
 	var hallways: Array[Dictionary] = _generate_hallways(partitions)
@@ -278,6 +278,9 @@ func _get_opposite_direction(direction_string: String) -> String:
 	if direction_string.to_lower() == "west": return "east"
 	return "bad direction"
 
+func get_parameter_interface() -> GeneratorParameterInterface:
+	return load("res://generators/binary_space_partition/parameter_interface.tscn").instantiate()
+
 func get_visual_representation(floorplan: Dictionary) -> Node2D:
 	var tilemap: TileMapLayer = load(TILEMAP_PATH).instantiate()
 	
@@ -298,9 +301,5 @@ func get_visual_representation(floorplan: Dictionary) -> Node2D:
 	for hallway: Dictionary in floorplan.hallways:
 		for tile_coordinates: Vector2i in hallway.tile_positions:
 			tilemap.set_cell(tile_coordinates, 0, Vector2i(1, 0))
-	
-	#print("")
-	#print("- - -")
-	#print(floorplan)
 	
 	return tilemap

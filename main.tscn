@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://fq4dg2mjn4d"]
+[gd_scene load_steps=3 format=3 uid="uid://fq4dg2mjn4d"]
 
 [ext_resource type="Script" uid="uid://ya3q0vjml76l" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://cpy0k5171uwid" path="res://utils/empty_parameter_interface.tscn" id="2_0xm2m"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_ig7tw")
@@ -18,11 +19,14 @@ color = Color(0, 0, 0, 1)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer"]
-offset_left = 384.0
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+offset_left = 1008.0
 offset_top = 16.0
-offset_right = 624.0
-offset_bottom = 48.0
+offset_right = 1264.0
+offset_bottom = 704.0
+
+[node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
 item_count = 4
 popup/item_0/text = "SimpleRoomPlacement"
 popup/item_0/id = 0
@@ -32,13 +36,27 @@ popup/item_2/text = "BinarySpacePartition"
 popup/item_2/id = 2
 popup/item_3/text = "Isaac"
 popup/item_3/id = 3
+metadata/_edit_lock_ = true
 
-[node name="GenerateButton" type="Button" parent="CanvasLayer"]
-offset_left = 528.0
-offset_top = 64.0
-offset_right = 625.0
-offset_bottom = 95.0
+[node name="ParameterInterfaceContainer" type="VBoxContainer" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="EmptyParameterInterface" parent="CanvasLayer/VBoxContainer/ParameterInterfaceContainer" instance=ExtResource("2_0xm2m")]
+layout_mode = 2
+
+[node name="GenerateButton" type="Button" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
 text = "Generate"
+metadata/_edit_lock_ = true
+
+[node name="ResetCameraButton" type="Button" parent="CanvasLayer"]
+offset_left = 1152.0
+offset_top = 672.0
+offset_right = 1268.0
+offset_bottom = 703.0
+text = "Reset Camera"
 
 [node name="FloorVisualContainer" type="Node2D" parent="."]
 metadata/_edit_lock_ = true

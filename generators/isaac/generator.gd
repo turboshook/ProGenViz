@@ -4,7 +4,7 @@ extends FloorGenerator
 const NULL_ROOM: Rect2i = Rect2i(0, 0, -1, -1)
 
 	# Initialization Data #
-const FLOOR_GENERATION_DATA: Dictionary = {
+const PARAMETERS: Dictionary = {
 	"room_count": 16,
 	"max_give_ups": 3
 }
@@ -29,10 +29,10 @@ const DUNGEON_ROOM_SIZES: Array[Vector2i] = [
 	Vector2i(1, 1)
 ]
 
-func generate(generation_data: Dictionary = FLOOR_GENERATION_DATA) -> Dictionary:
+func generate(parameters: Dictionary) -> Dictionary:
 	
 	var _floorplan: Dictionary = EMPTY_FLOORPLAN.duplicate(true)
-	_floorplan["generation_data"] = generation_data
+	_floorplan["parameters"] = parameters
 	
 	var rooms_placed: int = 0 # account for starting room
 	var starting_room_position: Vector2i = Vector2i(3, 3)
@@ -53,7 +53,7 @@ func generate(generation_data: Dictionary = FLOOR_GENERATION_DATA) -> Dictionary
 			# initialize this exit to point to null room so that the exit is present in the floorplan
 			_floorplan.rooms[rooms_placed].neighbors[exit_coordinate] = NULL_ROOM
 			
-			if rooms_placed >= _floorplan.generation_data.room_count: continue
+			if rooms_placed >= _floorplan.parameters.room_count: continue
 			
 			var new_room_rect: Rect2i = Rect2i(exit_coordinate, Vector2i(1, 1))
 			
@@ -65,7 +65,7 @@ func generate(generation_data: Dictionary = FLOOR_GENERATION_DATA) -> Dictionary
 				continue
 			
 			# random chance to give up creating a neighbor for this room, constrained to max_give_ups
-			if randf() >= 0.5 and current_give_ups < _floorplan.generation_data.max_give_ups:
+			if randf() >= 0.5 and current_give_ups < _floorplan.parameters.max_give_ups:
 				current_give_ups += 1
 				continue
 			
@@ -129,6 +129,9 @@ func _rect_is_obstructed(new_room_rect: Rect2i, rooms: Array) -> bool:
 			if neighboring_rooms > 1: 
 				return true
 	return false
+
+func get_parameter_interface() -> GeneratorParameterInterface:
+	return load("res://generators/isaac/parameter_interface.tscn").instantiate()
 
 func get_visual_representation(floorplan: Dictionary) -> Node2D:
 	var tilemap: TileMapLayer = load("res://generators/isaac/isaac_tilemap.tscn").instantiate()
