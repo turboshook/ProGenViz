@@ -20,13 +20,18 @@ color = Color(0, 0, 0, 1)
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
-offset_left = 1008.0
+offset_left = 960.0
 offset_top = 16.0
 offset_right = 1264.0
-offset_bottom = 704.0
+offset_bottom = 656.0
 
-[node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
 layout_mode = 2
+alignment = 1
+
+[node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 item_count = 5
 popup/item_0/text = "SimpleRoomPlacement"
 popup/item_0/id = 0
@@ -38,25 +43,23 @@ popup/item_3/text = "Isaac"
 popup/item_3/id = 3
 popup/item_4/text = "RandomWalk"
 popup/item_4/id = 4
-metadata/_edit_lock_ = true
 
-[node name="ParameterInterfaceContainer" type="VBoxContainer" parent="CanvasLayer/VBoxContainer"]
+[node name="GenerateButton" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-metadata/_edit_lock_ = true
+size_flags_horizontal = 4
+text = "Generate"
+
+[node name="ParameterInterfaceContainer" type="ScrollContainer" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="EmptyParameterInterface" parent="CanvasLayer/VBoxContainer/ParameterInterfaceContainer" instance=ExtResource("2_0xm2m")]
 layout_mode = 2
 
-[node name="GenerateButton" type="Button" parent="CanvasLayer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Generate"
-metadata/_edit_lock_ = true
-
 [node name="ResetCameraButton" type="Button" parent="CanvasLayer"]
-offset_left = 1152.0
+offset_left = 1136.0
 offset_top = 672.0
-offset_right = 1268.0
+offset_right = 1264.0
 offset_bottom = 703.0
 text = "Reset Camera"
 

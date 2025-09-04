@@ -8,9 +8,9 @@ const GENERATORS: Array[String] = [
 	"res://generators/random_walk/generator.gd"
 ]
 
-@onready var algorithm_selection_button: OptionButton = $CanvasLayer/VBoxContainer/AlgorithmSelectionButton
-@onready var parameter_interface_container: VBoxContainer = $CanvasLayer/VBoxContainer/ParameterInterfaceContainer
-@onready var generate_button: Button = $CanvasLayer/VBoxContainer/GenerateButton
+@onready var algorithm_selection_button: OptionButton = $CanvasLayer/VBoxContainer/HBoxContainer/AlgorithmSelectionButton
+@onready var generate_button: Button = $CanvasLayer/VBoxContainer/HBoxContainer/GenerateButton
+@onready var parameter_interface_container: ScrollContainer = $CanvasLayer/VBoxContainer/ParameterInterfaceContainer
 @onready var reset_camera_button: Button = $CanvasLayer/ResetCameraButton
 @onready var floor_visual_container: Node2D = $FloorVisualContainer
 
