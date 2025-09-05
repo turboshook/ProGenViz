@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="GeneratorParameterTable" load_steps=3 format=3 uid="uid://dgivu3nuk23hi"]
+
+[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://generators/utils/generator_parameter_table/generator_parameter_category.gd" id="1_ifre2"]
+[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://generators/utils/generator_parameter_table/generator_parameter_table.gd" id="2_ssayo"]
+
+[resource]
+script = ExtResource("2_ssayo")
+categories = Array[ExtResource("1_ifre2")]([])
+metadata/_custom_type_script = "uid://h3r21fqhv0bo"

@@ -3,8 +3,7 @@ extends FloorGenerator
 const NULL_TILE: Vector2i = Vector2i(-1, -1)
 const OUT_OF_BOUNDS_BUFFER: Vector2i = Vector2i(4, 2)
 
-	# Initialization Data #
-const PARAMETERS: Dictionary = {
+var _default_parameters: Dictionary = {
 		"x_sectors": 4,
 		"y_sectors": 3,
 		"room_size_min": Vector2i(4, 3),
@@ -197,8 +196,11 @@ func _get_random_tile(room_rect: Rect2i) -> Vector2i:
 	var random_y: int = range(room_rect.size.y).pick_random()
 	return room_rect.position + Vector2i(random_x, random_y)
 
-func get_parameter_interface() -> GeneratorParameterInterface:
-	return load("res://generators/mystery_dungeon/parameter_interface.tscn").instantiate()
+func generate_from_default() -> Dictionary:
+	return generate(_default_parameters)
+
+func get_parameter_table() -> GeneratorParameterTable:
+	return load("res://generators/mystery_dungeon/parameter_table.tres")
 
 func get_visual_representation(floorplan: Dictionary) -> Node2D:
 	var tilemap: TileMapLayer = load(TILEMAP_PATH).instantiate()

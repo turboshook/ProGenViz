@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="GeneratorParameterTable" load_steps=10 format=3 uid="uid://ig28tyrnunbr"]
+
+[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://generators/utils/generator_parameter_table/generator_parameter_category.gd" id="1_wkidk"]
+[ext_resource type="Script" uid="uid://cxb24x7g2nv33" path="res://generators/utils/generator_parameter_table/generator_parameter_definition.gd" id="2_1g81s"]
+[ext_resource type="Script" uid="uid://cn1osy2eiovo4" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_int_parameter.gd" id="3_2io1j"]
+[ext_resource type="Script" uid="uid://bfmg8o7qs7thl" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_float_parameter.gd" id="4_ux1xu"]
+[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://generators/utils/generator_parameter_table/generator_parameter_table.gd" id="5_lr3lr"]
+
+[sub_resource type="Resource" id="Resource_1g81s"]
+script = ExtResource("3_2io1j")
+value = 1
+min = 1
+max = 12
+name = "walker_count"
+metadata/_custom_type_script = "uid://cn1osy2eiovo4"
+
+[sub_resource type="Resource" id="Resource_2io1j"]
+script = ExtResource("3_2io1j")
+value = 128
+min = 16
+max = 512
+name = "walker_lifetime"
+metadata/_custom_type_script = "uid://cn1osy2eiovo4"
+
+[sub_resource type="Resource" id="Resource_lr3lr"]
+script = ExtResource("4_ux1xu")
+value = 0.25
+min = 0.0
+max = 1.0
+name = "walker_turn_chance"
+metadata/_custom_type_script = "uid://bfmg8o7qs7thl"
+
+[sub_resource type="Resource" id="Resource_ux1xu"]
+script = ExtResource("1_wkidk")
+name = "Walker"
+parameters = Array[ExtResource("2_1g81s")]([SubResource("Resource_1g81s"), SubResource("Resource_2io1j"), SubResource("Resource_lr3lr")])
+metadata/_custom_type_script = "uid://bjevtxemkyuxs"
+
+[resource]
+script = ExtResource("5_lr3lr")
+categories = Array[ExtResource("1_wkidk")]([SubResource("Resource_ux1xu")])
+metadata/_custom_type_script = "uid://h3r21fqhv0bo"

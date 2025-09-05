@@ -10,13 +10,12 @@ const GENERATORS: Array[String] = [
 
 @onready var algorithm_selection_button: OptionButton = $CanvasLayer/VBoxContainer/HBoxContainer/AlgorithmSelectionButton
 @onready var generate_button: Button = $CanvasLayer/VBoxContainer/HBoxContainer/GenerateButton
-@onready var parameter_interface_container: ScrollContainer = $CanvasLayer/VBoxContainer/ParameterInterfaceContainer
+@onready var generator_parameter_interface: GeneratorParameterInterface = $CanvasLayer/VBoxContainer/ParameterInterfaceContainer/GeneratorParameterInterface
 @onready var reset_camera_button: Button = $CanvasLayer/ResetCameraButton
 @onready var floor_visual_container: Node2D = $FloorVisualContainer
 
 var generator_id: int = -1
 var floor_generator: FloorGenerator 
-var parameter_interface: GeneratorParameterInterface
 
 func _ready() -> void:
 	algorithm_selection_button.item_selected.connect(_on_item_selected)
@@ -36,24 +35,19 @@ func _on_item_selected(index: int) -> void:
 		generator_id = index
 		floor_generator = load(GENERATORS[generator_id]).new()
 	if generator_id < 0: return
-	parameter_interface_container.get_child(0).queue_free()
-	var new_interface: GeneratorParameterInterface = floor_generator.get_parameter_interface()
-	if not new_interface:
-		var empty_interface: Control = load("res://utils/empty_parameter_interface.tscn").instantiate()
-		parameter_interface_container.add_child(empty_interface)
-		parameter_interface = null
-		return
-	parameter_interface = new_interface
-	parameter_interface_container.add_child(new_interface)
+	var parameter_table: GeneratorParameterTable = floor_generator.get_parameter_table()
+	generator_parameter_interface.initialize(parameter_table)
+	await RenderingServer.frame_post_draw # allow param interface to populate all controls 
 	generate()
 
 func generate() -> void:
-	if not parameter_interface: return
-	var parameters: Dictionary = parameter_interface.get_parameters()
+	var parameters: Dictionary = generator_parameter_interface.get_parameters()
 	
 	if floor_visual_container.get_child_count() > 0:
 		floor_visual_container.get_child(0).queue_free()
 	
-	var floorplan: Dictionary = floor_generator.generate(parameters)
+	var floorplan: Dictionary = {}
+	if parameters == {}: floorplan = floor_generator.generate_from_default()
+	else: floorplan = floor_generator.generate(parameters)
 	var visual_representation: Node2D = floor_generator.get_visual_representation(floorplan)
 	floor_visual_container.add_child(visual_representation)

@@ -2,8 +2,7 @@ extends FloorGenerator
 
 const TILEMAP_PATH: String = "res://generators/binary_space_partition/b_s_p_tilemap.tscn"
 
-	# Initialization Data #
-const PARAMETERS: Dictionary = {
+var _default_parameters: Dictionary = {
 	"floor_tile_width": 36, 
 	"floor_tile_height": 36,
 	"partition_border": Vector2i(2, 2),
@@ -278,8 +277,11 @@ func _get_opposite_direction(direction_string: String) -> String:
 	if direction_string.to_lower() == "west": return "east"
 	return "bad direction"
 
-func get_parameter_interface() -> GeneratorParameterInterface:
-	return load("res://generators/binary_space_partition/parameter_interface.tscn").instantiate()
+func generate_from_default() -> Dictionary:
+	return generate(_default_parameters)
+
+func get_parameter_table() -> GeneratorParameterTable:
+	return load("res://generators/binary_space_partition/parameter_table.tres")
 
 func get_visual_representation(floorplan: Dictionary) -> Node2D:
 	var tilemap: TileMapLayer = load(TILEMAP_PATH).instantiate()

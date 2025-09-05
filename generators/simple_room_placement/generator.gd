@@ -1,7 +1,6 @@
 extends FloorGenerator
 
-	# Initialization Data #
-const PARAMETERS: Dictionary = {
+var _default_parameters: Dictionary = {
 	"floor_size": Vector2i(60, 60),
 	"max_room_count": 12,
 	"min_room_size": Vector2i(4, 4),
@@ -69,8 +68,11 @@ func _get_random_rect(generation_data: Dictionary) -> Rect2i:
 	)
 	return Rect2i(room_position, room_size)
 
-func get_parameter_interface() -> GeneratorParameterInterface:
-	return load("res://generators/simple_room_placement/parameter_interface.tscn").instantiate()
+func generate_from_default() -> Dictionary:
+	return generate(_default_parameters)
+
+func get_parameter_table() -> GeneratorParameterTable:
+	return load("res://generators/simple_room_placement/parameter_table.tres")
 
 func get_visual_representation(floorplan: Dictionary) -> Node2D:
 	var tile_map: TileMapLayer = load("res://generators/simple_room_placement/s_r_p_tile_map.tscn").instantiate()

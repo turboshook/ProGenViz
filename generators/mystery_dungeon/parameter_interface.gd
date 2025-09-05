@@ -1,4 +1,4 @@
-extends GeneratorParameterInterface
+extends Control
 
 func get_parameters() -> Dictionary:
 	return {

@@ -1,4 +1,4 @@
-extends GeneratorParameterInterface
+extends Control
 
 @onready var floor_dimension_x: SpinBox = $PanelContainer/MarginContainer/VBoxContainer/FloorProperties/FloorSize/HBoxContainer/FloorDimensionX
 @onready var floor_dimension_y: SpinBox = $PanelContainer/MarginContainer/VBoxContainer/FloorProperties/FloorSize/HBoxContainer2/FloorDimensionY

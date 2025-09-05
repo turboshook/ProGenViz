@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://fq4dg2mjn4d"]
 
 [ext_resource type="Script" uid="uid://ya3q0vjml76l" path="res://main.gd" id="1_ig7tw"]
-[ext_resource type="PackedScene" uid="uid://cpy0k5171uwid" path="res://utils/empty_parameter_interface.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bwymn7btwagif" path="res://utils/generator_parameter_interface/generator_parameter_interface.tscn" id="2_0xm2m"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_ig7tw")
@@ -53,7 +53,7 @@ text = "Generate"
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="EmptyParameterInterface" parent="CanvasLayer/VBoxContainer/ParameterInterfaceContainer" instance=ExtResource("2_0xm2m")]
+[node name="GeneratorParameterInterface" parent="CanvasLayer/VBoxContainer/ParameterInterfaceContainer" instance=ExtResource("2_0xm2m")]
 layout_mode = 2
 
 [node name="ResetCameraButton" type="Button" parent="CanvasLayer"]

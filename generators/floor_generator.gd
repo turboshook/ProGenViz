@@ -5,7 +5,10 @@ class_name FloorGenerator
 func generate(parameters: Dictionary) -> Dictionary:
 	return {}
 
-func get_parameter_interface() -> GeneratorParameterInterface:
+func generate_from_default() -> Dictionary:
+	return generate({})
+
+func get_parameter_table() -> GeneratorParameterTable:
 	return null
 
 @warning_ignore("unused_parameter")

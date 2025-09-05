@@ -1,10 +1,8 @@
 extends FloorGenerator
 
-
 const NULL_ROOM: Rect2i = Rect2i(0, 0, -1, -1)
 
-	# Initialization Data #
-const PARAMETERS: Dictionary = {
+const _default_parameters: Dictionary = {
 	"room_count": 16,
 	"max_give_ups": 3
 }
@@ -130,8 +128,11 @@ func _rect_is_obstructed(new_room_rect: Rect2i, rooms: Array) -> bool:
 				return true
 	return false
 
-func get_parameter_interface() -> GeneratorParameterInterface:
-	return load("res://generators/isaac/parameter_interface.tscn").instantiate()
+func generate_from_default() -> Dictionary:
+	return generate(_default_parameters)
+
+func get_parameter_table() -> GeneratorParameterTable:
+	return load("res://generators/isaac/parameter_table.tres")
 
 func get_visual_representation(floorplan: Dictionary) -> Node2D:
 	var tilemap: TileMapLayer = load("res://generators/isaac/isaac_tilemap.tscn").instantiate()

@@ -1,0 +1,78 @@
+[gd_resource type="Resource" script_class="GeneratorParameterTable" load_steps=15 format=3 uid="uid://be1udfhebkmak"]
+
+[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://generators/utils/generator_parameter_table/generator_parameter_category.gd" id="1_kh8kw"]
+[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://generators/utils/generator_parameter_table/generator_parameter_table.gd" id="2_3roo8"]
+[ext_resource type="Script" uid="uid://cxb24x7g2nv33" path="res://generators/utils/generator_parameter_table/generator_parameter_definition.gd" id="2_mnt8f"]
+[ext_resource type="Script" uid="uid://cura5q3mxleax" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_vector2i_parameter.gd" id="3_egidb"]
+[ext_resource type="Script" uid="uid://cn1osy2eiovo4" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_int_parameter.gd" id="3_vnv4d"]
+
+[sub_resource type="Resource" id="Resource_2jmfh"]
+script = ExtResource("3_egidb")
+value = Vector2i(60, 60)
+min = Vector2i(30, 30)
+max = Vector2i(120, 120)
+name = "floor_size"
+metadata/_custom_type_script = "uid://cura5q3mxleax"
+
+[sub_resource type="Resource" id="Resource_c04jd"]
+script = ExtResource("3_vnv4d")
+value = 12
+min = 4
+max = 32
+name = "max_room_count"
+metadata/_custom_type_script = "uid://cn1osy2eiovo4"
+
+[sub_resource type="Resource" id="Resource_xhu7r"]
+script = ExtResource("3_egidb")
+value = Vector2i(1, 1)
+min = Vector2i(0, 0)
+max = Vector2i(8, 8)
+name = "room_padding"
+metadata/_custom_type_script = "uid://cura5q3mxleax"
+
+[sub_resource type="Resource" id="Resource_egidb"]
+script = ExtResource("1_kh8kw")
+name = "Floor"
+parameters = Array[ExtResource("2_mnt8f")]([SubResource("Resource_2jmfh"), SubResource("Resource_c04jd"), SubResource("Resource_xhu7r")])
+metadata/_custom_type_script = "uid://bjevtxemkyuxs"
+
+[sub_resource type="Resource" id="Resource_vnv4d"]
+script = ExtResource("3_egidb")
+value = Vector2i(4, 4)
+min = Vector2i(1, 1)
+max = Vector2i(6, 6)
+name = "min_room_size"
+metadata/_custom_type_script = "uid://cura5q3mxleax"
+
+[sub_resource type="Resource" id="Resource_hhdoo"]
+script = ExtResource("3_egidb")
+value = Vector2i(8, 8)
+min = Vector2i(6, 6)
+max = Vector2i(24, 24)
+name = "max_room_size"
+metadata/_custom_type_script = "uid://cura5q3mxleax"
+
+[sub_resource type="Resource" id="Resource_2hlvt"]
+script = ExtResource("1_kh8kw")
+name = "Rooms"
+parameters = Array[ExtResource("2_mnt8f")]([SubResource("Resource_vnv4d"), SubResource("Resource_hhdoo")])
+metadata/_custom_type_script = "uid://bjevtxemkyuxs"
+
+[sub_resource type="Resource" id="Resource_7vbbo"]
+script = ExtResource("3_vnv4d")
+value = 6
+min = 0
+max = 32
+name = "retry_threshold"
+metadata/_custom_type_script = "uid://cn1osy2eiovo4"
+
+[sub_resource type="Resource" id="Resource_4vj2n"]
+script = ExtResource("1_kh8kw")
+name = "Misc"
+parameters = Array[ExtResource("2_mnt8f")]([SubResource("Resource_7vbbo")])
+metadata/_custom_type_script = "uid://bjevtxemkyuxs"
+
+[resource]
+script = ExtResource("2_3roo8")
+categories = Array[ExtResource("1_kh8kw")]([SubResource("Resource_egidb"), SubResource("Resource_2hlvt"), SubResource("Resource_4vj2n")])
+metadata/_custom_type_script = "uid://h3r21fqhv0bo"

@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://1j8hbrlnidb3"]
-
-[ext_resource type="Script" uid="uid://c1ur33sh0c3ce" path="res://generators/isaac/parameter_interface.gd" id="1_gahqb"]
-
-[node name="ParameterInterface" type="Control"]
-layout_mode = 3
-anchors_preset = 0
-script = ExtResource("1_gahqb")
-metadata/_custom_type_script = "uid://c61cuasynsm01"
