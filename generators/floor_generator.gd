@@ -2,6 +2,7 @@ extends RefCounted
 class_name FloorGenerator
 
 var _default_parameters: Dictionary = {}
+@warning_ignore("unused_private_class_variable")
 var _floorplan: Dictionary = {}
 
 func _init() -> void:

@@ -64,7 +64,7 @@ func _init() -> void:
 func generate(parameters: Dictionary) -> void:
 	_partitions = _generate_partitions(parameters)
 	_generate_rooms(parameters)
-	_hallways = _generate_hallways(parameters)
+	_hallways = _generate_hallways()
 	_floorplan = {
 		"partitions": _partitions,
 		"hallways": _hallways
@@ -193,7 +193,7 @@ func _generate_rooms(parameters: Dictionary) -> void:
 				continue
 			_partitions[i]["room"]["entrances"][direction_string]["position"] = _get_random_wall_coordinate(_partitions[i]["room"], direction_string)
 
-func _generate_hallways(parameters: Dictionary) -> Array[Dictionary]:
+func _generate_hallways() -> Array[Dictionary]:
 	
 	var hallways: Array[Dictionary]
 	

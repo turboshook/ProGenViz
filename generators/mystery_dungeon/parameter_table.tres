@@ -9,32 +9,32 @@
 [sub_resource type="Resource" id="Resource_h8fx7"]
 script = ExtResource("3_77yvk")
 value = 4
-min = 1
-max = 24
+value_min = 1
+value_max = 8
 name = "x_sectors"
 metadata/_custom_type_script = "uid://cn1osy2eiovo4"
 
 [sub_resource type="Resource" id="Resource_ljoow"]
 script = ExtResource("3_77yvk")
 value = 3
-min = 1
-max = 24
+value_min = 1
+value_max = 8
 name = "y_sectors"
 metadata/_custom_type_script = "uid://cn1osy2eiovo4"
 
 [sub_resource type="Resource" id="Resource_873to"]
 script = ExtResource("4_77yvk")
 value = Vector2i(10, 8)
-min = Vector2i(4, 4)
-max = Vector2i(16, 16)
+value_min = Vector2i(6, 6)
+value_max = Vector2i(24, 24)
 name = "sector_size"
 metadata/_custom_type_script = "uid://cura5q3mxleax"
 
 [sub_resource type="Resource" id="Resource_k1sc8"]
 script = ExtResource("3_77yvk")
 value = 3
-min = 0
-max = 4
+value_min = 0
+value_max = 6
 name = "sector_border"
 metadata/_custom_type_script = "uid://cn1osy2eiovo4"
 
@@ -47,16 +47,16 @@ metadata/_custom_type_script = "uid://bjevtxemkyuxs"
 [sub_resource type="Resource" id="Resource_77yvk"]
 script = ExtResource("4_77yvk")
 value = Vector2i(4, 3)
-min = Vector2i(1, 1)
-max = Vector2i(6, 4)
+value_min = Vector2i(1, 1)
+value_max = Vector2i(6, 4)
 name = "room_size_min"
 metadata/_custom_type_script = "uid://cura5q3mxleax"
 
 [sub_resource type="Resource" id="Resource_nbliq"]
 script = ExtResource("4_77yvk")
 value = Vector2i(6, 4)
-min = Vector2i(6, 4)
-max = Vector2i(12, 8)
+value_min = Vector2i(6, 4)
+value_max = Vector2i(16, 16)
 name = "room_size_max"
 metadata/_custom_type_script = "uid://cura5q3mxleax"
 

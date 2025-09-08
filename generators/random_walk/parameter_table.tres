@@ -9,24 +9,24 @@
 [sub_resource type="Resource" id="Resource_1g81s"]
 script = ExtResource("3_2io1j")
 value = 1
-min = 1
-max = 12
+value_min = 0
+value_max = 16
 name = "walker_count"
 metadata/_custom_type_script = "uid://cn1osy2eiovo4"
 
 [sub_resource type="Resource" id="Resource_2io1j"]
 script = ExtResource("3_2io1j")
 value = 128
-min = 16
-max = 512
+value_min = 1
+value_max = 512
 name = "walker_lifetime"
 metadata/_custom_type_script = "uid://cn1osy2eiovo4"
 
 [sub_resource type="Resource" id="Resource_lr3lr"]
 script = ExtResource("4_ux1xu")
 value = 0.25
-min = 0.0
-max = 1.0
+value_min = 0.0
+value_max = 1.0
 name = "walker_turn_chance"
 metadata/_custom_type_script = "uid://bfmg8o7qs7thl"
 

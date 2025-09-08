@@ -34,8 +34,8 @@ func _create_int_control(parameter: GeneratorIntParameter) -> HBoxContainer:
 	container.alignment = BoxContainer.ALIGNMENT_END
 	container.add_child(_create_parameter_name_label(parameter.name))
 	var spin_box: SpinBox = SpinBox.new()
-	spin_box.min_value = parameter.min
-	spin_box.max_value = parameter.max
+	spin_box.min_value = parameter.value_min
+	spin_box.max_value = parameter.value_max
 	spin_box.value = parameter.value
 	container.add_child(spin_box)
 	_parameter_callback_store[parameter.name] = func(): return int(spin_box.get_line_edit().text)
@@ -47,8 +47,8 @@ func _create_float_control(parameter: GeneratorFloatParameter) -> HBoxContainer:
 	container.add_child(_create_parameter_name_label(parameter.name))
 	var spin_box: SpinBox = SpinBox.new()
 	spin_box.step = 0.01
-	spin_box.min_value = parameter.min
-	spin_box.max_value = parameter.max
+	spin_box.min_value = parameter.value_min
+	spin_box.max_value = parameter.value_max
 	spin_box.value = parameter.value
 	container.add_child(spin_box)
 	_parameter_callback_store[parameter.name] = func(): return float(spin_box.get_line_edit().text)
@@ -64,15 +64,15 @@ func _create_vector2i_control(parameter: GeneratorVector2iParameter) -> VBoxCont
 	
 	hbox_container.add_child(_create_parameter_name_label("X:"))
 	var spin_box_x: SpinBox = SpinBox.new()
-	spin_box_x.min_value = parameter.min.x
-	spin_box_x.max_value = parameter.max.x
+	spin_box_x.min_value = parameter.value_min.x
+	spin_box_x.max_value = parameter.value_max.x
 	spin_box_x.value = parameter.value.x
 	hbox_container.add_child(spin_box_x)
 	
 	hbox_container.add_child(_create_parameter_name_label("Y:"))
 	var spin_box_y: SpinBox = SpinBox.new()
-	spin_box_y.min_value = parameter.min.x
-	spin_box_y.max_value = parameter.max.x
+	spin_box_y.min_value = parameter.value_min.x
+	spin_box_y.max_value = parameter.value_max.x
 	spin_box_y.value = parameter.value.x
 	hbox_container.add_child(spin_box_y)
 	
