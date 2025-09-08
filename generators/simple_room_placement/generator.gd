@@ -1,16 +1,17 @@
 extends FloorGenerator
 
-var _default_parameters: Dictionary = {
-	"floor_size": Vector2i(60, 60),
-	"max_room_count": 12,
-	"min_room_size": Vector2i(4, 4),
-	"max_room_size": Vector2i(8, 8),
-	"room_padding": Vector2i(1, 1),
-	"retry_threshold": 6 
-}
+func _init() -> void:
+	_default_parameters = {
+		"floor_size": Vector2i(60, 60),
+		"max_room_count": 12,
+		"min_room_size": Vector2i(4, 4),
+		"max_room_size": Vector2i(8, 8),
+		"room_padding": Vector2i(1, 1),
+		"retry_threshold": 6 
+	}
 
-func generate(parameters: Dictionary) -> Dictionary:
-	var floor_data: Dictionary = {
+func generate(parameters: Dictionary) -> void:
+	_floorplan = {
 		"rooms": [],
 		"hallways": []
 	}
@@ -52,10 +53,8 @@ func generate(parameters: Dictionary) -> Dictionary:
 			hallways.append(hallway_tiles)
 		prev_room = room
 	
-	floor_data.rooms = rooms
-	floor_data.hallways = hallways
-	
-	return floor_data
+	_floorplan.rooms = rooms
+	_floorplan.hallways = hallways
 
 func _get_random_rect(generation_data: Dictionary) -> Rect2i:
 	var room_size: Vector2i = Vector2i(
@@ -68,20 +67,17 @@ func _get_random_rect(generation_data: Dictionary) -> Rect2i:
 	)
 	return Rect2i(room_position, room_size)
 
-func generate_from_default() -> Dictionary:
-	return generate(_default_parameters)
-
 func get_parameter_table() -> GeneratorParameterTable:
 	return load("res://generators/simple_room_placement/parameter_table.tres")
 
-func get_visual_representation(floorplan: Dictionary) -> Node2D:
+func get_visual_representation() -> Node2D:
 	var tile_map: TileMapLayer = load("res://generators/simple_room_placement/s_r_p_tile_map.tscn").instantiate()
 	
-	for hallway: Array[Vector2i] in floorplan.hallways:
+	for hallway: Array[Vector2i] in _floorplan.hallways:
 		for tile_coordinates: Vector2i in hallway:
 			tile_map.set_cell(tile_coordinates, 0, Vector2(0, 1))
 	
-	for room: Rect2i in floorplan.rooms:
+	for room: Rect2i in _floorplan.rooms:
 		for x: int in range(room.position.x, room.position.x + room.size.x):
 			for y: int in range(room.position.y, room.position.y + room.size.y):
 				tile_map.set_cell(Vector2i(x, y), 0, Vector2(1, 0))

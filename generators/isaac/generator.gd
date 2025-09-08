@@ -2,11 +2,6 @@ extends FloorGenerator
 
 const NULL_ROOM: Rect2i = Rect2i(0, 0, -1, -1)
 
-const _default_parameters: Dictionary = {
-	"room_count": 16,
-	"max_give_ups": 3
-}
-
 	# Template Data #
 const EMPTY_FLOORPLAN: Dictionary = {
 	"start_room": -1,
@@ -27,9 +22,15 @@ const DUNGEON_ROOM_SIZES: Array[Vector2i] = [
 	Vector2i(1, 1)
 ]
 
-func generate(parameters: Dictionary) -> Dictionary:
+func _init() -> void:
+	_default_parameters = {
+		"room_count": 16,
+		"max_give_ups": 3
+	}
+
+func generate(parameters: Dictionary) -> void:
 	
-	var _floorplan: Dictionary = EMPTY_FLOORPLAN.duplicate(true)
+	_floorplan = EMPTY_FLOORPLAN.duplicate(true)
 	_floorplan["parameters"] = parameters
 	
 	var rooms_placed: int = 0 # account for starting room
@@ -92,8 +93,6 @@ func generate(parameters: Dictionary) -> Dictionary:
 			_floorplan.dead_ends.append(room_key)
 	
 	_floorplan.end_room = _floorplan.dead_ends.pop_back()
-	
-	return _floorplan
 
 func _get_exit_coordinates(room: Rect2i) -> Array[Vector2i]:
 	var exits: Array[Vector2i] = []
@@ -128,14 +127,11 @@ func _rect_is_obstructed(new_room_rect: Rect2i, rooms: Array) -> bool:
 				return true
 	return false
 
-func generate_from_default() -> Dictionary:
-	return generate(_default_parameters)
-
 func get_parameter_table() -> GeneratorParameterTable:
 	return load("res://generators/isaac/parameter_table.tres")
 
-func get_visual_representation(floorplan: Dictionary) -> Node2D:
+func get_visual_representation() -> Node2D:
 	var tilemap: TileMapLayer = load("res://generators/isaac/isaac_tilemap.tscn").instantiate()
-	for room_data: Dictionary in floorplan.rooms:
+	for room_data: Dictionary in _floorplan.rooms:
 		tilemap.set_cell(room_data.rect.position, 0, Vector2i(0, 0))
 	return tilemap

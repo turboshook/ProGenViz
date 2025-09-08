@@ -3,15 +3,6 @@ extends FloorGenerator
 const NULL_TILE: Vector2i = Vector2i(-1, -1)
 const OUT_OF_BOUNDS_BUFFER: Vector2i = Vector2i(4, 2)
 
-var _default_parameters: Dictionary = {
-		"x_sectors": 4,
-		"y_sectors": 3,
-		"room_size_min": Vector2i(4, 3),
-		"room_size_max": Vector2i(6, 4),
-		"sector_size": Vector2i(10, 8),
-		"sector_border": 3
-	}
-
 	# Template Data #
 const ROOM_GENERATION_DATA: Dictionary = {
 		"rect" = Rect2i(0, 0, 0, 0),
@@ -33,10 +24,19 @@ const HALLWAY_GENERATION_DATA: Dictionary = {
 
 const TILEMAP_PATH: String = "res://generators/mystery_dungeon/m_d_tilemap.tscn"
 
-func generate(parameters: Dictionary) -> Dictionary:
+func _init() -> void:
+	_default_parameters = {
+		"x_sectors": 4,
+		"y_sectors": 3,
+		"room_size_min": Vector2i(4, 3),
+		"room_size_max": Vector2i(6, 4),
+		"sector_size": Vector2i(10, 8),
+		"sector_border": 3
+	}
+
+func generate(parameters: Dictionary) -> void:
 	
-	# initialize return dictionary 
-	var floorplan: Dictionary = {
+	_floorplan = {
 		"parameters": {},
 		"rooms": {},
 		"hallways": {},
@@ -45,7 +45,7 @@ func generate(parameters: Dictionary) -> Dictionary:
 			"floor_exit": NULL_TILE
 		}
 	}
-	floorplan["parameters"] = parameters
+	_floorplan["parameters"] = parameters
 	
 	# begin generating rooms within sectors
 	var sector_key: int = 0
@@ -98,42 +98,42 @@ func generate(parameters: Dictionary) -> Dictionary:
 				var west_entrance_position: Vector2i = room_rect.position + Vector2i(-1, randi_range(0, room_rect.size.y - 1)) 
 				room_data.entrances.west.append(west_entrance_position)
 			
-			floorplan.rooms[sector_key] = room_data
+			_floorplan.rooms[sector_key] = room_data
 			
 			# iterate ID key
 			sector_key += 1
 	
 	# start hallway generation
 	var hallway_key: int = 0
-	for sector in floorplan.rooms.keys():
+	for sector: int in _floorplan.rooms.keys():
 		
 		# for each sector, define start and end points for every SOUTH and EAST hallway
-		var this_room_data: Dictionary = floorplan.rooms[sector]
+		var this_room_data: Dictionary = _floorplan.rooms[sector]
 		if not this_room_data.entrances.south.is_empty():
-			var target_room_data: Dictionary = floorplan.rooms[sector + 1]
+			var target_room_data: Dictionary = _floorplan.rooms[sector + 1]
 			var hallway_data: Dictionary = HALLWAY_GENERATION_DATA.duplicate(true)
 			hallway_data.start_position = this_room_data.entrances.south[0]
 			hallway_data.end_position = target_room_data.entrances.north[0]
-			floorplan.hallways[hallway_key] = hallway_data
+			_floorplan.hallways[hallway_key] = hallway_data
 			hallway_key += 1
 
 		if not this_room_data.entrances.east.is_empty():
-			var target_room_data: Dictionary = floorplan.rooms[sector + parameters.y_sectors]
+			var target_room_data: Dictionary = _floorplan.rooms[sector + parameters.y_sectors]
 			var hallway_data: Dictionary = HALLWAY_GENERATION_DATA.duplicate(true)
 			hallway_data.start_position = this_room_data.entrances.east[0]
 			hallway_data.end_position = target_room_data.entrances.west[0]
 			hallway_data.is_vertical = false
-			floorplan.hallways[hallway_key] = hallway_data
+			_floorplan.hallways[hallway_key] = hallway_data
 			hallway_key += 1
 	
 	# TODO (maybe)
 	# re-implement this finicky walk strategy using AStar pathfinding instead
 	
 	# walk every hallway
-	for key in floorplan.hallways.keys():
+	for key: int in _floorplan.hallways.keys():
 		# initialize walker and define it travel parameters
-		var start_position: Vector2i = floorplan.hallways[key].start_position
-		var target_position: Vector2i = floorplan.hallways[key].end_position
+		var start_position: Vector2i = _floorplan.hallways[key].start_position
+		var target_position: Vector2i = _floorplan.hallways[key].end_position
 		var x_steps: int = target_position.x - start_position.x
 		var y_steps: int = target_position.y - start_position.y
 		# uncomfortable + 1 to total steps, otherwise the walker always stops one tile short :/
@@ -141,7 +141,7 @@ func generate(parameters: Dictionary) -> Dictionary:
 		# I think this is because of the turn
 		
 		# initialize all hallways as vertical...
-		var is_vertical_at_start: bool = floorplan.hallways[key].is_vertical
+		var is_vertical_at_start: bool = _floorplan.hallways[key].is_vertical
 		var is_vertical: int = is_vertical_at_start
 		@warning_ignore("integer_division")
 		var turn_step: int = (y_steps/2)
@@ -176,37 +176,32 @@ func generate(parameters: Dictionary) -> Dictionary:
 			if is_vertical: hallway_walker.y += sign(y_steps)
 			else: hallway_walker.x += sign(x_steps)
 		
-		floorplan.hallways[key].tiles = walked_tiles
+		_floorplan.hallways[key].tiles = walked_tiles
 	
-	var all_rooms: Array = floorplan.rooms.keys()
+	var all_rooms: Array = _floorplan.rooms.keys()
 	var spawn_room: int = all_rooms.pick_random()
 	all_rooms.erase(spawn_room)
-	floorplan.meta.player_spawn = spawn_room
-	floorplan.rooms[spawn_room].meta["player_spawn"] = _get_random_tile(floorplan.rooms[spawn_room].rect)
+	_floorplan.meta.player_spawn = spawn_room
+	_floorplan.rooms[spawn_room].meta["player_spawn"] = _get_random_tile(_floorplan.rooms[spawn_room].rect)
 	
 	var exit_room: int = all_rooms.pick_random()
 	all_rooms.erase(exit_room)
-	floorplan.meta.floor_exit = exit_room
-	floorplan.rooms[exit_room].meta["floor_exit"] = _get_random_tile(floorplan.rooms[exit_room].rect)
-	
-	return floorplan
+	_floorplan.meta.floor_exit = exit_room
+	_floorplan.rooms[exit_room].meta["floor_exit"] = _get_random_tile(_floorplan.rooms[exit_room].rect)
 
 func _get_random_tile(room_rect: Rect2i) -> Vector2i:
 	var random_x: int = range(room_rect.size.x).pick_random()
 	var random_y: int = range(room_rect.size.y).pick_random()
 	return room_rect.position + Vector2i(random_x, random_y)
 
-func generate_from_default() -> Dictionary:
-	return generate(_default_parameters)
-
 func get_parameter_table() -> GeneratorParameterTable:
 	return load("res://generators/mystery_dungeon/parameter_table.tres")
 
-func get_visual_representation(floorplan: Dictionary) -> Node2D:
+func get_visual_representation() -> Node2D:
 	var tilemap: TileMapLayer = load(TILEMAP_PATH).instantiate()
 	
-	for room_key: int in floorplan.rooms:
-		var room_data: Dictionary = floorplan.rooms[room_key]
+	for room_key: int in _floorplan.rooms:
+		var room_data: Dictionary = _floorplan.rooms[room_key]
 		
 		# draw sector
 		for x: int in range(room_data.sector.position.x, room_data.sector.position.x + room_data.sector.size.x):
@@ -219,8 +214,8 @@ func get_visual_representation(floorplan: Dictionary) -> Node2D:
 				tilemap.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
 	
 	# draw hallways
-	for hallway_key: int in floorplan.hallways:
-		var hallway_data: Dictionary = floorplan.hallways[hallway_key]
+	for hallway_key: int in _floorplan.hallways:
+		var hallway_data: Dictionary = _floorplan.hallways[hallway_key]
 		for tile_coordinates: Vector2i in hallway_data.tiles:
 			tilemap.set_cell(tile_coordinates, 0, Vector2i(1, 0))
 	

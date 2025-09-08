@@ -46,8 +46,7 @@ func generate() -> void:
 	if floor_visual_container.get_child_count() > 0:
 		floor_visual_container.get_child(0).queue_free()
 	
-	var floorplan: Dictionary = {}
-	if parameters == {}: floorplan = floor_generator.generate_from_default()
-	else: floorplan = floor_generator.generate(parameters)
-	var visual_representation: Node2D = floor_generator.get_visual_representation(floorplan)
+	if parameters == {}: floor_generator.generate_from_default()
+	else: floor_generator.generate(parameters)
+	var visual_representation: Node2D = floor_generator.get_visual_representation()
 	floor_visual_container.add_child(visual_representation)
