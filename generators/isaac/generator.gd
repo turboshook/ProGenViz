@@ -24,7 +24,7 @@ const DUNGEON_ROOM_SIZES: Array[Vector2i] = [
 
 func _init() -> void:
 	_default_parameters = {
-		"room_count": 16,
+		"room_count": 8,
 		"max_give_ups": 3
 	}
 

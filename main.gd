@@ -42,10 +42,8 @@ func _on_item_selected(index: int) -> void:
 
 func generate() -> void:
 	var parameters: Dictionary = generator_parameter_interface.get_parameters()
-	
 	if floor_visual_container.get_child_count() > 0:
 		floor_visual_container.get_child(0).queue_free()
-	
 	if parameters == {}: floor_generator.generate_from_default()
 	else: floor_generator.generate(parameters)
 	var visual_representation: Node2D = floor_generator.get_visual_representation()
