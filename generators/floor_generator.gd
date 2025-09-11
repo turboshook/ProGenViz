@@ -5,9 +5,6 @@ var _default_parameters: Dictionary = {}
 @warning_ignore("unused_private_class_variable")
 var _floorplan: Dictionary = {}
 
-func _init() -> void:
-	_default_parameters = {}
-
 @warning_ignore("unused_parameter")
 func generate(parameters: Dictionary) -> void:
 	pass
@@ -16,9 +13,18 @@ func generate_from_default() -> void:
 	generate(_default_parameters)
 
 func get_parameter_table() -> GeneratorParameterTable:
-	return null
+	var param_table_path: String = get_script().resource_path.get_base_dir() + "/parameter_table.tres"
+	if !FileAccess.file_exists(param_table_path):
+		printerr("FloorGenerator @ get_parameter_table(): ", param_table_path, " not found. Returning empty GeneratorParameterTable.")
+		return GeneratorParameterTable.new()
+	return load(param_table_path)
 
-@warning_ignore("unused_parameter")
 func get_visualizer() -> Node2D:
-	var node_2d: Node2D = Node2D.new()
-	return node_2d
+	var visualization_scene_path: String = get_script().resource_path.get_base_dir() + "/generator_visualization.tscn"
+	if !FileAccess.file_exists(visualization_scene_path):
+		printerr("FloorGenerator @ get_visualizer(): ", visualization_scene_path, " not found. Returning empty visualizer.")
+		return GeneratorVisualization.new()
+	var visualization: GeneratorVisualization 
+	visualization = load(visualization_scene_path).instantiate()
+	visualization.set_floorplan(_floorplan)
+	return visualization

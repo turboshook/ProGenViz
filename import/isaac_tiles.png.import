@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkqfiui6ttrjx"
-path="res://.godot/imported/tiles.png-10477045342ce15c4bcfb6d6a75bc4cd.ctex"
+uid="uid://b2iy4q486tjbg"
+path="res://.godot/imported/isaac_tiles.png-170bf17e89b580635e124c5b5a6f8a13.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://generators/binary_space_partition/tiles.png"
-dest_files=["res://.godot/imported/tiles.png-10477045342ce15c4bcfb6d6a75bc4cd.ctex"]
+source_file="res://import/isaac_tiles.png"
+dest_files=["res://.godot/imported/isaac_tiles.png-170bf17e89b580635e124c5b5a6f8a13.ctex"]
 
 [params]
 

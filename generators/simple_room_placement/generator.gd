@@ -66,20 +66,3 @@ func _get_random_rect(generation_data: Dictionary) -> Rect2i:
 		randi_range(0, generation_data.floor_size.y - room_size.y)
 	)
 	return Rect2i(room_position, room_size)
-
-func get_parameter_table() -> GeneratorParameterTable:
-	return load("res://generators/simple_room_placement/parameter_table.tres")
-
-func get_visualizer() -> Node2D:
-	var tile_map: TileMapLayer = load("res://generators/simple_room_placement/s_r_p_tile_map.tscn").instantiate()
-	
-	for hallway: Array[Vector2i] in _floorplan.hallways:
-		for tile_coordinates: Vector2i in hallway:
-			tile_map.set_cell(tile_coordinates, 0, Vector2(0, 1))
-	
-	for room: Rect2i in _floorplan.rooms:
-		for x: int in range(room.position.x, room.position.x + room.size.x):
-			for y: int in range(room.position.y, room.position.y + room.size.y):
-				tile_map.set_cell(Vector2i(x, y), 0, Vector2(1, 0))
-	
-	return tile_map

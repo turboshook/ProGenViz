@@ -277,29 +277,3 @@ func _get_opposite_direction(direction_string: String) -> String:
 	if direction_string.to_lower() == "east": return "west"
 	if direction_string.to_lower() == "west": return "east"
 	return "bad direction"
-
-func get_parameter_table() -> GeneratorParameterTable:
-	return load("res://generators/binary_space_partition/parameter_table.tres")
-
-func get_visualizer() -> Node2D:
-	var tilemap: TileMapLayer = load(TILEMAP_PATH).instantiate()
-	
-	for partition: Dictionary in _floorplan.partitions:
-		var room_data: Dictionary = partition.room
-		
-		# draw partition
-		for x: int in range(partition.origin.x, partition.origin.x + partition.width):
-			for y: int in range(partition.origin.y, partition.origin.y + partition.height):
-				tilemap.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
-		
-		# draw room
-		for x: int in range(room_data.origin.x, room_data.origin.x + room_data.width):
-			for y: int in range(room_data.origin.y, room_data.origin.y + room_data.height):
-				tilemap.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
-	
-	# draw hallways
-	for hallway: Dictionary in _floorplan.hallways:
-		for tile_coordinates: Vector2i in hallway.tile_positions:
-			tilemap.set_cell(tile_coordinates, 0, Vector2i(1, 0))
-	
-	return tilemap

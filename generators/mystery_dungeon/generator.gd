@@ -22,8 +22,6 @@ const HALLWAY_GENERATION_DATA: Dictionary = {
 		"tiles" = []
 	}
 
-const TILEMAP_PATH: String = "res://generators/mystery_dungeon/m_d_tilemap.tscn"
-
 func _init() -> void:
 	_default_parameters = {
 		"x_sectors": 4,
@@ -193,30 +191,3 @@ func _get_random_tile(room_rect: Rect2i) -> Vector2i:
 	var random_x: int = range(room_rect.size.x).pick_random()
 	var random_y: int = range(room_rect.size.y).pick_random()
 	return room_rect.position + Vector2i(random_x, random_y)
-
-func get_parameter_table() -> GeneratorParameterTable:
-	return load("res://generators/mystery_dungeon/parameter_table.tres")
-
-func get_visualizer() -> Node2D:
-	var tilemap: TileMapLayer = load(TILEMAP_PATH).instantiate()
-	
-	for room_key: int in _floorplan.rooms:
-		var room_data: Dictionary = _floorplan.rooms[room_key]
-		
-		# draw sector
-		for x: int in range(room_data.sector.position.x, room_data.sector.position.x + room_data.sector.size.x):
-			for y: int in range(room_data.sector.position.y, room_data.sector.position.y + room_data.sector.size.y):
-				tilemap.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
-		
-		# draw room
-		for x: int in range(room_data.rect.position.x, room_data.rect.position.x + room_data.rect.size.x):
-			for y: int in range(room_data.rect.position.y, room_data.rect.position.y + room_data.rect.size.y):
-				tilemap.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
-	
-	# draw hallways
-	for hallway_key: int in _floorplan.hallways:
-		var hallway_data: Dictionary = _floorplan.hallways[hallway_key]
-		for tile_coordinates: Vector2i in hallway_data.tiles:
-			tilemap.set_cell(tile_coordinates, 0, Vector2i(1, 0))
-	
-	return tilemap

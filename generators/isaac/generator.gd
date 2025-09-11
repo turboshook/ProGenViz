@@ -126,12 +126,3 @@ func _rect_is_obstructed(new_room_rect: Rect2i, rooms: Array) -> bool:
 			if neighboring_rooms > 1: 
 				return true
 	return false
-
-func get_parameter_table() -> GeneratorParameterTable:
-	return load("res://generators/isaac/parameter_table.tres")
-
-func get_visualizer() -> Node2D:
-	var tilemap: TileMapLayer = load("res://generators/isaac/isaac_tilemap.tscn").instantiate()
-	for room_data: Dictionary in _floorplan.rooms:
-		tilemap.set_cell(room_data.rect.position, 0, Vector2i(0, 0))
-	return tilemap

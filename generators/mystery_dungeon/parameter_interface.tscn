@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cralnetuh6gyc"]
-
-[ext_resource type="Script" uid="uid://dj1776gyskbfw" path="res://generators/mystery_dungeon/parameter_interface.gd" id="1_tr8qp"]
-
-[node name="ParameterInterface" type="Control"]
-layout_mode = 3
-anchors_preset = 0
-script = ExtResource("1_tr8qp")
-metadata/_custom_type_script = "uid://c61cuasynsm01"

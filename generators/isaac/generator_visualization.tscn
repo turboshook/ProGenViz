@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://do3vh0qsbpp7l"]
+
+[ext_resource type="Script" uid="uid://b7mxg2h8h6srb" path="res://generators/isaac/generator_visualization.gd" id="1_gunpp"]
+[ext_resource type="PackedScene" uid="uid://cafjt4nfqx7ir" path="res://generators/isaac/isaac_tilemap.tscn" id="2_ghvxb"]
+
+[node name="GeneratorVisualization" type="Node2D"]
+script = ExtResource("1_gunpp")
+metadata/_custom_type_script = "uid://lvmunabsg24w"
+
+[node name="IsaacTilemap" parent="." instance=ExtResource("2_ghvxb")]
