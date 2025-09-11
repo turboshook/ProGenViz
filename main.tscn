@@ -30,6 +30,7 @@ grow_vertical = 2
 theme = ExtResource("2_h2yge")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
 offset_left = 944.0
 offset_top = 16.0
 offset_right = 1264.0
@@ -69,6 +70,7 @@ size_flags_vertical = 3
 layout_mode = 2
 
 [node name="ResetCameraButton" type="Button" parent="CanvasLayer/UI"]
+layout_mode = 0
 offset_left = 1136.0
 offset_top = 672.0
 offset_right = 1264.0
