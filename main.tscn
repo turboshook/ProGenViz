@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://fq4dg2mjn4d"]
+[gd_scene load_steps=4 format=3 uid="uid://fq4dg2mjn4d"]
 
 [ext_resource type="Script" uid="uid://ya3q0vjml76l" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://bwymn7btwagif" path="res://utils/generator_parameter_interface/generator_parameter_interface.tscn" id="2_0xm2m"]
+[ext_resource type="Theme" uid="uid://budipvsn6w6vj" path="res://utils/ui_theme.tres" id="2_h2yge"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_ig7tw")
@@ -15,21 +16,31 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
+color = Color(0.137255, 0.27451, 0.298039, 1)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
-offset_left = 960.0
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_h2yge")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI"]
+offset_left = 944.0
 offset_top = 16.0
 offset_right = 1264.0
 offset_bottom = 656.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 alignment = 1
 
-[node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer/VBoxContainer/HBoxContainer"]
+[node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer/UI/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 item_count = 5
@@ -44,19 +55,20 @@ popup/item_3/id = 3
 popup/item_4/text = "RandomWalk"
 popup/item_4/id = 4
 
-[node name="GenerateButton" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer"]
+[node name="GenerateButton" type="Button" parent="CanvasLayer/UI/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Generate"
 
-[node name="ParameterInterfaceContainer" type="ScrollContainer" parent="CanvasLayer/VBoxContainer"]
+[node name="ParameterInterfaceContainer" type="ScrollContainer" parent="CanvasLayer/UI/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="GeneratorParameterInterface" parent="CanvasLayer/VBoxContainer/ParameterInterfaceContainer" instance=ExtResource("2_0xm2m")]
+[node name="GeneratorParameterInterface" parent="CanvasLayer/UI/VBoxContainer/ParameterInterfaceContainer" instance=ExtResource("2_0xm2m")]
 layout_mode = 2
 
-[node name="ResetCameraButton" type="Button" parent="CanvasLayer"]
+[node name="ResetCameraButton" type="Button" parent="CanvasLayer/UI"]
 offset_left = 1136.0
 offset_top = 672.0
 offset_right = 1264.0

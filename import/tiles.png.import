@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cl7vg0jbfeaot"
-path="res://.godot/imported/tiles.png-8c2f93dbf78a4d1317f7e375c9f11c3a.ctex"
+path="res://.godot/imported/tiles.png-85239c01aee836e7ddf2ed2e815d40a6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://generators/simple_room_placement/tiles.png"
-dest_files=["res://.godot/imported/tiles.png-8c2f93dbf78a4d1317f7e375c9f11c3a.ctex"]
+source_file="res://import/tiles.png"
+dest_files=["res://.godot/imported/tiles.png-85239c01aee836e7ddf2ed2e815d40a6.ctex"]
 
 [params]
 
