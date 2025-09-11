@@ -70,7 +70,7 @@ func _get_random_rect(generation_data: Dictionary) -> Rect2i:
 func get_parameter_table() -> GeneratorParameterTable:
 	return load("res://generators/simple_room_placement/parameter_table.tres")
 
-func get_visual_representation() -> Node2D:
+func get_visualizer() -> Node2D:
 	var tile_map: TileMapLayer = load("res://generators/simple_room_placement/s_r_p_tile_map.tscn").instantiate()
 	
 	for hallway: Array[Vector2i] in _floorplan.hallways:

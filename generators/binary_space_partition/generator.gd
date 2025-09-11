@@ -281,7 +281,7 @@ func _get_opposite_direction(direction_string: String) -> String:
 func get_parameter_table() -> GeneratorParameterTable:
 	return load("res://generators/binary_space_partition/parameter_table.tres")
 
-func get_visual_representation() -> Node2D:
+func get_visualizer() -> Node2D:
 	var tilemap: TileMapLayer = load(TILEMAP_PATH).instantiate()
 	
 	for partition: Dictionary in _floorplan.partitions:

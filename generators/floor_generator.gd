@@ -19,6 +19,6 @@ func get_parameter_table() -> GeneratorParameterTable:
 	return null
 
 @warning_ignore("unused_parameter")
-func get_visual_representation() -> Node2D:
+func get_visualizer() -> Node2D:
 	var node_2d: Node2D = Node2D.new()
 	return node_2d

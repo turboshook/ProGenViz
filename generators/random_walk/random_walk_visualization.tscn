@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dds3p7tsgabq7"]
+
+[ext_resource type="Script" uid="uid://dbsu0jsocommm" path="res://generators/random_walk/random_walk_visualization.gd" id="1_osnlf"]
+[ext_resource type="PackedScene" uid="uid://cuu55vehijv7w" path="res://generators/random_walk/r_w_tile_map.tscn" id="2_osnlf"]
+
+[node name="RandomWalkVisualization" type="Node2D"]
+script = ExtResource("1_osnlf")
+metadata/_custom_type_script = "uid://lvmunabsg24w"
+
+[node name="RWTileMap" parent="." instance=ExtResource("2_osnlf")]
+metadata/_edit_lock_ = true

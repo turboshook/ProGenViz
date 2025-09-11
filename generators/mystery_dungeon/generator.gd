@@ -197,7 +197,7 @@ func _get_random_tile(room_rect: Rect2i) -> Vector2i:
 func get_parameter_table() -> GeneratorParameterTable:
 	return load("res://generators/mystery_dungeon/parameter_table.tres")
 
-func get_visual_representation() -> Node2D:
+func get_visualizer() -> Node2D:
 	var tilemap: TileMapLayer = load(TILEMAP_PATH).instantiate()
 	
 	for room_key: int in _floorplan.rooms:

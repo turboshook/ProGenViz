@@ -46,5 +46,5 @@ func generate() -> void:
 		floor_visual_container.get_child(0).queue_free()
 	if parameters == {}: floor_generator.generate_from_default()
 	else: floor_generator.generate(parameters)
-	var visual_representation: Node2D = floor_generator.get_visual_representation()
+	var visual_representation: Node2D = floor_generator.get_visualizer()
 	floor_visual_container.add_child(visual_representation)

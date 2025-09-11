@@ -8,14 +8,19 @@ func _init() -> void:
 	}
 
 func generate(parameters: Dictionary) -> void:
-	_floorplan = {"tiles": []}
+	_floorplan = {
+		"tiles": [], # ordered list of tile coordinates used in the visualizer
+		"tile_set": {} # O(1) lookup for unique tile coordinates
+	}
 	for _walker_id: int in range(parameters.walker_count):
 		var walker_coordinate: Vector2i = Vector2i(32, 32)
 		var step_direction: Vector2i = [
 			Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT
 		].pick_random() 
 		for _step: int in range(parameters.walker_lifetime):
-			_floorplan.tiles.append(walker_coordinate)
+			if not _floorplan.tile_set.has(walker_coordinate):
+				_floorplan.tile_set[walker_coordinate] = null # some dummy value
+				_floorplan.tiles.append(walker_coordinate)
 			if randf() < parameters.walker_turn_chance:
 				step_direction = _handle_turn(step_direction)
 			walker_coordinate += step_direction
@@ -28,8 +33,7 @@ func get_parameter_table() -> GeneratorParameterTable:
 	return load("res://generators/random_walk/parameter_table.tres")
 
 @warning_ignore("unused_parameter")
-func get_visual_representation() -> Node2D:
-	var tile_map: TileMapLayer = load("res://generators/random_walk/r_w_tile_map.tscn").instantiate()
-	for tile_coordinate: Vector2i in _floorplan.tiles:
-		tile_map.set_cell(tile_coordinate, 0, Vector2i(1, 1))
-	return tile_map
+func get_visualizer() -> Node2D:
+	var visualizer: GeneratorVisualization = load("res://generators/random_walk/random_walk_visualization.tscn").instantiate()
+	visualizer.set_floorplan(_floorplan)
+	return visualizer
