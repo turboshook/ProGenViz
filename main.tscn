@@ -79,3 +79,11 @@ text = "Reset Camera"
 
 [node name="FloorVisualContainer" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
+
+[node name="CameraTarget" type="Node2D" parent="."]
+position = Vector2(640, 360)
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+metadata/_edit_lock_ = true
