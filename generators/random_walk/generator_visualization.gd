@@ -10,6 +10,6 @@ func _activate() -> void:
 		for tile_coordinate: Vector2i in _floorplan.walks[walk]:
 			rw_tile_map.set_cell(tile_coordinate, 0, tile_atlas_coordinates[atlas_index])
 			tiles_placed += 1
-			if tiles_placed % 8 == 0: AudioManager.play_sound("footstep")
-			await get_tree().process_frame
+			if tiles_placed % 4 == 0: AudioManager.play_sound("footstep")
+			await get_tree().physics_frame
 		atlas_index = atlas_index + 1 if atlas_index < tile_atlas_coordinates.size() - 1 else 0

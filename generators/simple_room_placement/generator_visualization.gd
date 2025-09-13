@@ -9,13 +9,13 @@ func _activate() -> void:
 			for y: int in range(room.position.y, room.position.y + room.size.y):
 				srp_tile_map.set_cell(Vector2i(x, y), 0, Vector2(1, 2))
 				tiles_placed += 1
-				if tiles_placed % 4 == 0: AudioManager.play_sound("tap")
-				await get_tree().process_frame
+				if tiles_placed % 2 == 0: AudioManager.play_sound("tap")
+				await get_tree().physics_frame
 	
 	for hallway: Array[Vector2i] in _floorplan.hallways:
 		var tiles_placed: int = -1
 		for tile_coordinates: Vector2i in hallway:
 			srp_tile_map.set_cell(tile_coordinates, 0, Vector2(0, 2))
 			tiles_placed += 1
-			if tiles_placed % 8 == 0: AudioManager.play_sound("footstep")
-			await get_tree().process_frame
+			if tiles_placed % 4 == 0: AudioManager.play_sound("footstep")
+			await get_tree().physics_frame
