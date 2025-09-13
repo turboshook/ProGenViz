@@ -129,52 +129,56 @@ func generate(parameters: Dictionary) -> void:
 	
 	# walk every hallway
 	for key: int in _floorplan.hallways.keys():
-		# initialize walker and define it travel parameters
-		var start_position: Vector2i = _floorplan.hallways[key].start_position
-		var target_position: Vector2i = _floorplan.hallways[key].end_position
-		var x_steps: int = target_position.x - start_position.x
-		var y_steps: int = target_position.y - start_position.y
-		# uncomfortable + 1 to total steps, otherwise the walker always stops one tile short :/
-		var total_steps: int = abs(x_steps) + abs(y_steps) + 1 
-		# I think this is because of the turn
+		## initialize walker and define it travel parameters
+		#var start_position: Vector2i = _floorplan.hallways[key].start_position
+		#var target_position: Vector2i = _floorplan.hallways[key].end_position
+		#var x_steps: int = target_position.x - start_position.x
+		#var y_steps: int = target_position.y - start_position.y
+		## uncomfortable + 1 to total steps, otherwise the walker always stops one tile short :/
+		#var total_steps: int = abs(x_steps) + abs(y_steps) + 1 
+		## I think this is because of the turn
+		#
+		## initialize all hallways as vertical...
+		#var is_vertical_at_start: bool = _floorplan.hallways[key].is_vertical
+		#var is_vertical: int = is_vertical_at_start
+		#@warning_ignore("integer_division")
+		#var turn_step: int = (y_steps/2)
+		#
+		## unless they are horizontal
+		#if not is_vertical_at_start:
+			#is_vertical_at_start = false
+			#@warning_ignore("integer_division")
+			#turn_step = (x_steps/2)
+		#
+		## begin walk
+		#var walked_tiles: Array[Vector2i] = []
+		#var hallway_walker: Vector2i = start_position
+		#var performed_first_turn: bool = false
+		#for step in range(total_steps):
+			#
+			## determine whether the first turn has been performed
+			## if one is needed
+			#if step >= turn_step and not performed_first_turn:
+				#is_vertical = !(is_vertical_at_start)
+				#performed_first_turn = true
+			#
+			## place a tile there
+			#walked_tiles.append(hallway_walker)
+			#
+			## No elif here to handle cases where hallways are straight lines and would otherwise
+			## waste a step going nowhere, stopping one tile short of connecting the two rooms.
+			## In that case, immediately switch back to the former state.
+			#if performed_first_turn and hallway_walker.y == target_position.y: is_vertical = false
+			#if performed_first_turn and hallway_walker.x == target_position.x: is_vertical = true
+			#
+			#if is_vertical: hallway_walker.y += sign(y_steps)
+			#else: hallway_walker.x += sign(x_steps)
 		
-		# initialize all hallways as vertical...
-		var is_vertical_at_start: bool = _floorplan.hallways[key].is_vertical
-		var is_vertical: int = is_vertical_at_start
-		@warning_ignore("integer_division")
-		var turn_step: int = (y_steps/2)
-		
-		# unless they are horizontal
-		if not is_vertical_at_start:
-			is_vertical_at_start = false
-			@warning_ignore("integer_division")
-			turn_step = (x_steps/2)
-		
-		# begin walk
-		var walked_tiles: Array[Vector2i] = []
-		var hallway_walker: Vector2i = start_position
-		var performed_first_turn: bool = false
-		for step in range(total_steps):
-			
-			# determine whether the first turn has been performed
-			# if one is needed
-			if step >= turn_step and not performed_first_turn:
-				is_vertical = !(is_vertical_at_start)
-				performed_first_turn = true
-			
-			# place a tile there
-			walked_tiles.append(hallway_walker)
-			
-			# No elif here to handle cases where hallways are straight lines and would otherwise
-			# waste a step going nowhere, stopping one tile short of connecting the two rooms.
-			# In that case, immediately switch back to the former state.
-			if performed_first_turn and hallway_walker.y == target_position.y: is_vertical = false
-			if performed_first_turn and hallway_walker.x == target_position.x: is_vertical = true
-			
-			if is_vertical: hallway_walker.y += sign(y_steps)
-			else: hallway_walker.x += sign(x_steps)
-		
-		_floorplan.hallways[key].tiles = walked_tiles
+		_floorplan.hallways[key].tiles = GeneratorUtils.get_middle_bend_path(
+			_floorplan.hallways[key].start_position,
+			_floorplan.hallways[key].end_position,
+			_floorplan.hallways[key].is_vertical
+		)
 	
 	var all_rooms: Array = _floorplan.rooms.keys()
 	var spawn_room: int = all_rooms.pick_random()

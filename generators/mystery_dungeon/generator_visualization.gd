@@ -17,7 +17,7 @@ func _activate() -> void:
 				md_tilemap.set_cell(Vector2i(x, y), 0, Vector2i(1, 1))
 		
 		AudioManager.play_sound("tap")
-		for _frame: int in range(8): await get_tree().physics_frame
+		for _frame: int in range(4): await get_tree().physics_frame
 	
 	# draw hallways
 	var tiles_placed: int = -1
