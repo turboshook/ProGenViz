@@ -44,17 +44,25 @@ alignment = 1
 [node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer/UI/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-item_count = 5
-popup/item_0/text = "SimpleRoomPlacement"
+item_count = 8
+popup/item_0/text = "General"
 popup/item_0/id = 0
-popup/item_1/text = "MysteryDungeon"
+popup/item_0/separator = true
+popup/item_1/text = "SimpleRoomPlacement"
 popup/item_1/id = 1
-popup/item_2/text = "BinarySpacePartition"
+popup/item_2/text = "RandomWalk"
 popup/item_2/id = 2
-popup/item_3/text = "Isaac"
+popup/item_3/text = "BinarySpacePartition"
 popup/item_3/id = 3
-popup/item_4/text = "RandomWalk"
+popup/item_4/text = "InverseDLA"
 popup/item_4/id = 4
+popup/item_5/text = "Titles"
+popup/item_5/id = 5
+popup/item_5/separator = true
+popup/item_6/text = "Isaac"
+popup/item_6/id = 6
+popup/item_7/text = "MysteryDungeon"
+popup/item_7/id = 7
 
 [node name="GenerateButton" type="Button" parent="CanvasLayer/UI/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(80, 0)

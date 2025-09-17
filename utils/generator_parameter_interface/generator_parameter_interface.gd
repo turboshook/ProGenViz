@@ -89,7 +89,7 @@ func _create_vector2i_control(parameter: GeneratorVector2iParameter) -> VBoxCont
 
 func _create_parameter_name_label(parameter_name: String) -> Label:
 	var parameter_name_label: Label = Label.new()
-	parameter_name_label.text = parameter_name
+	parameter_name_label.text = parameter_name.capitalize()
 	parameter_name_label.add_theme_font_size_override("font_size", 12)
 	return parameter_name_label
 

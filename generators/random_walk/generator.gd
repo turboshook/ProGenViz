@@ -4,7 +4,7 @@ func _init() -> void:
 	_default_parameters = {
 		"walker_count": 1,
 		"walker_lifetime": 128,
-		"walker_turn_chance": 0.25
+		"walker_turn_chance": 0.0
 	}
 
 func generate(parameters: Dictionary) -> void:
@@ -13,7 +13,7 @@ func generate(parameters: Dictionary) -> void:
 		"tile_set": {} # O(1) lookup for unique tile coordinates.
 	}
 	for _walker_id: int in range(parameters.walker_count):
-		var walker_coordinate: Vector2i = Vector2i(32, 32)
+		var walker_coordinate: Vector2i = Vector2i(48, 48)
 		var step_direction: Vector2i = [
 			Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT
 		].pick_random() 
