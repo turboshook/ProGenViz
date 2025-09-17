@@ -6,6 +6,7 @@ const GENERATORS: Array[String] = [
 	"res://generators/simple_room_placement/generator.gd",
 	"res://generators/random_walk/generator.gd",
 	"res://generators/binary_space_partition/generator.gd",
+	"res://generators/diffusion_limited_aggregation/generator.gd",
 	"res://generators/inverse_diffusion_limited_aggregation/generator.gd",
 	"",
 	"res://generators/isaac/generator.gd",

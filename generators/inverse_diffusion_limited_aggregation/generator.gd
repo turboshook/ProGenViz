@@ -2,19 +2,20 @@ extends FloorGenerator
 
 func _init() -> void:
 	_default_parameters = {
-		"max_tile_quantity": 256,
+		"tile_quantity": 256,
 		"walker_turn_chance": 0.0
 	}
 
 func generate(parameters: Dictionary) -> void:
 	_floorplan = {
 		"walks": [],
-		"tile_coordinates": [Vector2i(48, 48)],
-		"coordinate_set": {Vector2i(48, 48): null}
+		"tile_coordinates": [Vector2i(32, 32)],
+		"coordinate_set": {Vector2i(32, 32): null}
 	}
-	for tile_count: int in range(parameters.max_tile_quantity - 1):
+	
+	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
+	for tile_count: int in range(parameters.tile_quantity - 1):
 		var walker_coordinate: Vector2i = _floorplan.tile_coordinates.pick_random()
-		var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 		var step_direction = step_directions.pick_random()
 		var walk: Array[Vector2i] = [walker_coordinate]
 		

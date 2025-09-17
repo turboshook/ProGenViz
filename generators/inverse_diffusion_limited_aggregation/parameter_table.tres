@@ -11,7 +11,7 @@ script = ExtResource("3_yhe57")
 value = 256
 value_min = 16
 value_max = 512
-name = "max_tile_quantity"
+name = "tile_quantity"
 metadata/_custom_type_script = "uid://cn1osy2eiovo4"
 
 [sub_resource type="Resource" id="Resource_6a44a"]
