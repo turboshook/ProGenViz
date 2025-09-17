@@ -8,7 +8,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -1024.0
-offset_bottom = -592.0
+offset_bottom = -80.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -16,6 +16,7 @@ size_flags_vertical = 3
 script = ExtResource("1_jp8s0")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,4 +38,24 @@ theme_override_constants/margin_bottom = 8
 metadata/_edit_lock_ = true
 
 [node name="ParameterCategoryContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ParameterCategoryContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer"]
 layout_mode = 2

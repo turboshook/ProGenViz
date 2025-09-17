@@ -1,7 +1,7 @@
 extends Control
 class_name GeneratorParameterInterface
 
-@onready var parameter_category_container: VBoxContainer = $PanelContainer/MarginContainer/ParameterCategoryContainer
+@onready var parameter_category_container: VBoxContainer = $ScrollContainer/MarginContainer/ParameterCategoryContainer
 
 var _parameter_callback_store: Dictionary = {}
 
@@ -11,23 +11,28 @@ func initialize(param_table: GeneratorParameterTable) -> void:
 	_parameter_callback_store = {}
 	
 	for category: GeneratorParameterCategory in param_table.categories:
-		var parameter_container: VBoxContainer = _create_parameter_container(category.name)
-		parameter_category_container.add_child(parameter_container)
+		var category_container: FoldableContainer = _create_category_container(category.name)
+		parameter_category_container.add_child(category_container)
 		for parameter: GeneratorParameterDefinition in category.parameters:
 			if parameter is GeneratorIntParameter:
-				parameter_container.add_child(_create_int_control(parameter))
+				var int_parameter: HBoxContainer = _create_int_control(parameter)
+				category_container.get_child(0).add_child(int_parameter)
 			elif parameter is GeneratorFloatParameter:
-				parameter_container.add_child(_create_float_control(parameter))
+				var float_parameter: HBoxContainer = _create_float_control(parameter)
+				category_container.get_child(0).add_child(float_parameter)
 			elif parameter is GeneratorVector2iParameter:
-				parameter_container.add_child(_create_vector2i_control(parameter))
+				var vector_parameter: VBoxContainer = _create_vector2i_control(parameter)
+				category_container.get_child(0).add_child(vector_parameter)
 
-func _create_parameter_container(category_name: String) -> VBoxContainer:
+func _create_category_container(category_name: String) -> FoldableContainer:
+	var category_container: FoldableContainer = FoldableContainer.new()
 	var parameter_container: VBoxContainer = VBoxContainer.new()
+	category_container.add_child(parameter_container)
 	parameter_container.add_theme_constant_override("separation", 0)
-	var category_label: Label = Label.new()
-	category_label.text = category_name
-	parameter_container.add_child(category_label)
-	return parameter_container
+	category_container.title = category_name
+	category_container.fold()
+	# TODO look into using a foldable group?
+	return category_container
 
 func _create_int_control(parameter: GeneratorIntParameter) -> HBoxContainer:
 	var container: HBoxContainer = HBoxContainer.new()

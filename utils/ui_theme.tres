@@ -1,10 +1,17 @@
-[gd_resource type="Theme" load_steps=7 format=3 uid="uid://budipvsn6w6vj"]
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://budipvsn6w6vj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6qfjw"]
 bg_color = Color(0, 0, 0, 0.247059)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ohdkm"]
 bg_color = Color(0, 0, 0, 0.333333)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lelem"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.24705882)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1kvt3"]
 bg_color = Color(0, 0, 0, 0.247059)
@@ -18,12 +25,26 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ojx3"]
 bg_color = Color(0, 0, 0, 0.121569)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_78ino"]
+bg_color = Color(0.13725491, 0.27450982, 0.29803923, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k4sfn"]
+bg_color = Color(0, 0, 0, 0.78431374)
+
 [resource]
 Button/styles/focus = SubResource("StyleBoxFlat_6qfjw")
 Button/styles/hover = SubResource("StyleBoxFlat_ohdkm")
 Button/styles/normal = SubResource("StyleBoxFlat_6qfjw")
 Button/styles/pressed = SubResource("StyleBoxFlat_6qfjw")
+FoldableContainer/font_sizes/font_size = 12
+FoldableContainer/styles/panel = SubResource("StyleBoxFlat_lelem")
+FoldableContainer/styles/title_collapsed_hover_panel = SubResource("StyleBoxFlat_lelem")
+FoldableContainer/styles/title_collapsed_panel = SubResource("StyleBoxFlat_lelem")
+FoldableContainer/styles/title_hover_panel = SubResource("StyleBoxFlat_lelem")
+FoldableContainer/styles/title_panel = SubResource("StyleBoxFlat_lelem")
 LineEdit/styles/focus = SubResource("StyleBoxFlat_1kvt3")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_2lhw5")
 Panel/styles/panel = SubResource("StyleBoxFlat_epr4m")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_8ojx3")
+PopupMenu/styles/hover = SubResource("StyleBoxFlat_78ino")
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_k4sfn")
