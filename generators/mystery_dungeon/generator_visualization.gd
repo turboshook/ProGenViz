@@ -28,3 +28,9 @@ func _activate() -> void:
 			tiles_placed += 1
 			if tiles_placed % 4 == 0: AudioManager.play_sound("footstep")
 			await get_tree().physics_frame
+
+func get_center_offset() -> Vector2:
+	var params: Dictionary = _floorplan.parameters
+	var sector_grid_size: Vector2 = Vector2(params.x_sectors, params.y_sectors)
+	var sector_size: Vector2 = Vector2(params.sector_size.x + params.sector_border, params.sector_size.y + params.sector_border)
+	return ((sector_grid_size * sector_size) * 8.0)/2.0

@@ -15,3 +15,6 @@ func _activate() -> void:
 		tiles_placed += 1
 		if tiles_placed % 8 == 0: AudioManager.play_sound("footstep")
 		if tiles_placed % 2 == 0: await get_tree().physics_frame
+
+func get_center_offset() -> Vector2:
+	return Vector2(_floorplan.map_size/2) * 8.0

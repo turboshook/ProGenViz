@@ -12,3 +12,6 @@ func set_floorplan(floorplan: Dictionary) -> void:
 
 func _activate() -> void:
 	pass
+
+func get_center_offset() -> Vector2:
+	return Vector2.ZERO

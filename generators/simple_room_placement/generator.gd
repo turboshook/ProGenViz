@@ -12,6 +12,7 @@ func _init() -> void:
 
 func generate(parameters: Dictionary) -> void:
 	_floorplan = {
+		"floor_size": parameters.floor_size,
 		"rooms": [],
 		"hallways": []
 	}

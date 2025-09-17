@@ -45,8 +45,9 @@ func generate() -> void:
 		floor_visual_container.get_child(0).queue_free()
 	if parameters == {}: floor_generator.generate_from_default()
 	else: floor_generator.generate(parameters)
-	var visual_representation: Node2D = floor_generator.get_visualizer()
+	var visual_representation: GeneratorVisualization = floor_generator.get_visualizer()
 	floor_visual_container.add_child(visual_representation)
+	visual_representation.position -= visual_representation.get_center_offset()
 
 func _on_item_selected(index: int) -> void:
 	if generator_id != index and index != -1:
@@ -56,4 +57,5 @@ func _on_item_selected(index: int) -> void:
 	var parameter_table: GeneratorParameterTable = floor_generator.get_parameter_table()
 	generator_parameter_interface.initialize(parameter_table)
 	await RenderingServer.frame_post_draw # allow param interface to populate all controls 
+	camera_target.position = Vector2(640.0, 360.0) # reset camera position
 	generate()

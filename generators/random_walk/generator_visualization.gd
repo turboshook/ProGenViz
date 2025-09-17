@@ -13,3 +13,6 @@ func _activate() -> void:
 			if tiles_placed % 4 == 0: AudioManager.play_sound("footstep")
 			await get_tree().physics_frame
 		atlas_index = atlas_index + 1 if atlas_index < tile_atlas_coordinates.size() - 1 else 0
+
+func get_center_offset() -> Vector2:
+	return Vector2(_floorplan.walks[0][0] * 8.0)

@@ -21,3 +21,6 @@ func _activate() -> void:
 		var tile_coordinate: Vector2i = _floorplan.tile_coordinates[walk_index]
 		floor_tile_map.set_cell(tile_coordinate, 0, floor_atlas_tile_coordinate)
 		walk_tile_map.clear()
+
+func get_center_offset() -> Vector2:
+	return Vector2(256.0, 256.0)
