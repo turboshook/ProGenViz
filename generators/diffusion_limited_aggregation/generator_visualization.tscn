@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://deft87j5s353h"]
+[gd_scene load_steps=6 format=3 uid="uid://deft87j5s353h"]
 
 [ext_resource type="Script" uid="uid://bkpg1t4q6igbd" path="res://generators/diffusion_limited_aggregation/generator_visualization.gd" id="1_bt8y0"]
 [ext_resource type="Texture2D" uid="uid://cl7vg0jbfeaot" path="res://import/textures/tiles.png" id="2_ynt03"]
+[ext_resource type="PackedScene" uid="uid://b4fddv7fptpj8" path="res://generators/utils/tile_placement_particles.tscn" id="3_pn2y5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pn2y5"]
 texture = ExtResource("2_ynt03")
@@ -23,3 +24,5 @@ metadata/_custom_type_script = "uid://lvmunabsg24w"
 
 [node name="FloorTileMap" type="TileMapLayer" parent="."]
 tile_set = SubResource("TileSet_y46bx")
+
+[node name="TilePlacementParticles" parent="." instance=ExtResource("3_pn2y5")]

@@ -2,6 +2,7 @@ extends GeneratorVisualization
 
 @onready var floor_tile_map: TileMapLayer = $FloorTileMap
 @onready var walk_tile_map: TileMapLayer = $WalkTileMap
+@onready var tile_placement_particles: CPUParticles2D = $TilePlacementParticles
 
 func _activate() -> void:
 	
@@ -16,11 +17,14 @@ func _activate() -> void:
 		for walk_coordinate: Vector2i in walk:
 			walk_tile_map.set_cell(walk_coordinate, 0, walker_atlas_tile_coordinate)
 			tiles_placed += 1
-			if tiles_placed % 32 == 0: AudioManager.play_sound("footstep")
-			if tiles_placed % 8 == 0: await get_tree().physics_frame
+			if tiles_placed % 12 == 0: AudioManager.play_sound("footstep")
+			if tiles_placed % 3 == 0: await get_tree().physics_frame
 		var tile_coordinate: Vector2i = _floorplan.tile_coordinates[walk_index]
 		floor_tile_map.set_cell(tile_coordinate, 0, floor_atlas_tile_coordinate)
+		tile_placement_particles.position = (tile_coordinate * 8.0)
+		if !tile_placement_particles.emitting: tile_placement_particles.set_emitting(true)
 		walk_tile_map.clear()
+	tile_placement_particles.set_emitting(false)
 
 func get_center_offset() -> Vector2:
 	return Vector2(256.0, 256.0)

@@ -1,6 +1,7 @@
 extends GeneratorVisualization
 
 @onready var bsp_tilemap: TileMapLayer = $BSPTilemap
+@onready var tile_placement_particles: CPUParticles2D = $TilePlacementParticles
 
 func _activate() -> void:
 	for partition: Dictionary in _floorplan.partitions:
@@ -21,12 +22,15 @@ func _activate() -> void:
 	
 	# draw hallways
 	var tiles_placed: int = -1
+	tile_placement_particles.set_emitting(true)
 	for hallway: Dictionary in _floorplan.hallways:
 		for tile_coordinates: Vector2i in hallway.tile_positions:
 			bsp_tilemap.set_cell(tile_coordinates, 0, Vector2i(1, 1))
+			tile_placement_particles.position = (tile_coordinates * 8.0)
 			tiles_placed += 1
 			if tiles_placed % 4 == 0: AudioManager.play_sound("footstep")
 			await get_tree().physics_frame
+	tile_placement_particles.set_emitting(false)
 
 func get_center_offset() -> Vector2:
 	return (

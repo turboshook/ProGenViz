@@ -1,10 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://kisyf33qyicm"]
+[gd_scene load_steps=4 format=3 uid="uid://kisyf33qyicm"]
 
 [ext_resource type="Script" uid="uid://cot83uh373eo5" path="res://generators/binary_space_partition/generator_visualization.gd" id="1_6lret"]
 [ext_resource type="PackedScene" uid="uid://cc1e7ndw6p6j7" path="res://generators/binary_space_partition/b_s_p_tilemap.tscn" id="2_lkp51"]
+[ext_resource type="PackedScene" uid="uid://b4fddv7fptpj8" path="res://generators/utils/tile_placement_particles.tscn" id="3_nx0pm"]
 
 [node name="GeneratorVisualization" type="Node2D"]
 script = ExtResource("1_6lret")
 metadata/_custom_type_script = "uid://lvmunabsg24w"
 
 [node name="BSPTilemap" parent="." instance=ExtResource("2_lkp51")]
+
+[node name="TilePlacementParticles" parent="." instance=ExtResource("3_nx0pm")]

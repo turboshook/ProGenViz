@@ -35,6 +35,8 @@ func _process(delta: float) -> void:
 		Input.get_axis("input_up", "input_down")
 	).normalized()
 	camera_target.position += scroll_vector * 3.0
+	camera_target.position.x = clamp(camera_target.position.x, 384.0, 896.0)
+	camera_target.position.y = clamp(camera_target.position.y, 360.0 - 256.0, 360.0 + 256.0)
 	camera.position = camera.position.lerp(camera_target.position, delta * 4.0)
 	reset_camera_button.visible = (camera_target.position != Vector2(640.0, 360.0))
 
