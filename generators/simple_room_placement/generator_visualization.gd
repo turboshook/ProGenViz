@@ -1,7 +1,6 @@
 extends GeneratorVisualization
 
 @onready var srp_tile_map: TileMapLayer = $SRPTileMap
-@onready var tile_placement_particles: CPUParticles2D = $TilePlacementParticles
 
 func _activate() -> void:
 	for room: Rect2i in _floorplan.rooms:
@@ -12,16 +11,16 @@ func _activate() -> void:
 		for _i: int in range(4): await get_tree().physics_frame
 	
 	# defer this call because the particles keep showing at the origin
-	tile_placement_particles.set_emitting.call_deferred(true)
+	_tile_particles.set_emitting.call_deferred(true)
 	for hallway: Array[Vector2i] in _floorplan.hallways:
 		var tiles_placed: int = -1
 		for tile_coordinates: Vector2i in hallway:
 			srp_tile_map.set_cell(tile_coordinates, 0, Vector2(0, 2))
-			tile_placement_particles.position = (tile_coordinates * 8.0)
+			_tile_particles.position = (tile_coordinates * 8.0)
 			tiles_placed += 1
 			if tiles_placed % 4 == 0: AudioManager.play_sound("footstep")
 			await get_tree().physics_frame
-	tile_placement_particles.set_emitting(false)
+	_tile_particles.set_emitting(false)
 
 func get_center_offset() -> Vector2:
 	return (_floorplan.floor_size/2 * 8.0)

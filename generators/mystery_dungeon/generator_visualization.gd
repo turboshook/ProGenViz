@@ -1,7 +1,6 @@
 extends GeneratorVisualization
 
 @onready var md_tilemap: TileMapLayer = $MDTilemap
-@onready var tile_placement_particles: CPUParticles2D = $TilePlacementParticles
 
 func _activate() -> void:
 	for room_key: int in _floorplan.rooms:
@@ -26,12 +25,12 @@ func _activate() -> void:
 		var hallway_data: Dictionary = _floorplan.hallways[hallway_key]
 		for tile_coordinates: Vector2i in hallway_data.tiles:
 			md_tilemap.set_cell(tile_coordinates, 0, Vector2i(0, 2))
-			tile_placement_particles.position = (tile_coordinates * 8.0)
-			if !tile_placement_particles.emitting: tile_placement_particles.set_emitting(true)
+			_tile_particles.position = (tile_coordinates * 8.0)
+			if !_tile_particles.emitting: _tile_particles.set_emitting(true)
 			tiles_placed += 1
 			if tiles_placed % 4 == 0: AudioManager.play_sound("footstep")
 			await get_tree().physics_frame
-	tile_placement_particles.set_emitting(false)
+	_tile_particles.set_emitting(false)
 
 func get_center_offset() -> Vector2:
 	var params: Dictionary = _floorplan.parameters

@@ -2,7 +2,6 @@ extends GeneratorVisualization
 
 @onready var floor_tile_map: TileMapLayer = $FloorTileMap
 @onready var walk_tile_map: TileMapLayer = $WalkTileMap
-@onready var tile_placement_particles: CPUParticles2D = $TilePlacementParticles
 
 func _activate() -> void:
 	
@@ -21,10 +20,10 @@ func _activate() -> void:
 			if tiles_placed % 3 == 0: await get_tree().physics_frame
 		var tile_coordinate: Vector2i = _floorplan.tile_coordinates[walk_index]
 		floor_tile_map.set_cell(tile_coordinate, 0, floor_atlas_tile_coordinate)
-		tile_placement_particles.position = (tile_coordinate * 8.0)
-		if !tile_placement_particles.emitting: tile_placement_particles.set_emitting(true)
+		_tile_particles.position = (tile_coordinate * 8.0)
+		if !_tile_particles.emitting: _tile_particles.set_emitting(true)
 		walk_tile_map.clear()
-	tile_placement_particles.set_emitting(false)
+	_tile_particles.set_emitting(false)
 
 func get_center_offset() -> Vector2:
 	return Vector2(256.0, 256.0)

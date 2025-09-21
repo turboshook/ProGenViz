@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://dg7y3gcy1m8ll"]
+[gd_scene load_steps=7 format=3 uid="uid://dg7y3gcy1m8ll"]
 
 [ext_resource type="Script" uid="uid://7kad37fb82d7" path="res://generators/inverse_diffusion_limited_aggregation/generator_visualization.gd" id="1_ub50x"]
 [ext_resource type="Texture2D" uid="uid://cl7vg0jbfeaot" path="res://import/textures/tiles.png" id="2_bbom2"]
-[ext_resource type="PackedScene" uid="uid://b4fddv7fptpj8" path="res://generators/utils/tile_placement_particles.tscn" id="3_g72ot"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g72ot"]
 texture = ExtResource("2_bbom2")
@@ -41,5 +40,3 @@ tile_set = SubResource("TileSet_2lg4w")
 
 [node name="WalkTileMap" type="TileMapLayer" parent="."]
 tile_set = SubResource("TileSet_g72ot")
-
-[node name="TilePlacementParticles" parent="." instance=ExtResource("3_g72ot")]
