@@ -7,6 +7,7 @@ func _init() -> void:
 		"abort_threshold": 100
 	}
 
+@warning_ignore("unused_parameter")
 func generate(parameters: Dictionary) -> void:
 	# Initialize center with cross shape to attempt to force more particle interactions sooner
 	var center_coordinate: Vector2i = parameters.map_size/2
@@ -33,13 +34,16 @@ func generate(parameters: Dictionary) -> void:
 		"particles": []
 	}
 	
-	var particle_active_rect: Rect2i = Rect2i(Vector2i.ZERO, parameters.map_size/4)
-	particle_active_rect.position = (parameters.map_size)/2 - (particle_active_rect.size)/2
 	var particles: Array[Dictionary] = []
-	particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/3)
+	var particle_count: int = (parameters.map_size.x * parameters.map_size.y)/3
+	particles.resize(particle_count)
 	for i: int in range(particles.size()):
+		var particle_position: Vector2i = Vector2i(
+			randi_range(0, parameters.map_size.x - 1),
+			randi_range(0, parameters.map_size.y - 1)
+		)
 		particles[i] = {
-			"position": _pick_random_point(particle_active_rect),
+			"position": particle_position,
 			"active": true
 		}
 	
@@ -48,38 +52,24 @@ func generate(parameters: Dictionary) -> void:
 	while (particles_resolved < (parameters.max_tiles_placed - 1)) and (particles_resolved < particles.size() - 1):
 		for particle: Dictionary in particles:
 			if not particle.active: continue
-			particle.position += _get_in_bounds_step(particle.position, particle_active_rect)
-			
+			particle.position += _get_in_bounds_step(particle.position, parameters.map_size)
 			if not _particle_has_inactive_neighbor(particle.position): continue
 			_floorplan.tile_coordinates.append(particle.position)
 			_floorplan.coordinate_set[particle.position] = null
 			particle.active = false
 			particles_resolved += 1
-			
-			if not _point_on_rect_perimeter(particle.position, particle_active_rect): continue
-			if particle_active_rect.size == parameters.map_size: continue
-			particle_active_rect = particle_active_rect.grow(4)
-			var new_particles: Array[Dictionary] = []
-			new_particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/3)
-			for i: int in range(new_particles.size()):
-				new_particles[i] = {
-					"position": _pick_random_point(particle_active_rect),
-					"active": true
-				}
-			particles = particles + new_particles
-			
 		updates += 1
 		if updates >= parameters.abort_threshold: break
 	
 	_floorplan.particles = particles #ehh
 
-func _get_in_bounds_step(particle_position: Vector2i, active_region: Rect2i) -> Vector2i:
+func _get_in_bounds_step(particle_position: Vector2i, map_size: Vector2i) -> Vector2i:
 	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 	var allowed_step_indeces: Array[int] = []
-	if particle_position.y > active_region.position.y: allowed_step_indeces.append(0)
-	if particle_position.y < (active_region.position.y + active_region.size.y): allowed_step_indeces.append(1)
-	if particle_position.x > active_region.position.x: allowed_step_indeces.append(2)
-	if particle_position.x < (active_region.position.x + active_region.size.x): allowed_step_indeces.append(3)
+	if particle_position.y > 0: allowed_step_indeces.append(0)
+	if particle_position.y < (map_size.y - 1): allowed_step_indeces.append(1)
+	if particle_position.x > 0: allowed_step_indeces.append(2)
+	if particle_position.x < (map_size.x - 1): allowed_step_indeces.append(3)
 	return Vector2i.ZERO if allowed_step_indeces.is_empty() else step_directions[allowed_step_indeces.pick_random()]
 
 func _particle_has_inactive_neighbor(particle_position: Vector2i) -> bool:
@@ -88,18 +78,4 @@ func _particle_has_inactive_neighbor(particle_position: Vector2i) -> bool:
 		_floorplan.coordinate_set.has(particle_position + Vector2i.DOWN) or 
 		_floorplan.coordinate_set.has(particle_position + Vector2i.LEFT) or 
 		_floorplan.coordinate_set.has(particle_position + Vector2i.RIGHT)
-	)
-
-func _pick_random_point(rect: Rect2i) -> Vector2i:
-	return Vector2i(
-		randi_range(rect.position.x, rect.position.x + rect.size.x),
-		randi_range(rect.position.y, rect.position.y + rect.size.y)
-	)
-
-func _point_on_rect_perimeter(particle_position: Vector2i, active_region: Rect2i) -> bool:
-	return (
-		particle_position.x == (active_region.position.x + active_region.size.x) or
-		particle_position.x == active_region.position.x or
-		particle_position.y == (active_region.position.y + active_region.size.y) or
-		particle_position.y == active_region.position.y
 	)

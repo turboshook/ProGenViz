@@ -47,6 +47,17 @@ func generate() -> void:
 		floor_visual_container.get_child(0).queue_free()
 	if parameters == {}: floor_generator.generate_from_default()
 	else: floor_generator.generate(parameters)
+	
+	#var times: Array[float] = []
+	#for _i: int in range(100):
+		#var start_time: float = Time.get_ticks_msec()
+		#floor_generator.generate(parameters)
+		#times.append(Time.get_ticks_msec() - start_time)
+		#await get_tree().process_frame
+	#var sum: float = 0.0
+	#for time: float in times: sum += time
+	#print(sum / times.size())
+	
 	var visual_representation: GeneratorVisualization = floor_generator.get_visualizer()
 	floor_visual_container.add_child(visual_representation)
 	visual_representation.position -= visual_representation.get_center_offset()
