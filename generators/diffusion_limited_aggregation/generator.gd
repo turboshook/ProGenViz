@@ -4,6 +4,7 @@ func _init() -> void:
 	_default_parameters = {
 		"map_size": Vector2i(32, 32),
 		"max_tiles_placed": 128,
+		"particle_spawn_density": 3,
 		"max_updates": 150
 	}
 
@@ -37,14 +38,14 @@ func generate(parameters: Dictionary) -> void:
 	var particle_active_rect: Rect2i = Rect2i(Vector2i.ZERO, parameters.map_size/4)
 	particle_active_rect.position = (parameters.map_size)/2 - (particle_active_rect.size)/2
 	var particles: Array[Dictionary] = []
-	particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/3)
+	particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/parameters.particle_spawn_density)
 	for i: int in range(particles.size()):
 		particles[i] = {
 			"position": _pick_random_point(particle_active_rect),
 			"active": true
 		}
 	
-	# simulate until we have placed the maximum allowable number of tiles
+	# simulate until we have placed the maximum allowable number of tiles 
 	while (_floorplan.tile_coordinates.size() < parameters.max_tiles_placed):
 		for particle: Dictionary in particles:
 			if not particle.active: continue # skip inactive particles
@@ -58,9 +59,10 @@ func generate(parameters: Dictionary) -> void:
 			_floorplan.coordinate_set[particle.position] = null
 			particle.active = false
 			
-			# placed the maximum allowable tiles, will exit while loop
+			# if placed the maximum allowable tiles, stop processing particles (will also end while loop)
 			if _floorplan.tile_coordinates.size() >= parameters.max_tiles_placed: break
 			
+			# if all current particles have been resolved or the last tile placed is at the edge of the active rect
 			if _floorplan.tile_coordinates.size() != particles.size() and \
 			not _point_on_rect_perimeter(particle.position, particle_active_rect): continue
 			# expand active particle region if last particle hit the boundary
@@ -68,20 +70,21 @@ func generate(parameters: Dictionary) -> void:
 			var prev_rect: Rect2i = particle_active_rect
 			particle_active_rect = particle_active_rect.grow(4)
 			
-			# spawn new particles in the newly-added active region
+			# spawn new particles in the newly-expanded active rect, excluding points intersected by the old rect
 			var new_particles: Array[Dictionary] = []
-			new_particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/6)
+			new_particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/(parameters.particle_spawn_density * 2))
 			for i: int in range(new_particles.size()):
 				new_particles[i] = {
 					"position": _get_point_excluding(particle_active_rect, prev_rect),
 					"active": true
 				}
 			particles = particles + new_particles
-			
+		
+		# alternatively, end simulation if we have reached the maximum update count
 		_floorplan.updates += 1
 		if _floorplan.updates >= parameters.max_updates: break
 	
-	_floorplan.particles = particles # for debugging
+	_floorplan.particles = particles # used to visualize unresolved particles
 
 func _get_in_bounds_step(particle_position: Vector2i, active_region: Rect2i) -> Vector2i:
 	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
@@ -122,12 +125,12 @@ func _get_point_excluding(from: Rect2i, excluding: Rect2i) -> Vector2i:
 			randi_range(from.position.y, from.position.y + from.size.y - 1)
 		)
 	
-	# randomly choose between placing in horizontal or vertical quadrant
+	# randomly choose between horizontal-first or vertical-first partitioning
 	if randf() > 0.5:
 		var left_width: int = intersection.position.x - from.position.x
 		var right_width: int = (from.position.x + from.size.x) - (intersection.position.x + intersection.size.x)
 		if left_width > 0 and (right_width == 0 or randf() < float(left_width) / float(left_width + right_width)):
-			# pick from right band
+			# pick from left band
 			return Vector2i(
 				randi_range(from.position.x, intersection.position.x - 1), 
 				randi_range(from.position.y, from.position.y + from.size.y - 1)

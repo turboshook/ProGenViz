@@ -22,10 +22,9 @@ func _activate() -> void:
 	_tile_particles.set_emitting(false)
 	
 	# visualize particles that never resolved
-	var particle_tile_atlas_coordinates: Vector2i = tile_atlas_coordinates.pick_random()
 	for particle: Dictionary in _floorplan.particles:
 		if _floorplan.coordinate_set.has(particle.position): continue
-		floor_tile_map.set_cell(particle.position, 0, particle_tile_atlas_coordinates)
+		floor_tile_map.set_cell(particle.position, 0, tile_atlas_coordinates.pick_random())
 
 func get_center_offset() -> Vector2:
 	return Vector2(_floorplan.map_size/2) * 8.0
