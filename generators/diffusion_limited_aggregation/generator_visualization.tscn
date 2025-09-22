@@ -23,3 +23,7 @@ metadata/_custom_type_script = "uid://lvmunabsg24w"
 
 [node name="FloorTileMap" type="TileMapLayer" parent="."]
 tile_set = SubResource("TileSet_y46bx")
+
+[node name="ParticleTileMap" type="TileMapLayer" parent="."]
+self_modulate = Color(1, 1, 1, 0.24705882)
+tile_set = SubResource("TileSet_y46bx")

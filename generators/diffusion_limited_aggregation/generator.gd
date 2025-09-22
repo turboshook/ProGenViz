@@ -90,9 +90,9 @@ func _get_in_bounds_step(particle_position: Vector2i, active_region: Rect2i) -> 
 	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 	var allowed_step_indeces: Array[int] = []
 	if particle_position.y > active_region.position.y: allowed_step_indeces.append(0)
-	if particle_position.y < (active_region.position.y + active_region.size.y): allowed_step_indeces.append(1)
+	if particle_position.y < (active_region.position.y + active_region.size.y - 1): allowed_step_indeces.append(1)
 	if particle_position.x > active_region.position.x: allowed_step_indeces.append(2)
-	if particle_position.x < (active_region.position.x + active_region.size.x): allowed_step_indeces.append(3)
+	if particle_position.x < (active_region.position.x + active_region.size.x - 1): allowed_step_indeces.append(3)
 	return Vector2i.ZERO if allowed_step_indeces.is_empty() else step_directions[allowed_step_indeces.pick_random()]
 
 func _particle_has_inactive_neighbor(particle_position: Vector2i) -> bool:

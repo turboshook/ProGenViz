@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="GeneratorParameterTable" load_steps=14 format=3 uid="uid://kedckfwbukap"]
+[gd_resource type="Resource" script_class="GeneratorParameterTable" load_steps=13 format=3 uid="uid://kedckfwbukap"]
 
 [ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://generators/utils/generator_parameter_table/generator_parameter_category.gd" id="1_ka4qs"]
 [ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://generators/utils/generator_parameter_table/generator_parameter_table.gd" id="2_lgr1t"]
@@ -33,7 +33,6 @@ metadata/_custom_type_script = "uid://cura5q3mxleax"
 [sub_resource type="Resource" id="Resource_k1sc8"]
 script = ExtResource("3_77yvk")
 value = 3
-value_min = 0
 value_max = 6
 name = "sector_border"
 metadata/_custom_type_script = "uid://cn1osy2eiovo4"
@@ -52,18 +51,10 @@ value_max = Vector2i(6, 4)
 name = "room_size_min"
 metadata/_custom_type_script = "uid://cura5q3mxleax"
 
-[sub_resource type="Resource" id="Resource_nbliq"]
-script = ExtResource("4_77yvk")
-value = Vector2i(6, 4)
-value_min = Vector2i(6, 4)
-value_max = Vector2i(16, 16)
-name = "room_size_max"
-metadata/_custom_type_script = "uid://cura5q3mxleax"
-
 [sub_resource type="Resource" id="Resource_j2ylv"]
 script = ExtResource("1_ka4qs")
 name = "Room"
-parameters = Array[ExtResource("2_pvp4w")]([SubResource("Resource_77yvk"), SubResource("Resource_nbliq")])
+parameters = Array[ExtResource("2_pvp4w")]([SubResource("Resource_77yvk")])
 metadata/_custom_type_script = "uid://bjevtxemkyuxs"
 
 [resource]

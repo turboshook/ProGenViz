@@ -1,6 +1,7 @@
 extends GeneratorVisualization
 
 @onready var floor_tile_map: TileMapLayer = $FloorTileMap
+@onready var particle_tile_map: TileMapLayer = $ParticleTileMap
 
 func _activate() -> void:
 	
@@ -24,7 +25,7 @@ func _activate() -> void:
 	# visualize particles that never resolved
 	for particle: Dictionary in _floorplan.particles:
 		if _floorplan.coordinate_set.has(particle.position): continue
-		floor_tile_map.set_cell(particle.position, 0, tile_atlas_coordinates.pick_random())
+		particle_tile_map.set_cell(particle.position, 0, tile_atlas_coordinates.pick_random())
 
 func get_center_offset() -> Vector2:
 	return Vector2(_floorplan.map_size/2) * 8.0

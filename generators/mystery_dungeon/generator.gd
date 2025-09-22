@@ -1,7 +1,6 @@
 extends FloorGenerator
 
 const NULL_TILE: Vector2i = Vector2i(-1, -1)
-const OUT_OF_BOUNDS_BUFFER: Vector2i = Vector2i(4, 2)
 
 	# Template Data #
 const ROOM_GENERATION_DATA: Dictionary = {
@@ -27,7 +26,6 @@ func _init() -> void:
 		"x_sectors": 4,
 		"y_sectors": 3,
 		"room_size_min": Vector2i(4, 3),
-		"room_size_max": Vector2i(6, 4),
 		"sector_size": Vector2i(10, 8),
 		"sector_border": 3
 	}
@@ -47,59 +45,93 @@ func generate(parameters: Dictionary) -> void:
 	
 	# begin generating rooms within sectors
 	var sector_key: int = 0
-	for x_sector in range(parameters.x_sectors):
-		for y_sector in range(parameters.y_sectors):
+	for x_sector: int in range(parameters.x_sectors):
+		for y_sector: int in range(parameters.y_sectors):
 			
 			# define the sector in 2D tile space
 			var sector_origin: Vector2i = Vector2i(
-				x_sector * (parameters.sector_size.x + parameters.sector_border) + OUT_OF_BOUNDS_BUFFER.x,
-				y_sector * (parameters.sector_size.y + parameters.sector_border) + OUT_OF_BOUNDS_BUFFER.y
-			) # TODO look at this once its all running again, do I want the border here all the time?
+				x_sector * (parameters.sector_size.x + parameters.sector_border),
+				y_sector * (parameters.sector_size.y + parameters.sector_border)
+			)
 			var sector_rect: Rect2i = Rect2i(sector_origin, parameters.sector_size)
 			
 			# determine the size of the room
 			var room_rect: Rect2i = Rect2i(0, 0, 0, 0)
-			room_rect.size.x = randi_range(
-				parameters.room_size_min.x, 
-				parameters.room_size_max.x
-			)
-			room_rect.size.y = randi_range(
-				parameters.room_size_min.y, 
-				parameters.room_size_max.y
-			)
-			
-			# calculate the amount of free space available to the room in its sector
-			var x_wiggle_room: int = sector_rect.size.x - room_rect.size.x
-			var y_wiggle_room: int = sector_rect.size.y - room_rect.size.y
+			room_rect.size.x = randi_range(parameters.room_size_min.x, parameters.sector_size.x)
+			room_rect.size.y = randi_range(parameters.room_size_min.y, parameters.sector_size.y)
 			
 			# determine the room's origin (top left coordinate) given available space in sector
+			var room_margin: Vector2i = sector_rect.size - room_rect.size
 			room_rect.position = Vector2i(
-				randi_range(sector_rect.position.x, sector_rect.position.x + x_wiggle_room),
-				randi_range(sector_rect.position.y, sector_rect.position.y + y_wiggle_room)
+				randi_range(sector_rect.position.x, sector_rect.position.x + room_margin.x),
+				randi_range(sector_rect.position.y, sector_rect.position.y + room_margin.y)
 			)
 			
 			# create and initialize instance of DungeonRoomData to store in floorplan
 			var room_data: Dictionary = ROOM_GENERATION_DATA.duplicate(true)
 			
+			# add entrances to rooms
 			room_data.rect = room_rect
 			room_data.sector = sector_rect
+			# TODO below could be accomplished with a loop
 			if y_sector > 0:
 				var north_entrance_position: Vector2i = room_rect.position + Vector2i(randi_range(0, room_rect.size.x - 1), -1)
 				room_data.entrances.north.append(north_entrance_position)
+				if room_data.rect.size.x > 5:
+					var north_face_tiles: Array[Vector2i] = GeneratorUtils.get_rect_face_coordinates(room_data.rect, Vector2i.UP)
+					north_face_tiles.shuffle()
+					for face_tile: Vector2i in north_face_tiles:
+						if face_tile.distance_to(room_data.entrances.north[0]) < 2: continue
+						room_data.entrances.north.append(face_tile + Vector2i.UP)
+						break
 			if y_sector < parameters.y_sectors - 1:
 				var south_entrance_position: Vector2i = room_rect.position + Vector2i(randi_range(0, room_rect.size.x - 1), room_rect.size.y) 
 				room_data.entrances.south.append(south_entrance_position)
+				if room_data.rect.size.x > 5:
+					var south_face_tiles: Array[Vector2i] = GeneratorUtils.get_rect_face_coordinates(room_data.rect, Vector2i.DOWN)
+					south_face_tiles.shuffle()
+					for face_tile: Vector2i in south_face_tiles:
+						if face_tile.distance_to(room_data.entrances.south[0]) < 2: continue
+						room_data.entrances.south.append(face_tile + Vector2i.DOWN)
+						break
 			if x_sector < parameters.x_sectors - 1:
 				var east_entrance_position: Vector2i = room_rect.position + Vector2i(room_rect.size.x, randi_range(0, room_rect.size.y - 1)) 
 				room_data.entrances.east.append(east_entrance_position)
+				if room_data.rect.size.y > 5:
+					var east_face_tiles: Array[Vector2i] = GeneratorUtils.get_rect_face_coordinates(room_data.rect, Vector2i.RIGHT)
+					east_face_tiles.shuffle()
+					for face_tile: Vector2i in east_face_tiles:
+						if face_tile.distance_to(room_data.entrances.east[0]) < 2: continue
+						room_data.entrances.east.append(face_tile + Vector2i.RIGHT)
+						break
 			if x_sector > 0:
 				var west_entrance_position: Vector2i = room_rect.position + Vector2i(-1, randi_range(0, room_rect.size.y - 1)) 
 				room_data.entrances.west.append(west_entrance_position)
+				if room_data.rect.size.y > 5:
+					var west_face_tiles: Array[Vector2i] = GeneratorUtils.get_rect_face_coordinates(room_data.rect, Vector2i.LEFT)
+					west_face_tiles.shuffle()
+					for face_tile: Vector2i in west_face_tiles:
+						if face_tile.distance_to(room_data.entrances.west[0]) < 2: continue
+						room_data.entrances.west.append(face_tile + Vector2i.LEFT)
+						break
 			
 			_floorplan.rooms[sector_key] = room_data
 			
 			# iterate ID key
 			sector_key += 1
+	
+	# room post processing
+	var floor_mod_roll: float = randf()
+	if (parameters.x_sectors < 3 or parameters.y_sectors < 3) and floor_mod_roll < 0.5:
+		var random_room_key: int = _floorplan.rooms.keys().pick_random()
+		_crunch_room(_floorplan.rooms[random_room_key])
+	elif (parameters.x_sectors > 3 or parameters.y_sectors > 3) and floor_mod_roll < 0.5:
+		var all_keys: Array = _floorplan.rooms.keys() as Array[int]
+		var room_keys: Array[int] = [all_keys.pick_random()]
+		all_keys.erase(room_keys[0])
+		room_keys.append(all_keys.pick_random())
+		_crunch_room(_floorplan.rooms[room_keys[0]])
+		_crunch_room(_floorplan.rooms[room_keys[1]])
 	
 	# start hallway generation
 	var hallway_key: int = 0
@@ -114,6 +146,20 @@ func generate(parameters: Dictionary) -> void:
 			hallway_data.end_position = target_room_data.entrances.north[0]
 			_floorplan.hallways[hallway_key] = hallway_data
 			hallway_key += 1
+			
+			var roll: float = randf()
+			if roll < 0.25 and this_room_data.entrances.south.size() > 1:
+				var extra_hallway_data: Dictionary = HALLWAY_GENERATION_DATA.duplicate(true)
+				extra_hallway_data.start_position = this_room_data.entrances.south[1]
+				extra_hallway_data.end_position = target_room_data.entrances.north[0]
+				_floorplan.hallways[hallway_key] = extra_hallway_data
+				hallway_key += 1
+			elif roll >= 0.75 and target_room_data.entrances.north.size() > 1:
+				var extra_hallway_data: Dictionary = HALLWAY_GENERATION_DATA.duplicate(true)
+				extra_hallway_data.start_position = this_room_data.entrances.south[0]
+				extra_hallway_data.end_position = target_room_data.entrances.north[1]
+				_floorplan.hallways[hallway_key] = extra_hallway_data
+				hallway_key += 1
 
 		if not this_room_data.entrances.east.is_empty():
 			var target_room_data: Dictionary = _floorplan.rooms[sector + parameters.y_sectors]
@@ -123,57 +169,25 @@ func generate(parameters: Dictionary) -> void:
 			hallway_data.is_vertical = false
 			_floorplan.hallways[hallway_key] = hallway_data
 			hallway_key += 1
-	
-	# TODO (maybe)
-	# re-implement this finicky walk strategy using AStar pathfinding instead
+			
+			var roll: float = randf()
+			if roll < 0.25 and this_room_data.entrances.east.size() > 1:
+				var extra_hallway_data: Dictionary = HALLWAY_GENERATION_DATA.duplicate(true)
+				extra_hallway_data.start_position = this_room_data.entrances.east[1]
+				extra_hallway_data.end_position = target_room_data.entrances.west[0]
+				extra_hallway_data.is_vertical = false
+				_floorplan.hallways[hallway_key] = extra_hallway_data
+				hallway_key += 1
+			elif roll >= 0.75 and target_room_data.entrances.west.size() > 1:
+				var extra_hallway_data: Dictionary = HALLWAY_GENERATION_DATA.duplicate(true)
+				extra_hallway_data.start_position = this_room_data.entrances.east[0]
+				extra_hallway_data.end_position = target_room_data.entrances.west[1]
+				extra_hallway_data.is_vertical = false
+				_floorplan.hallways[hallway_key] = extra_hallway_data
+				hallway_key += 1
 	
 	# walk every hallway
 	for key: int in _floorplan.hallways.keys():
-		## initialize walker and define it travel parameters
-		#var start_position: Vector2i = _floorplan.hallways[key].start_position
-		#var target_position: Vector2i = _floorplan.hallways[key].end_position
-		#var x_steps: int = target_position.x - start_position.x
-		#var y_steps: int = target_position.y - start_position.y
-		## uncomfortable + 1 to total steps, otherwise the walker always stops one tile short :/
-		#var total_steps: int = abs(x_steps) + abs(y_steps) + 1 
-		## I think this is because of the turn
-		#
-		## initialize all hallways as vertical...
-		#var is_vertical_at_start: bool = _floorplan.hallways[key].is_vertical
-		#var is_vertical: int = is_vertical_at_start
-		#@warning_ignore("integer_division")
-		#var turn_step: int = (y_steps/2)
-		#
-		## unless they are horizontal
-		#if not is_vertical_at_start:
-			#is_vertical_at_start = false
-			#@warning_ignore("integer_division")
-			#turn_step = (x_steps/2)
-		#
-		## begin walk
-		#var walked_tiles: Array[Vector2i] = []
-		#var hallway_walker: Vector2i = start_position
-		#var performed_first_turn: bool = false
-		#for step in range(total_steps):
-			#
-			## determine whether the first turn has been performed
-			## if one is needed
-			#if step >= turn_step and not performed_first_turn:
-				#is_vertical = !(is_vertical_at_start)
-				#performed_first_turn = true
-			#
-			## place a tile there
-			#walked_tiles.append(hallway_walker)
-			#
-			## No elif here to handle cases where hallways are straight lines and would otherwise
-			## waste a step going nowhere, stopping one tile short of connecting the two rooms.
-			## In that case, immediately switch back to the former state.
-			#if performed_first_turn and hallway_walker.y == target_position.y: is_vertical = false
-			#if performed_first_turn and hallway_walker.x == target_position.x: is_vertical = true
-			#
-			#if is_vertical: hallway_walker.y += sign(y_steps)
-			#else: hallway_walker.x += sign(x_steps)
-		
 		_floorplan.hallways[key].tiles = GeneratorUtils.get_middle_bend_path(
 			_floorplan.hallways[key].start_position,
 			_floorplan.hallways[key].end_position,
@@ -190,6 +204,14 @@ func generate(parameters: Dictionary) -> void:
 	all_rooms.erase(exit_room)
 	_floorplan.meta.floor_exit = exit_room
 	_floorplan.rooms[exit_room].meta["floor_exit"] = _get_random_tile(_floorplan.rooms[exit_room].rect)
+
+func _crunch_room(room_data: Dictionary) -> void:
+	var new_rect: Rect2i = Rect2i(room_data.rect.get_center(), Vector2i.ONE)
+	room_data.rect = new_rect
+	if not room_data.entrances.north.is_empty(): room_data.entrances.north = [new_rect.position]
+	if not room_data.entrances.south.is_empty(): room_data.entrances.south = [new_rect.position]
+	if not room_data.entrances.east.is_empty(): room_data.entrances.east = [new_rect.position]
+	if not room_data.entrances.west.is_empty(): room_data.entrances.west = [new_rect.position]
 
 func _get_random_tile(room_rect: Rect2i) -> Vector2i:
 	var random_x: int = range(room_rect.size.x).pick_random()

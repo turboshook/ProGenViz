@@ -1,6 +1,5 @@
 extends Node2D
 
-# TODO automate this or something
 const GENERATORS: Array[String] = [
 	"",
 	"res://generators/simple_room_placement/generator.gd",

@@ -73,3 +73,22 @@ static func get_middle_bend_path(start: Vector2i, end: Vector2i, vertical_first:
 	var leg_2: Array[Vector2i] = get_simple_path(bend_1, end, vertical_first)
 	
 	return leg_0 + leg_1 + leg_2
+
+static func get_rect_face_coordinates(rect: Rect2i, face: Vector2i) -> Array[Vector2i]:
+	var coordinates: Array[Vector2i] = []
+	match face:
+		Vector2i.UP:
+			for i: int in range(rect.size.x):
+				coordinates.append(Vector2i(rect.position.x + i, rect.position.y))
+		Vector2i.DOWN:
+			for i: int in range(rect.size.x):
+				coordinates.append(Vector2i(rect.position.x + i,rect.position.y + rect.size.y - 1))
+		Vector2i.LEFT:
+			for i: int in range(rect.size.y):
+				coordinates.append(Vector2i(rect.position.x,rect.position.y + i))
+		Vector2i.RIGHT:
+			for i: int in range(rect.size.y):
+				coordinates.append(Vector2i(rect.position.x + rect.size.x - 1,rect.position.y + i))
+		_:
+			printerr("GeneratorUtils @ get_rect_face_coordinates: face must be a cardinal direction Vector2i of length 1 (Vector2.UP, etc.).")
+	return coordinates
