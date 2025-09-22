@@ -4,7 +4,7 @@ func _init() -> void:
 	_default_parameters = {
 		"map_size": Vector2i(32, 32),
 		"max_tiles_placed": 256,
-		"abort_threshold": 100
+		"max_updates": 100
 	}
 
 @warning_ignore("unused_parameter")
@@ -31,6 +31,7 @@ func generate(parameters: Dictionary) -> void:
 			init_coord_2: null,
 			init_coord_3: null
 		},
+		"updates": 0,
 		"particles": []
 	}
 	
@@ -59,7 +60,7 @@ func generate(parameters: Dictionary) -> void:
 			particle.active = false
 			particles_resolved += 1
 		updates += 1
-		if updates >= parameters.abort_threshold: break
+		if updates >= parameters.max_updates: break
 	
 	_floorplan.particles = particles #ehh
 

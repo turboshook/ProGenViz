@@ -16,7 +16,7 @@ metadata/_custom_type_script = "uid://cura5q3mxleax"
 
 [sub_resource type="Resource" id="Resource_nm53g"]
 script = ExtResource("4_31v3w")
-value = 256
+value = 128
 value_min = 16
 value_max = 512
 name = "max_tiles_placed"
@@ -24,10 +24,10 @@ metadata/_custom_type_script = "uid://cn1osy2eiovo4"
 
 [sub_resource type="Resource" id="Resource_gqj31"]
 script = ExtResource("4_31v3w")
-value = 100
+value = 150
 value_min = 1
 value_max = 1000
-name = "abort_threshold"
+name = "max_updates"
 metadata/_custom_type_script = "uid://cn1osy2eiovo4"
 
 [sub_resource type="Resource" id="Resource_xkl6q"]

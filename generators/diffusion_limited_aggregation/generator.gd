@@ -3,8 +3,8 @@ extends FloorGenerator
 func _init() -> void:
 	_default_parameters = {
 		"map_size": Vector2i(32, 32),
-		"max_tiles_placed": 256,
-		"abort_threshold": 100
+		"max_tiles_placed": 128,
+		"max_updates": 150
 	}
 
 func generate(parameters: Dictionary) -> void:
@@ -30,6 +30,7 @@ func generate(parameters: Dictionary) -> void:
 			init_coord_2: null,
 			init_coord_3: null
 		},
+		"updates": 0,
 		"particles": []
 	}
 	
@@ -43,35 +44,44 @@ func generate(parameters: Dictionary) -> void:
 			"active": true
 		}
 	
-	var particles_resolved: int = 0
-	var updates: int = 0
-	while (particles_resolved < (parameters.max_tiles_placed - 1)) and (particles_resolved < particles.size() - 1):
+	# simulate until we have placed the maximum allowable number of tiles
+	while (_floorplan.tile_coordinates.size() < parameters.max_tiles_placed):
 		for particle: Dictionary in particles:
-			if not particle.active: continue
+			if not particle.active: continue # skip inactive particles
+			
+			# constrain particle movement
 			particle.position += _get_in_bounds_step(particle.position, particle_active_rect)
 			
 			if not _particle_has_inactive_neighbor(particle.position): continue
+			# partlce has joined the aggregation, place a tile
 			_floorplan.tile_coordinates.append(particle.position)
 			_floorplan.coordinate_set[particle.position] = null
 			particle.active = false
-			particles_resolved += 1
 			
-			if not _point_on_rect_perimeter(particle.position, particle_active_rect): continue
+			# placed the maximum allowable tiles, will exit while loop
+			if _floorplan.tile_coordinates.size() >= parameters.max_tiles_placed: break
+			
+			if _floorplan.tile_coordinates.size() != particles.size() and \
+			not _point_on_rect_perimeter(particle.position, particle_active_rect): continue
+			# expand active particle region if last particle hit the boundary
 			if particle_active_rect.size == parameters.map_size: continue
+			var prev_rect: Rect2i = particle_active_rect
 			particle_active_rect = particle_active_rect.grow(4)
+			
+			# spawn new particles in the newly-added active region
 			var new_particles: Array[Dictionary] = []
-			new_particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/3)
+			new_particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/6)
 			for i: int in range(new_particles.size()):
 				new_particles[i] = {
-					"position": _pick_random_point(particle_active_rect),
+					"position": _get_point_excluding(particle_active_rect, prev_rect),
 					"active": true
 				}
 			particles = particles + new_particles
 			
-		updates += 1
-		if updates >= parameters.abort_threshold: break
+		_floorplan.updates += 1
+		if _floorplan.updates >= parameters.max_updates: break
 	
-	_floorplan.particles = particles #ehh
+	_floorplan.particles = particles # for debugging
 
 func _get_in_bounds_step(particle_position: Vector2i, active_region: Rect2i) -> Vector2i:
 	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
@@ -102,4 +112,42 @@ func _point_on_rect_perimeter(particle_position: Vector2i, active_region: Rect2i
 		particle_position.x == active_region.position.x or
 		particle_position.y == (active_region.position.y + active_region.size.y) or
 		particle_position.y == active_region.position.y
+	)
+
+func _get_point_excluding(from: Rect2i, excluding: Rect2i) -> Vector2i:
+	var intersection: Rect2i = from.intersection(excluding)
+	if intersection == Rect2i(): # no intersection, unconstrained selection
+		return Vector2i(
+			randi_range(from.position.x, from.position.x + from.size.x - 1),
+			randi_range(from.position.y, from.position.y + from.size.y - 1)
+		)
+	
+	# randomly choose between placing in horizontal or vertical quadrant
+	if randf() > 0.5:
+		var left_width: int = intersection.position.x - from.position.x
+		var right_width: int = (from.position.x + from.size.x) - (intersection.position.x + intersection.size.x)
+		if left_width > 0 and (right_width == 0 or randf() < float(left_width) / float(left_width + right_width)):
+			# pick from right band
+			return Vector2i(
+				randi_range(from.position.x, intersection.position.x - 1), 
+				randi_range(from.position.y, from.position.y + from.size.y - 1)
+			)
+		# pick from right band
+		return Vector2i(
+			randi_range(intersection.position.x + intersection.size.x, from.position.x + from.size.x - 1),
+			randi_range(from.position.y, from.position.y + from.size.y - 1)
+		)
+	
+	var top_height: int = intersection.position.y - from.position.y
+	var bottom_height: int = (from.position.y + from.size.y) - (intersection.position.y + intersection.size.y)
+	if top_height > 0 and (bottom_height == 0 or randf() < float(top_height) / float(top_height + bottom_height)):
+		# pick from top band
+		return Vector2i(
+			randi_range(from.position.x, from.position.x + from.size.x - 1),
+			randi_range(from.position.y, intersection.position.y - 1)
+		)
+	# pick from bottom band
+	return Vector2i(
+		randi_range(from.position.x, from.position.x + from.size.x - 1),
+		randi_range(intersection.position.y + intersection.size.y, from.position.y + from.size.y - 1)
 	)
