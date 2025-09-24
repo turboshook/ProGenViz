@@ -1,15 +1,14 @@
 [gd_resource type="Resource" script_class="GeneratorParameterTable" load_steps=10 format=3 uid="uid://ig28tyrnunbr"]
 
-[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://generators/utils/generator_parameter_table/generator_parameter_category.gd" id="1_wkidk"]
-[ext_resource type="Script" uid="uid://cxb24x7g2nv33" path="res://generators/utils/generator_parameter_table/generator_parameter_definition.gd" id="2_1g81s"]
-[ext_resource type="Script" uid="uid://cn1osy2eiovo4" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_int_parameter.gd" id="3_2io1j"]
-[ext_resource type="Script" uid="uid://bfmg8o7qs7thl" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_float_parameter.gd" id="4_ux1xu"]
-[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://generators/utils/generator_parameter_table/generator_parameter_table.gd" id="5_lr3lr"]
+[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://utils/generator_parameter_table/generator_parameter_category.gd" id="1_wkidk"]
+[ext_resource type="Script" uid="uid://cxb24x7g2nv33" path="res://utils/generator_parameter_table/generator_parameter_definition.gd" id="2_1g81s"]
+[ext_resource type="Script" uid="uid://cn1osy2eiovo4" path="res://utils/generator_parameter_table/generator_parameter_definition/generator_int_parameter.gd" id="3_2io1j"]
+[ext_resource type="Script" uid="uid://bfmg8o7qs7thl" path="res://utils/generator_parameter_table/generator_parameter_definition/generator_float_parameter.gd" id="4_ux1xu"]
+[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://utils/generator_parameter_table/generator_parameter_table.gd" id="5_lr3lr"]
 
 [sub_resource type="Resource" id="Resource_1g81s"]
 script = ExtResource("3_2io1j")
 value = 1
-value_min = 0
 value_max = 16
 name = "walker_count"
 metadata/_custom_type_script = "uid://cn1osy2eiovo4"
@@ -25,7 +24,6 @@ metadata/_custom_type_script = "uid://cn1osy2eiovo4"
 [sub_resource type="Resource" id="Resource_lr3lr"]
 script = ExtResource("4_ux1xu")
 value = 0.25
-value_min = 0.0
 value_max = 1.0
 name = "walker_turn_chance"
 metadata/_custom_type_script = "uid://bfmg8o7qs7thl"

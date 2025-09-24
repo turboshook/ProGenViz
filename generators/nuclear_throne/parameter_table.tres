@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="GeneratorParameterTable" load_steps=3 format=3 uid="uid://dw73aqbxvcqcy"]
+
+[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://utils/generator_parameter_table/generator_parameter_category.gd" id="1_pmxc4"]
+[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://utils/generator_parameter_table/generator_parameter_table.gd" id="5_somie"]
+
+[resource]
+script = ExtResource("5_somie")
+metadata/_custom_type_script = "uid://h3r21fqhv0bo"

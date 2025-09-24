@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="GeneratorParameterTable" load_steps=13 format=3 uid="uid://kedckfwbukap"]
 
-[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://generators/utils/generator_parameter_table/generator_parameter_category.gd" id="1_ka4qs"]
-[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://generators/utils/generator_parameter_table/generator_parameter_table.gd" id="2_lgr1t"]
-[ext_resource type="Script" uid="uid://cxb24x7g2nv33" path="res://generators/utils/generator_parameter_table/generator_parameter_definition.gd" id="2_pvp4w"]
-[ext_resource type="Script" uid="uid://cn1osy2eiovo4" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_int_parameter.gd" id="3_77yvk"]
-[ext_resource type="Script" uid="uid://cura5q3mxleax" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_vector2i_parameter.gd" id="4_77yvk"]
+[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://utils/generator_parameter_table/generator_parameter_category.gd" id="1_ka4qs"]
+[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://utils/generator_parameter_table/generator_parameter_table.gd" id="2_lgr1t"]
+[ext_resource type="Script" uid="uid://cxb24x7g2nv33" path="res://utils/generator_parameter_table/generator_parameter_definition.gd" id="2_pvp4w"]
+[ext_resource type="Script" uid="uid://cn1osy2eiovo4" path="res://utils/generator_parameter_table/generator_parameter_definition/generator_int_parameter.gd" id="3_77yvk"]
+[ext_resource type="Script" uid="uid://cura5q3mxleax" path="res://utils/generator_parameter_table/generator_parameter_definition/generator_vector2i_parameter.gd" id="4_77yvk"]
 
 [sub_resource type="Resource" id="Resource_h8fx7"]
 script = ExtResource("3_77yvk")

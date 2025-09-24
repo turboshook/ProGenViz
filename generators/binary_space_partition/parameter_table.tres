@@ -1,11 +1,11 @@
 [gd_resource type="Resource" script_class="GeneratorParameterTable" load_steps=18 format=3 uid="uid://cqdsuxl1oaq56"]
 
-[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://generators/utils/generator_parameter_table/generator_parameter_category.gd" id="1_mqf6r"]
-[ext_resource type="Script" uid="uid://cxb24x7g2nv33" path="res://generators/utils/generator_parameter_table/generator_parameter_definition.gd" id="2_a8lfq"]
-[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://generators/utils/generator_parameter_table/generator_parameter_table.gd" id="2_ptra5"]
-[ext_resource type="Script" uid="uid://cn1osy2eiovo4" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_int_parameter.gd" id="3_63rbi"]
-[ext_resource type="Script" uid="uid://cura5q3mxleax" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_vector2i_parameter.gd" id="4_1bo8x"]
-[ext_resource type="Script" uid="uid://bfmg8o7qs7thl" path="res://generators/utils/generator_parameter_table/generator_parameter_definition/generator_float_parameter.gd" id="5_63rbi"]
+[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://utils/generator_parameter_table/generator_parameter_category.gd" id="1_mqf6r"]
+[ext_resource type="Script" uid="uid://cxb24x7g2nv33" path="res://utils/generator_parameter_table/generator_parameter_definition.gd" id="2_a8lfq"]
+[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://utils/generator_parameter_table/generator_parameter_table.gd" id="2_ptra5"]
+[ext_resource type="Script" uid="uid://cn1osy2eiovo4" path="res://utils/generator_parameter_table/generator_parameter_definition/generator_int_parameter.gd" id="3_63rbi"]
+[ext_resource type="Script" uid="uid://cura5q3mxleax" path="res://utils/generator_parameter_table/generator_parameter_definition/generator_vector2i_parameter.gd" id="4_1bo8x"]
+[ext_resource type="Script" uid="uid://bfmg8o7qs7thl" path="res://utils/generator_parameter_table/generator_parameter_definition/generator_float_parameter.gd" id="5_63rbi"]
 
 [sub_resource type="Resource" id="Resource_hfjv8"]
 script = ExtResource("3_63rbi")

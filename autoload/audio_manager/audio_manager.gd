@@ -23,5 +23,5 @@ func stop_bgm(fade_out_time: float = 0.25) -> void:
 	await volume_down_tween.finished
 
 func play_sound(sound_name: String) -> void:
-	if not _sounds.has(sound_name): return
+	if not _sounds.has(sound_name.to_lower()): return
 	_sounds[sound_name].play()

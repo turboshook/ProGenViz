@@ -2,30 +2,30 @@ extends Node
 class_name GeneratorUtils
 
 static func get_bresenham_line(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
-	var points: Array[Vector2i] = []
-	var x0: int = start.x
-	var y0: int = start.y
-	var x1: int = end.x
-	var y1: int = end.y
-	var diff_x: int = abs(x1 - x0)
-	var diff_y: int = abs(y1 - y0)
-	var sx: int = 1 if x0 < x1 else -1
-	var sy: int = 1 if y0 < y1 else -1
 	
+	var points: Array[Vector2i] = []
+	var diff_x: int = abs(end.x - start.x)
+	var diff_y: int = abs(end.y - start.y)
+	var x_step: int = 1 if start.x < end.x else -1
+	var y_step: int = 1 if start.y < end.y else -1
+	var point: Vector2i = start
 	var error: int = diff_x - diff_y
+	
 	for i in range(max(diff_x, diff_y) + 1):
-		points.append(Vector2i(x0, y0))
-		if x0 == x1 && y0 == y1: break
-		var error_2 : int = 2 * error
-		if error_2 > -diff_y:
+		points.append(point)
+		if point == end: break
+		var error_x2 : int = error * 2
+		if error_x2 > -diff_y:
 			error -= diff_y
-			x0 += sx
-		if error_2 < diff_x:
+			point.x += x_step
+		if error_x2 < diff_x:
 			error += diff_x
-			y0 += sy
+			point.y += y_step
+	
 	return points
 
 static func get_simple_path(start: Vector2i, end: Vector2i, vertical_first: bool = true) -> Array[Vector2i]:
+	
 	if start == end: return []
 	var path_coordinates: Array[Vector2i] = [start]
 	var current_coordinate: Vector2i = start
@@ -55,6 +55,7 @@ static func get_simple_path(start: Vector2i, end: Vector2i, vertical_first: bool
 	return path_coordinates
 
 static func get_middle_bend_path(start: Vector2i, end: Vector2i, vertical_first: bool = true) -> Array[Vector2i]:
+	
 	if abs(end.y - start.y) < 2 and vertical_first: return get_simple_path(start, end, vertical_first)
 	elif abs(end.x - start.x) < 2 and !vertical_first: return get_simple_path(start, end, vertical_first)
 	var bend_0: Vector2i = Vector2i.ZERO
@@ -74,7 +75,14 @@ static func get_middle_bend_path(start: Vector2i, end: Vector2i, vertical_first:
 	
 	return leg_0 + leg_1 + leg_2
 
+static func get_rect_random_point(rect: Rect2i) -> Vector2i:
+	return Vector2i(
+		randi_range(rect.position.x, rect.position.x + rect.size.x - 1),
+		randi_range(rect.position.y, rect.position.y + rect.size.y - 1)
+	)
+
 static func get_rect_face_coordinates(rect: Rect2i, face: Vector2i) -> Array[Vector2i]:
+	
 	var coordinates: Array[Vector2i] = []
 	match face:
 		Vector2i.UP:

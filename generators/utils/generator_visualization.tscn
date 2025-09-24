@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://b3v22430pnhlr"]
-
-[ext_resource type="Script" uid="uid://7kad37fb82d7" path="res://generators/inverse_diffusion_limited_aggregation/generator_visualization.gd" id="1_ud38l"]
-
-[node name="GeneratorVisualization" type="Node2D"]
-script = ExtResource("1_ud38l")
-metadata/_custom_type_script = "uid://lvmunabsg24w"

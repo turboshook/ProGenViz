@@ -7,7 +7,7 @@ var _tile_particles: CPUParticles2D
 func _ready() -> void:
 	if not _floorplan: return
 	_tile_particles = load(
-		"res://generators/utils/generator_visualization/tile_placement_particles.tscn"
+		"res://utils/generator_visualization/tile_placement_particles.tscn"
 	).instantiate()
 	add_child(_tile_particles)
 	_activate()

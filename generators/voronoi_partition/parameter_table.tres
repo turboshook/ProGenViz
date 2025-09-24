@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="GeneratorParameterTable" load_steps=9 format=3 uid="uid://cjtvbchsvhtdp"]
+
+[ext_resource type="Script" uid="uid://bjevtxemkyuxs" path="res://utils/generator_parameter_table/generator_parameter_category.gd" id="1_bmaft"]
+[ext_resource type="Script" uid="uid://cxb24x7g2nv33" path="res://utils/generator_parameter_table/generator_parameter_definition.gd" id="2_oj07u"]
+[ext_resource type="Script" uid="uid://h3r21fqhv0bo" path="res://utils/generator_parameter_table/generator_parameter_table.gd" id="2_pjg1x"]
+[ext_resource type="Script" uid="uid://cura5q3mxleax" path="res://utils/generator_parameter_table/generator_parameter_definition/generator_vector2i_parameter.gd" id="3_x2j4y"]
+[ext_resource type="Script" uid="uid://cn1osy2eiovo4" path="res://utils/generator_parameter_table/generator_parameter_definition/generator_int_parameter.gd" id="4_m5rvc"]
+
+[sub_resource type="Resource" id="Resource_btxxe"]
+script = ExtResource("3_x2j4y")
+value = Vector2i(32, 32)
+value_min = Vector2i(24, 24)
+value_max = Vector2i(96, 96)
+name = "map_size"
+metadata/_custom_type_script = "uid://cura5q3mxleax"
+
+[sub_resource type="Resource" id="Resource_dc8fq"]
+script = ExtResource("4_m5rvc")
+value = 16
+value_min = 8
+value_max = 64
+name = "cell_count"
+metadata/_custom_type_script = "uid://cn1osy2eiovo4"
+
+[sub_resource type="Resource" id="Resource_xkd3p"]
+script = ExtResource("1_bmaft")
+name = "General"
+parameters = Array[ExtResource("2_oj07u")]([SubResource("Resource_btxxe"), SubResource("Resource_dc8fq")])
+metadata/_custom_type_script = "uid://bjevtxemkyuxs"
+
+[resource]
+script = ExtResource("2_pjg1x")
+categories = Array[ExtResource("1_bmaft")]([SubResource("Resource_xkd3p")])
+metadata/_custom_type_script = "uid://h3r21fqhv0bo"

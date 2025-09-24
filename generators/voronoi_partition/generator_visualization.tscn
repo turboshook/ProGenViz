@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://m8yiwhul33r4"]
+
+[ext_resource type="Script" uid="uid://dufcxmlpl8glw" path="res://generators/voronoi_partition/generator_visualization.gd" id="1_0j6up"]
+[ext_resource type="Texture2D" uid="uid://cl7vg0jbfeaot" path="res://import/textures/tiles.png" id="2_b3y5w"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_m7r6n"]
+texture = ExtResource("2_b3y5w")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+1:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_846dp"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_m7r6n")
+
+[node name="GeneratorVisualization" type="Node2D"]
+script = ExtResource("1_0j6up")
+metadata/_custom_type_script = "uid://lvmunabsg24w"
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_846dp")

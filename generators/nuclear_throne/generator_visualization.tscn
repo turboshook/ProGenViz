@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dhx724swp4nqt"]
+
+[ext_resource type="Script" uid="uid://cfqvynn6rervh" path="res://generators/nuclear_throne/generator_visualization.gd" id="1_rf146"]
+[ext_resource type="PackedScene" uid="uid://dvwju276gb5qj" path="res://generators/nuclear_throne/r_w_tile_map.tscn" id="2_mpr3x"]
+
+[node name="RandomWalkVisualization" type="Node2D"]
+script = ExtResource("1_rf146")
+metadata/_custom_type_script = "uid://lvmunabsg24w"
+
+[node name="RWTileMap" parent="." instance=ExtResource("2_mpr3x")]
+metadata/_edit_lock_ = true

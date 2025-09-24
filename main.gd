@@ -5,11 +5,13 @@ const GENERATORS: Array[String] = [
 	"res://generators/simple_room_placement/generator.gd",
 	"res://generators/random_walk/generator.gd",
 	"res://generators/binary_space_partition/generator.gd",
+	"res://generators/voronoi_partition/generator.gd",
 	"res://generators/diffusion_limited_aggregation/generator.gd",
 	"res://generators/inverse_diffusion_limited_aggregation/generator.gd",
 	"",
 	"res://generators/isaac/generator.gd",
-	"res://generators/mystery_dungeon/generator.gd"
+	"res://generators/mystery_dungeon/generator.gd",
+	"res://generators/nuclear_throne/generator.gd"
 ]
 
 @onready var algorithm_selection_button: OptionButton = $CanvasLayer/UI/VBoxContainer/HBoxContainer/AlgorithmSelectionButton
@@ -47,6 +49,7 @@ func generate() -> void:
 	if parameters == {}: floor_generator.generate_from_default()
 	else: floor_generator.generate(parameters)
 	
+	# used for performance evaluation
 	#var times: Array[float] = []
 	#for _i: int in range(100):
 		#var start_time: float = Time.get_ticks_msec()

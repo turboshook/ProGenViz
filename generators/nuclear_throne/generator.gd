@@ -12,6 +12,7 @@ func generate(parameters: Dictionary) -> void:
 		"walks": [], # Ordered list of tile coordinate per walker. Used in the visualizer
 		"tile_set": {} # O(1) lookup for unique tile coordinates.
 	}
+	
 	for _walker_id: int in range(parameters.walker_count):
 		var walker_coordinate: Vector2i = Vector2i(48, 48)
 		var step_direction: Vector2i = [
