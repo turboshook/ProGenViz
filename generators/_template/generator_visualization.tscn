@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://sy2a6xpccxgc"]
+
+[ext_resource type="Script" uid="uid://cvgoi6qh8wxm4" path="res://generators/_template/generator_visualization.gd" id="1_jagaq"]
+
+[node name="GeneratorVisualization" type="Node2D"]
+script = ExtResource("1_jagaq")
+metadata/_custom_type_script = "uid://lvmunabsg24w"
