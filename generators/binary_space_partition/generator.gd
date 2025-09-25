@@ -60,6 +60,9 @@ func _init() -> void:
 		"base_partition_variance": 4,
 		"min_room_size": Vector2i(3, 3)
 	}
+	_info_text = "
+		Info text here!
+	"
 
 func generate(parameters: Dictionary) -> void:
 	_partitions = _generate_partitions(parameters)

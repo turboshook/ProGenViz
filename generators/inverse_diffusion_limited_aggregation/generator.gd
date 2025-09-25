@@ -12,6 +12,9 @@ func generate(parameters: Dictionary) -> void:
 		"tile_coordinates": [Vector2i(32, 32)],
 		"coordinate_set": {Vector2i(32, 32): null}
 	}
+	_info_text = "
+		Info text here!
+	"
 	
 	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 	for tile_count: int in range(parameters.tile_quantity - 1):

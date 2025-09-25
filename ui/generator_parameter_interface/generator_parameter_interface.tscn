@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bwymn7btwagif"]
 
-[ext_resource type="Script" uid="uid://dhep10x3wlhr3" path="res://utils/generator_parameter_interface/generator_parameter_interface.gd" id="1_jp8s0"]
+[ext_resource type="Script" uid="uid://dhep10x3wlhr3" path="res://ui/generator_parameter_interface/generator_parameter_interface.gd" id="1_jp8s0"]
 
 [node name="GeneratorParameterInterface" type="Control"]
 layout_mode = 3

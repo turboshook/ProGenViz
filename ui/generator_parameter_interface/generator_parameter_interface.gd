@@ -31,7 +31,6 @@ func _create_category_container(category_name: String) -> FoldableContainer:
 	parameter_container.add_theme_constant_override("separation", 0)
 	category_container.title = category_name
 	category_container.fold()
-	# TODO look into using a foldable group?
 	return category_container
 
 func _create_int_control(parameter: GeneratorIntParameter) -> HBoxContainer:
@@ -90,7 +89,6 @@ func _create_vector2i_control(parameter: GeneratorVector2iParameter) -> VBoxCont
 func _create_parameter_name_label(parameter_name: String) -> Label:
 	var parameter_name_label: Label = Label.new()
 	parameter_name_label.text = parameter_name.capitalize()
-	parameter_name_label.add_theme_font_size_override("font_size", 12)
 	return parameter_name_label
 
 func get_parameters() -> Dictionary:

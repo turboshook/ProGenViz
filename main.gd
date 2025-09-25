@@ -14,9 +14,18 @@ const GENERATORS: Array[String] = [
 	"res://generators/nuclear_throne/generator.gd"
 ]
 
-@onready var algorithm_selection_button: OptionButton = $CanvasLayer/UI/VBoxContainer/HBoxContainer/AlgorithmSelectionButton
-@onready var generate_button: Button = $CanvasLayer/UI/VBoxContainer/HBoxContainer/GenerateButton
-@onready var generator_parameter_interface: GeneratorParameterInterface = $CanvasLayer/UI/VBoxContainer/ParameterInterfaceContainer/GeneratorParameterInterface
+# App UI
+@onready var settings_button: Button = $CanvasLayer/UI/AppUI/SettingsButton
+@onready var info_button: Button = $CanvasLayer/UI/AppUI/InfoButton
+@onready var app_settings_menu: AppSettingsMenu = $CanvasLayer/UI/AppSettingsMenu
+@onready var info_text_display: InfoTextDisplay = $CanvasLayer/UI/InfoTextDisplay
+
+# Generator UI
+@onready var algorithm_selection_button: OptionButton = $CanvasLayer/UI/GeneratorUI/HBoxContainer/AlgorithmSelectionButton
+@onready var generate_button: Button = $CanvasLayer/UI/GeneratorUI/HBoxContainer/GenerateButton
+@onready var generator_parameter_interface: GeneratorParameterInterface = $CanvasLayer/UI/GeneratorUI/ParameterInterfaceContainer/GeneratorParameterInterface
+
+# Visualizer Interface
 @onready var reset_camera_button: Button = $CanvasLayer/UI/ResetCameraButton
 @onready var floor_visual_container: Node2D = $FloorVisualContainer
 @onready var camera_target: Node2D = $CameraTarget
@@ -26,6 +35,11 @@ var generator_id: int = -1
 var floor_generator: FloorGenerator 
 
 func _ready() -> void:
+	info_text_display.set_text(
+		"Welcome to ProcGenToy! Select a generation algorithm from the dropdown menu to get started."
+	)
+	settings_button.pressed.connect(_on_settings_button_pressed)
+	info_button.pressed.connect(_on_info_button_pressed)
 	algorithm_selection_button.item_selected.connect(_on_item_selected)
 	generate_button.pressed.connect(generate)
 	reset_camera_button.pressed.connect(func(): camera_target.position = Vector2(640.0, 360.0))
@@ -40,6 +54,14 @@ func _process(delta: float) -> void:
 	camera_target.position.y = clamp(camera_target.position.y, 360.0 - 256.0, 360.0 + 256.0)
 	camera.position = camera.position.lerp(camera_target.position, delta * 4.0)
 	reset_camera_button.visible = (camera_target.position != Vector2(640.0, 360.0))
+
+func _on_settings_button_pressed() -> void:
+	app_settings_menu.visible = !app_settings_menu.visible
+	if app_settings_menu.visible: info_text_display.visible = false
+
+func _on_info_button_pressed() -> void:
+	info_text_display.visible = !info_text_display.visible
+	if info_text_display.visible: app_settings_menu.visible = false
 
 func generate() -> void:
 	if not floor_generator: return
@@ -73,4 +95,5 @@ func _on_item_selected(index: int) -> void:
 	generator_parameter_interface.initialize(parameter_table)
 	await RenderingServer.frame_post_draw # allow param interface to populate all controls 
 	camera_target.position = Vector2(640.0, 360.0) # reset camera position
+	info_text_display.set_text(floor_generator.get_info_text())
 	generate()

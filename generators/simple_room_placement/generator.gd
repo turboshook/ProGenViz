@@ -9,6 +9,16 @@ func _init() -> void:
 		"room_padding": Vector2i(1, 1),
 		"retry_threshold": 6 
 	}
+	_info_text = "\
+		This is one of the oldest and simplest styles of dungeon generation. Rectangular rooms are \
+		randomly generated within a range of possible x and y dimensions and then placed at random \
+		origins. If a placed room overlaps with a room that already exists, it is discarded. The loop \
+		ends if either the maximum allowable number of rooms are placed or if some room discard \
+		threshold is reached. 
+		
+		Rooms are connected by a continuous hallway that travels to every room's \
+		center in sequence, ensuring the map is fully traversible.\
+	"
 
 func generate(parameters: Dictionary) -> void:
 	_floorplan = {

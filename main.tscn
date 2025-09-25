@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://fq4dg2mjn4d"]
+[gd_scene load_steps=6 format=3 uid="uid://fq4dg2mjn4d"]
 
 [ext_resource type="Script" uid="uid://ya3q0vjml76l" path="res://main.gd" id="1_ig7tw"]
-[ext_resource type="PackedScene" uid="uid://bwymn7btwagif" path="res://utils/generator_parameter_interface/generator_parameter_interface.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bwymn7btwagif" path="res://ui/generator_parameter_interface/generator_parameter_interface.tscn" id="2_0xm2m"]
 [ext_resource type="Theme" uid="uid://budipvsn6w6vj" path="res://utils/ui_theme.tres" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://bkxrgsqbr10nw" path="res://ui/app_settings_menu/app_settings_menu.tscn" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://8wsxcjxuqayq" path="res://ui/info_text_display/info_text_display.tscn" id="5_lquwl"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_ig7tw")
@@ -16,7 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.1882353, 0.15686275, 0.21960784, 1)
+color = Color(0.1254902, 0.1882353, 0.36078432, 1)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -29,20 +31,57 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_h2yge")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI"]
+[node name="AppUI" type="HBoxContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 272.0
+offset_bottom = 48.0
+metadata/_edit_lock_ = true
+
+[node name="SettingsButton" type="Button" parent="CanvasLayer/UI/AppUI"]
+custom_minimum_size = Vector2(78, 0)
+layout_mode = 2
+text = "Settings"
+metadata/_edit_lock_ = true
+
+[node name="InfoButton" type="Button" parent="CanvasLayer/UI/AppUI"]
+custom_minimum_size = Vector2(47, 0)
+layout_mode = 2
+text = "Info"
+metadata/_edit_lock_ = true
+
+[node name="AppSettingsMenu" parent="CanvasLayer/UI" instance=ExtResource("4_1bvp3")]
+visible = false
+layout_mode = 1
+offset_left = 16.0
+offset_top = 64.0
+offset_right = -1008.0
+offset_bottom = -608.0
+
+[node name="InfoTextDisplay" parent="CanvasLayer/UI" instance=ExtResource("5_lquwl")]
+visible = false
+layout_mode = 0
+offset_left = 16.0
+offset_top = 64.0
+offset_right = 400.0
+offset_bottom = 112.0
+
+[node name="GeneratorUI" type="VBoxContainer" parent="CanvasLayer/UI"]
 layout_mode = 0
 offset_left = 896.0
 offset_top = 16.0
 offset_right = 1264.0
 offset_bottom = 656.0
+metadata/_edit_lock_ = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/GeneratorUI"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer/UI/VBoxContainer/HBoxContainer"]
+[node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer/UI/GeneratorUI/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 item_count = 11
@@ -72,19 +111,19 @@ popup/item_10/text = "Nuclear Throne"
 popup/item_10/id = 10
 metadata/_edit_lock_ = true
 
-[node name="GenerateButton" type="Button" parent="CanvasLayer/UI/VBoxContainer/HBoxContainer"]
+[node name="GenerateButton" type="Button" parent="CanvasLayer/UI/GeneratorUI/HBoxContainer"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Generate"
 metadata/_edit_lock_ = true
 
-[node name="ParameterInterfaceContainer" type="ScrollContainer" parent="CanvasLayer/UI/VBoxContainer"]
+[node name="ParameterInterfaceContainer" type="ScrollContainer" parent="CanvasLayer/UI/GeneratorUI"]
 layout_mode = 2
 size_flags_vertical = 3
 metadata/_edit_lock_ = true
 
-[node name="GeneratorParameterInterface" parent="CanvasLayer/UI/VBoxContainer/ParameterInterfaceContainer" instance=ExtResource("2_0xm2m")]
+[node name="GeneratorParameterInterface" parent="CanvasLayer/UI/GeneratorUI/ParameterInterfaceContainer" instance=ExtResource("2_0xm2m")]
 layout_mode = 2
 metadata/_edit_lock_ = true
 
@@ -95,6 +134,16 @@ offset_top = 672.0
 offset_right = 1264.0
 offset_bottom = 703.0
 text = "Reset Camera"
+metadata/_edit_lock_ = true
+
+[node name="Watermark" type="Label" parent="CanvasLayer/UI"]
+modulate = Color(1, 1, 1, 0.24705882)
+layout_mode = 0
+offset_left = 16.0
+offset_top = 688.0
+offset_right = 256.0
+offset_bottom = 704.0
+text = "ProcGenToy by turboshook"
 metadata/_edit_lock_ = true
 
 [node name="FloorVisualContainer" type="Node2D" parent="."]

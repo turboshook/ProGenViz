@@ -4,6 +4,8 @@ class_name FloorGenerator
 var _default_parameters: Dictionary = {}
 @warning_ignore("unused_private_class_variable")
 var _floorplan: Dictionary = {}
+@warning_ignore("unused_private_class_variable")
+var _info_text: String = ""
 
 @warning_ignore("unused_parameter")
 func generate(parameters: Dictionary) -> void:
@@ -28,3 +30,6 @@ func get_visualizer() -> Node2D:
 	visualization = load(visualization_scene_path).instantiate()
 	visualization.set_floorplan(_floorplan)
 	return visualization
+
+func get_info_text() -> String:
+	return _info_text

@@ -6,6 +6,13 @@ func _init() -> void:
 		"walker_lifetime": 128,
 		"walker_turn_chance": 0.25
 	}
+	_info_text = "\
+		A simple, minimally-constrained random walk. When turning, walkers will either veer left or \
+		right (never 180 degrees).
+		
+		Low turn chances tend to create dungeon or fortress-like environments while high turn chances \
+		create cave-like structures with a more natural feel.\
+	"
 
 func generate(parameters: Dictionary) -> void:
 	_floorplan = {

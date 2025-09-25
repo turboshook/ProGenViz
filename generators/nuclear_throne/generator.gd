@@ -8,6 +8,9 @@ func _init() -> void:
 		"subwalker_spawn_chance": 0.3,
 		"subwalker_kill_chance": 0.3
 	}
+	_info_text = "
+		Info text here!
+	"
 
 func generate(parameters: Dictionary) -> void:
 	_floorplan = {

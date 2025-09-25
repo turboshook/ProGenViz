@@ -29,11 +29,24 @@ func _init() -> void:
 		"sector_size": Vector2i(10, 8),
 		"sector_border": 3
 	}
+	_info_text = "\
+		This style of level generation is an approximation of what is typically used across the \
+		the 'mystery dungeon' rougelike subgenre, such as the 'Shiren the Wanderer' or 'Pokemon: \
+		Mystery Dungeon' games.
+		
+		It superficially resembles a binary space partition, but the number of partitions is \
+		decided ahead of time. A unique limitation of this genre is that walls are typically entire \
+		tiles, so hallways have to be generated in such a way that they ensure 1-tile room entrances.
+		
+		These games often apply post-processing steps before generating hallways that can change the \
+		feel of the layouts, such as transforming some rooms into 1x1 spaces (creating very long \
+		hallways) or merging rooms from adjacent partitions into gigantic areas. \
+	"
 
 func generate(parameters: Dictionary) -> void:
 	
 	_floorplan = {
-		"parameters": {},
+		"parameters": parameters,
 		"rooms": {},
 		"hallways": {},
 		"meta": {
@@ -41,7 +54,6 @@ func generate(parameters: Dictionary) -> void:
 			"floor_exit": NULL_TILE
 		}
 	}
-	_floorplan["parameters"] = parameters
 	
 	# begin generating rooms within sectors
 	var sector_key: int = 0

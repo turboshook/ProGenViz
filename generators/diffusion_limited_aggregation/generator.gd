@@ -7,6 +7,9 @@ func _init() -> void:
 		"particle_spawn_density": 3,
 		"max_updates": 150
 	}
+	_info_text = "
+		Info text here!
+	"
 
 func generate(parameters: Dictionary) -> void:
 	# Initialize center with cross shape to attempt to force more particle interactions sooner

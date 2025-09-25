@@ -27,6 +27,9 @@ func _init() -> void:
 		"room_count": 8,
 		"max_give_ups": 3
 	}
+	_info_text = "
+		Info text here!
+	"
 
 func generate(parameters: Dictionary) -> void:
 	
