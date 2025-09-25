@@ -1,0 +1,25 @@
+extends GeneratorVisualization
+
+@onready var tile_map: TileMapLayer = $TileMapLayer
+
+func _activate() -> void:
+	
+	# Drawing control parameters
+	var tile_atlas_coordinates: Array[Vector2i] = [Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)]
+	var atlas_index: int = randi_range(0, tile_atlas_coordinates.size() - 1)
+	var tiles_placed: int = -1
+	
+	# Draw every tile in order
+	_tile_particles.set_emitting(true)
+	for walk: int in range(_gen_data.walks.size()):
+		for tile_coordinate: Vector2i in _gen_data.walks[walk]:
+			tile_map.set_cell(tile_coordinate, 0, tile_atlas_coordinates[atlas_index])
+			_tile_particles.position = (tile_coordinate * 8.0)
+			tiles_placed += 1
+			if tiles_placed % 4 == 0: AudioManager.play_sound("footstep")
+			await get_tree().physics_frame
+		atlas_index = atlas_index + 1 if atlas_index < tile_atlas_coordinates.size() - 1 else 0
+	_tile_particles.set_emitting(false)
+
+func get_center_offset() -> Vector2:
+	return Vector2(_gen_data.walks[0][0] * 8.0)

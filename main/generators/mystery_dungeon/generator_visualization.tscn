@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bk0np0jtpw57s"]
+
+[ext_resource type="Script" uid="uid://b8ug5t28o1t4i" path="res://main/generators/mystery_dungeon/generator_visualization.gd" id="1_62tvs"]
+[ext_resource type="PackedScene" uid="uid://c4jn1tujmqmur" path="res://main/generators/mystery_dungeon/m_d_tilemap.tscn" id="2_m374t"]
+
+[node name="GeneratorVisualization" type="Node2D"]
+script = ExtResource("1_62tvs")
+metadata/_custom_type_script = "uid://lvmunabsg24w"
+
+[node name="MDTilemap" parent="." instance=ExtResource("2_m374t")]
+metadata/_edit_lock_ = true

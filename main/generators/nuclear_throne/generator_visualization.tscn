@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://dhx724swp4nqt"]
+
+[ext_resource type="Script" uid="uid://cfqvynn6rervh" path="res://main/generators/nuclear_throne/generator_visualization.gd" id="1_rf146"]
+[ext_resource type="Texture2D" uid="uid://cl7vg0jbfeaot" path="res://import/textures/tiles.png" id="2_rf146"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mpr3x"]
+texture = ExtResource("2_rf146")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+1:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_nbv1h"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_mpr3x")
+
+[node name="RandomWalkVisualization" type="Node2D"]
+script = ExtResource("1_rf146")
+metadata/_custom_type_script = "uid://lvmunabsg24w"
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_nbv1h")
+metadata/_edit_lock_ = true

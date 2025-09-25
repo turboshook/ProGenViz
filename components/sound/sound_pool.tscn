@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://np4y8vwrjgh1"]
-
-[ext_resource type="Script" uid="uid://b8lksse3ohtem" path="res://game/autoload/audio_manager/utils/sound_pool.gd" id="1_cf7pn"]
-
-[node name="SoundPool" type="Node"]
-script = ExtResource("1_cf7pn")

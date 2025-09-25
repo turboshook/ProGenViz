@@ -1,0 +1,113 @@
+[gd_scene load_steps=15 format=3 uid="uid://dp86ktquhlmuu"]
+
+[ext_resource type="Script" uid="uid://d1b8hl0wrj3ce" path="res://main/autoload/audio_manager/audio_manager.gd" id="1_b4cw0"]
+[ext_resource type="PackedScene" uid="uid://np4y8vwrjgh1" path="res://main/components/sound/sound_pool.tscn" id="2_1ir50"]
+[ext_resource type="Script" uid="uid://dxxxe0ggiv3th" path="res://main/components/sound/sound_queue.gd" id="2_veri3"]
+[ext_resource type="AudioStream" uid="uid://b4mddw53ku5cs" path="res://import/sfx/tap_0.ogg" id="3_180s8"]
+[ext_resource type="AudioStream" uid="uid://bbkjx65yylbw6" path="res://import/sfx/tap_1.ogg" id="4_b4cw0"]
+[ext_resource type="AudioStream" uid="uid://ikeeyw6y2ju4" path="res://import/sfx/tap_2.ogg" id="5_d6pjd"]
+[ext_resource type="AudioStream" uid="uid://dv3ql6rc3uhn4" path="res://import/sfx/tap_3.ogg" id="6_iwjvn"]
+[ext_resource type="AudioStream" uid="uid://btlphyhl0axdg" path="res://import/sfx/tap_4.ogg" id="7_k3xk4"]
+[ext_resource type="AudioStream" uid="uid://tfn7xnk0dv5d" path="res://import/sfx/tap_5.ogg" id="8_tn4hp"]
+[ext_resource type="Script" uid="uid://b8lksse3ohtem" path="res://main/components/sound/sound_pool.gd" id="10_d6pjd"]
+[ext_resource type="AudioStream" uid="uid://cco0kg40t6f00" path="res://import/sfx/Footstep_Dirt_00.ogg" id="11_2d5ut"]
+[ext_resource type="AudioStream" uid="uid://24j1jascpxe4" path="res://import/sfx/Footstep_Dirt_03.ogg" id="12_yt718"]
+[ext_resource type="AudioStream" uid="uid://dxm6nige6n7u4" path="res://import/sfx/Footstep_Dirt_04.ogg" id="13_ljgh5"]
+[ext_resource type="AudioStream" uid="uid://cnenycfom1doy" path="res://import/sfx/Footstep_Dirt_08.ogg" id="14_7gwo0"]
+
+[node name="AudioManager" type="Node"]
+script = ExtResource("1_b4cw0")
+
+[node name="BGMStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="Tap" parent="." instance=ExtResource("2_1ir50")]
+
+[node name="Tap0" type="Node" parent="Tap"]
+script = ExtResource("2_veri3")
+_player_count = 3
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap0"]
+stream = ExtResource("3_180s8")
+volume_db = 6.0
+
+[node name="Tap1" type="Node" parent="Tap"]
+script = ExtResource("2_veri3")
+_player_count = 3
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap1"]
+stream = ExtResource("4_b4cw0")
+volume_db = 6.0
+
+[node name="Tap2" type="Node" parent="Tap"]
+script = ExtResource("2_veri3")
+_player_count = 3
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap2"]
+stream = ExtResource("5_d6pjd")
+volume_db = 6.0
+
+[node name="Tap3" type="Node" parent="Tap"]
+script = ExtResource("2_veri3")
+_player_count = 3
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap3"]
+stream = ExtResource("6_iwjvn")
+volume_db = 6.0
+
+[node name="Tap4" type="Node" parent="Tap"]
+script = ExtResource("2_veri3")
+_player_count = 3
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap4"]
+stream = ExtResource("7_k3xk4")
+volume_db = 6.0
+
+[node name="Tap5" type="Node" parent="Tap"]
+script = ExtResource("2_veri3")
+_player_count = 3
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap5"]
+stream = ExtResource("8_tn4hp")
+volume_db = 6.0
+
+[node name="Footstep" type="Node" parent="."]
+script = ExtResource("10_d6pjd")
+metadata/_custom_type_script = "uid://b8lksse3ohtem"
+
+[node name="Footstep0" type="Node" parent="Footstep"]
+script = ExtResource("2_veri3")
+_player_count = 2
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Footstep/Footstep0"]
+stream = ExtResource("11_2d5ut")
+
+[node name="Footstep1" type="Node" parent="Footstep"]
+script = ExtResource("2_veri3")
+_player_count = 2
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Footstep/Footstep1"]
+stream = ExtResource("12_yt718")
+
+[node name="Footstep2" type="Node" parent="Footstep"]
+script = ExtResource("2_veri3")
+_player_count = 2
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Footstep/Footstep2"]
+stream = ExtResource("13_ljgh5")
+
+[node name="Footstep3" type="Node" parent="Footstep"]
+script = ExtResource("2_veri3")
+_player_count = 2
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Footstep/Footstep3"]
+stream = ExtResource("14_7gwo0")

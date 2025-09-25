@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bx3pyw72wixdp"]
+
+[ext_resource type="Script" uid="uid://b8aea7paq4xyx" path="res://main/generators/simple_room_placement/generator_visualization.gd" id="1_23opr"]
+[ext_resource type="PackedScene" uid="uid://cenqrtljsxea" path="res://main/generators/simple_room_placement/s_r_p_tile_map.tscn" id="2_kbo2x"]
+
+[node name="SimpleRoomPlacementVisualization" type="Node2D"]
+script = ExtResource("1_23opr")
+metadata/_custom_type_script = "uid://lvmunabsg24w"
+
+[node name="SRPTileMap" parent="." instance=ExtResource("2_kbo2x")]

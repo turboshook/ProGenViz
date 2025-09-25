@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://dg7y3gcy1m8ll"]
+
+[ext_resource type="Script" uid="uid://7kad37fb82d7" path="res://main/generators/inverse_diffusion_limited_aggregation/generator_visualization.gd" id="1_ub50x"]
+[ext_resource type="Texture2D" uid="uid://cl7vg0jbfeaot" path="res://import/textures/tiles.png" id="2_bbom2"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g72ot"]
+texture = ExtResource("2_bbom2")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+1:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_2lg4w"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_g72ot")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bbom2"]
+texture = ExtResource("2_bbom2")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+1:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_g72ot"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_bbom2")
+
+[node name="GeneratorVisualization" type="Node2D"]
+script = ExtResource("1_ub50x")
+metadata/_custom_type_script = "uid://lvmunabsg24w"
+
+[node name="FloorTileMap" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_2lg4w")
+
+[node name="WalkTileMap" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_g72ot")

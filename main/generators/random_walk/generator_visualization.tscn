@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://dds3p7tsgabq7"]
+
+[ext_resource type="Script" uid="uid://dbsu0jsocommm" path="res://main/generators/random_walk/generator_visualization.gd" id="1_esxii"]
+[ext_resource type="Texture2D" uid="uid://cl7vg0jbfeaot" path="res://import/textures/tiles.png" id="2_8it2s"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8it2s"]
+texture = ExtResource("2_8it2s")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+1:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_hnd6q"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_8it2s")
+
+[node name="RandomWalkVisualization" type="Node2D"]
+script = ExtResource("1_esxii")
+metadata/_custom_type_script = "uid://lvmunabsg24w"
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_hnd6q")
+metadata/_edit_lock_ = true

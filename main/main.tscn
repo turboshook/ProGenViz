@@ -1,0 +1,177 @@
+[gd_scene load_steps=6 format=3 uid="uid://fq4dg2mjn4d"]
+
+[ext_resource type="Script" uid="uid://ya3q0vjml76l" path="res://main/main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://bwymn7btwagif" path="res://main/ui/generator_parameter_interface/generator_parameter_interface.tscn" id="2_0xm2m"]
+[ext_resource type="Theme" uid="uid://budipvsn6w6vj" path="res://main/utils/ui_theme.tres" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://bkxrgsqbr10nw" path="res://main/ui/app_settings_menu/app_settings_menu.tscn" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://8wsxcjxuqayq" path="res://main/ui/info_text_display/info_text_display.tscn" id="5_lquwl"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_ig7tw")
+
+[node name="BackgroundLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="BackgroundLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1254902, 0.1882353, 0.36078432, 1)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_h2yge")
+
+[node name="AppUI" type="HBoxContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 272.0
+offset_bottom = 48.0
+metadata/_edit_lock_ = true
+
+[node name="SettingsButton" type="Button" parent="CanvasLayer/UI/AppUI"]
+custom_minimum_size = Vector2(78, 0)
+layout_mode = 2
+text = "Settings"
+metadata/_edit_lock_ = true
+
+[node name="InfoButton" type="Button" parent="CanvasLayer/UI/AppUI"]
+custom_minimum_size = Vector2(47, 0)
+layout_mode = 2
+text = "Info"
+metadata/_edit_lock_ = true
+
+[node name="AppSettingsMenu" parent="CanvasLayer/UI" instance=ExtResource("4_1bvp3")]
+visible = false
+layout_mode = 1
+offset_left = 16.0
+offset_top = 64.0
+offset_right = -1008.0
+offset_bottom = -608.0
+
+[node name="InfoTextDisplay" parent="CanvasLayer/UI" instance=ExtResource("5_lquwl")]
+visible = false
+layout_mode = 0
+offset_left = 16.0
+offset_top = 64.0
+offset_right = 400.0
+offset_bottom = 112.0
+
+[node name="GeneratorUI" type="VBoxContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 896.0
+offset_top = 16.0
+offset_right = 1264.0
+offset_bottom = 656.0
+metadata/_edit_lock_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/GeneratorUI"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="AlgorithmSelectionButton" type="OptionButton" parent="CanvasLayer/UI/GeneratorUI/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 11
+popup/item_0/text = "General"
+popup/item_0/id = 0
+popup/item_0/separator = true
+popup/item_1/text = "Simple Room Placement"
+popup/item_1/id = 1
+popup/item_2/text = "Random Walk"
+popup/item_2/id = 2
+popup/item_3/text = "Binary Space Partition"
+popup/item_3/id = 3
+popup/item_4/text = "Voronoi Partition"
+popup/item_4/id = 4
+popup/item_5/text = "Diffusion Limited Aggregation"
+popup/item_5/id = 5
+popup/item_6/text = "Inverse DLA"
+popup/item_6/id = 6
+popup/item_7/text = "Recreations"
+popup/item_7/id = 7
+popup/item_7/separator = true
+popup/item_8/text = "Isaac"
+popup/item_8/id = 8
+popup/item_9/text = "Mystery Dungeon"
+popup/item_9/id = 9
+popup/item_10/text = "Nuclear Throne"
+popup/item_10/id = 10
+metadata/_edit_lock_ = true
+
+[node name="GenerateButton" type="Button" parent="CanvasLayer/UI/GeneratorUI/HBoxContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Generate"
+metadata/_edit_lock_ = true
+
+[node name="ParameterInterfaceContainer" type="ScrollContainer" parent="CanvasLayer/UI/GeneratorUI"]
+layout_mode = 2
+size_flags_vertical = 3
+metadata/_edit_lock_ = true
+
+[node name="GeneratorParameterInterface" parent="CanvasLayer/UI/GeneratorUI/ParameterInterfaceContainer" instance=ExtResource("2_0xm2m")]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="ResetCameraButton" type="Button" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 1136.0
+offset_top = 672.0
+offset_right = 1264.0
+offset_bottom = 703.0
+text = "Reset Camera"
+metadata/_edit_lock_ = true
+
+[node name="Signature" type="HBoxContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 688.0
+offset_right = 400.0
+offset_bottom = 704.0
+metadata/_edit_lock_ = true
+
+[node name="Title" type="Label" parent="CanvasLayer/UI/Signature"]
+modulate = Color(1, 1, 1, 0.39215687)
+layout_mode = 2
+text = "ProcGenToy"
+metadata/_edit_lock_ = true
+
+[node name="Version" type="Label" parent="CanvasLayer/UI/Signature"]
+modulate = Color(1, 1, 1, 0.24705882)
+layout_mode = 2
+text = "[vx.x.x]"
+metadata/_edit_lock_ = true
+
+[node name="Credit" type="Label" parent="CanvasLayer/UI/Signature"]
+modulate = Color(1, 1, 1, 0.39215687)
+layout_mode = 2
+text = "by turboshook"
+metadata/_edit_lock_ = true
+
+[node name="FloorVisualContainer" type="Node2D" parent="."]
+position = Vector2(448, 352)
+metadata/_edit_lock_ = true
+
+[node name="CameraTarget" type="Node2D" parent="."]
+position = Vector2(640, 360)
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+metadata/_edit_lock_ = true
+
+[node name="Node3D" type="Node3D" parent="."]
