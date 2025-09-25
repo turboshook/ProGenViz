@@ -5,5 +5,5 @@ func _init() -> void:
 
 @warning_ignore("unused_parameter")
 func generate(parameters: Dictionary) -> void:
-	_floorplan = {}
+	_gen_data = {}
 

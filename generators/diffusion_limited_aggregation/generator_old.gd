@@ -15,7 +15,7 @@ func generate(parameters: Dictionary) -> void:
 	var init_coord_1: Vector2i = center_coordinate + Vector2i.DOWN
 	var init_coord_2: Vector2i = center_coordinate + Vector2i.LEFT
 	var init_coord_3: Vector2i = center_coordinate + Vector2i.RIGHT
-	_floorplan = {
+	_gen_data = {
 		"map_size": parameters.map_size,
 		"tile_coordinates": [
 			center_coordinate,
@@ -55,14 +55,14 @@ func generate(parameters: Dictionary) -> void:
 			if not particle.active: continue
 			particle.position += _get_in_bounds_step(particle.position, parameters.map_size)
 			if not _particle_has_inactive_neighbor(particle.position): continue
-			_floorplan.tile_coordinates.append(particle.position)
-			_floorplan.coordinate_set[particle.position] = null
+			_gen_data.tile_coordinates.append(particle.position)
+			_gen_data.coordinate_set[particle.position] = null
 			particle.active = false
 			particles_resolved += 1
 		updates += 1
 		if updates >= parameters.max_updates: break
 	
-	_floorplan.particles = particles #ehh
+	_gen_data.particles = particles #ehh
 
 func _get_in_bounds_step(particle_position: Vector2i, map_size: Vector2i) -> Vector2i:
 	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
@@ -75,8 +75,8 @@ func _get_in_bounds_step(particle_position: Vector2i, map_size: Vector2i) -> Vec
 
 func _particle_has_inactive_neighbor(particle_position: Vector2i) -> bool:
 	return (
-		_floorplan.coordinate_set.has(particle_position + Vector2i.UP) or 
-		_floorplan.coordinate_set.has(particle_position + Vector2i.DOWN) or 
-		_floorplan.coordinate_set.has(particle_position + Vector2i.LEFT) or 
-		_floorplan.coordinate_set.has(particle_position + Vector2i.RIGHT)
+		_gen_data.coordinate_set.has(particle_position + Vector2i.UP) or 
+		_gen_data.coordinate_set.has(particle_position + Vector2i.DOWN) or 
+		_gen_data.coordinate_set.has(particle_position + Vector2i.LEFT) or 
+		_gen_data.coordinate_set.has(particle_position + Vector2i.RIGHT)
 	)

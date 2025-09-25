@@ -1,2 +1,2 @@
-# DungeonGeneration
-Various 2D Dungeon Generators
+# ProcGenToy
+An interface for playing with some procedural generation methods.

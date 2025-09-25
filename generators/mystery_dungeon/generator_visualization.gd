@@ -8,8 +8,8 @@ func _activate() -> void:
 	var room_tile_atlas_coordinates: Vector2i = tile_atlas_coordinates.pick_random()
 	tile_atlas_coordinates.erase(room_tile_atlas_coordinates)
 	
-	for room_key: int in _floorplan.rooms:
-		var room_data: Dictionary = _floorplan.rooms[room_key]
+	for room_key: int in _gen_data.rooms:
+		var room_data: Dictionary = _gen_data.rooms[room_key]
 		
 		# draw sector
 		for x: int in range(room_data.sector.position.x, room_data.sector.position.x + room_data.sector.size.x):
@@ -28,8 +28,8 @@ func _activate() -> void:
 	
 	# draw hallways
 	var tiles_placed: int = -1
-	for hallway_key: int in _floorplan.hallways:
-		var hallway_data: Dictionary = _floorplan.hallways[hallway_key]
+	for hallway_key: int in _gen_data.hallways:
+		var hallway_data: Dictionary = _gen_data.hallways[hallway_key]
 		for tile_coordinates: Vector2i in hallway_data.tiles:
 			md_tilemap.set_cell(tile_coordinates, 0, hallway_tile_atlas_coordinates)
 			_tile_particles.position = (tile_coordinates * 8.0)
@@ -40,7 +40,7 @@ func _activate() -> void:
 	_tile_particles.set_emitting(false)
 
 func get_center_offset() -> Vector2:
-	var params: Dictionary = _floorplan.parameters
+	var params: Dictionary = _gen_data.parameters
 	var sector_grid_size: Vector2 = Vector2(params.x_sectors, params.y_sectors)
 	var sector_size: Vector2 = Vector2(params.sector_size.x + params.sector_border, params.sector_size.y + params.sector_border)
 	return ((sector_grid_size * sector_size) * 8.0)/2.0

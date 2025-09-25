@@ -3,7 +3,7 @@ extends GeneratorVisualization
 @onready var bsp_tilemap: TileMapLayer = $BSPTilemap
 
 func _activate() -> void:
-	for partition: Dictionary in _floorplan.partitions:
+	for partition: Dictionary in _gen_data.partitions:
 		var room_data: Dictionary = partition.room
 		
 		# draw partition
@@ -22,7 +22,7 @@ func _activate() -> void:
 	# draw hallways
 	var tiles_placed: int = -1
 	_tile_particles.set_emitting(true)
-	for hallway: Dictionary in _floorplan.hallways:
+	for hallway: Dictionary in _gen_data.hallways:
 		for tile_coordinates: Vector2i in hallway.tile_positions:
 			bsp_tilemap.set_cell(tile_coordinates, 0, Vector2i(1, 1))
 			_tile_particles.position = (tile_coordinates * 8.0)
@@ -34,7 +34,7 @@ func _activate() -> void:
 func get_center_offset() -> Vector2:
 	return (
 		Vector2(
-			_floorplan.parameters.floor_tile_width,
-			_floorplan.parameters.floor_tile_height
+			_gen_data.parameters.floor_tile_width,
+			_gen_data.parameters.floor_tile_height
 		) * 8.0
 	)/2.0

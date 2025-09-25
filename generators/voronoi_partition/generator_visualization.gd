@@ -4,7 +4,7 @@ extends GeneratorVisualization
 @onready var tile_maps: Array[TileMapLayer] = [tile_map]
 
 func _activate() -> void:
-	var extra_tile_maps: int = int(ceil(_floorplan.cells.size()/4.0)) - 1
+	var extra_tile_maps: int = int(ceil(_gen_data.cells.size()/4.0)) - 1
 	if extra_tile_maps > 0:
 		for i: int in range(extra_tile_maps):
 			var new_tile_map: TileMapLayer = tile_map.duplicate()
@@ -20,13 +20,13 @@ func _activate() -> void:
 	var atlas_index: int = 0
 	var tile_map_index: int = 0
 	
-	for x: int in range(_floorplan.map_size.x):
-		for y: int in range(_floorplan.map_size.y):
+	for x: int in range(_gen_data.map_size.x):
+		for y: int in range(_gen_data.map_size.y):
 			tile_map.set_cell(Vector2i(x, y), 0, Vector2i.ZERO)
 	
 	var tiles_placed: int = -1
-	for i: int in range(_floorplan.cells.size()):
-		tile_maps[tile_map_index].set_cell(_floorplan.cells[i].origin, 0, tile_atlas_coordinates[atlas_index])
+	for i: int in range(_gen_data.cells.size()):
+		tile_maps[tile_map_index].set_cell(_gen_data.cells[i].origin, 0, tile_atlas_coordinates[atlas_index])
 		tiles_placed += 1
 		if tiles_placed % 4 == 0: 
 			AudioManager.play_sound("footstep")
@@ -39,8 +39,8 @@ func _activate() -> void:
 	atlas_index = 0
 	tile_map_index = 0
 	
-	for i: int in range(_floorplan.cells.size()):
-		for tile: Vector2i in _floorplan.cells[i].tiles:
+	for i: int in range(_gen_data.cells.size()):
+		for tile: Vector2i in _gen_data.cells[i].tiles:
 			tile_maps[tile_map_index].set_cell(tile, 0, tile_atlas_coordinates[atlas_index])
 		AudioManager.play_sound("tap")
 		for _i: int in range(4): await get_tree().physics_frame
@@ -50,4 +50,4 @@ func _activate() -> void:
 		tile_map_index += 1
 
 func get_center_offset() -> Vector2:
-	return (_floorplan.map_size * 8.0) / 2.0
+	return (_gen_data.map_size * 8.0) / 2.0

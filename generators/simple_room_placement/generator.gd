@@ -21,7 +21,7 @@ func _init() -> void:
 	"
 
 func generate(parameters: Dictionary) -> void:
-	_floorplan = {
+	_gen_data = {
 		"floor_size": parameters.floor_size,
 		"rooms": [],
 		"hallways": []
@@ -64,8 +64,8 @@ func generate(parameters: Dictionary) -> void:
 			hallways.append(hallway_tiles)
 		prev_room = room
 	
-	_floorplan.rooms = rooms
-	_floorplan.hallways = hallways
+	_gen_data.rooms = rooms
+	_gen_data.hallways = hallways
 
 func _get_random_rect(generation_data: Dictionary) -> Rect2i:
 	var room_size: Vector2i = Vector2i(

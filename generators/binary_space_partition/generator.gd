@@ -68,7 +68,7 @@ func generate(parameters: Dictionary) -> void:
 	_partitions = _generate_partitions(parameters)
 	_generate_rooms(parameters)
 	_hallways = _generate_hallways()
-	_floorplan = {
+	_gen_data = {
 		"partitions": _partitions,
 		"hallways": _hallways,
 		"parameters": parameters

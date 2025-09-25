@@ -140,11 +140,11 @@ metadata/_edit_lock_ = true
 modulate = Color(1, 1, 1, 0.24705882)
 layout_mode = 0
 offset_left = 16.0
-offset_top = 688.0
+offset_top = 672.0
 offset_right = 256.0
-offset_bottom = 704.0
-text = "ProcGenToy by turboshook"
-metadata/_edit_lock_ = true
+offset_bottom = 707.0
+text = "ProcGenToy [v0.0.1] 
+turboshook"
 
 [node name="FloorVisualContainer" type="Node2D" parent="."]
 position = Vector2(448, 352)

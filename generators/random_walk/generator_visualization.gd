@@ -7,8 +7,8 @@ func _activate() -> void:
 	var atlas_index: int = randi_range(0, tile_atlas_coordinates.size() - 1)
 	var tiles_placed: int = -1
 	_tile_particles.set_emitting(true)
-	for walk: int in range(_floorplan.walks.size()):
-		for tile_coordinate: Vector2i in _floorplan.walks[walk]:
+	for walk: int in range(_gen_data.walks.size()):
+		for tile_coordinate: Vector2i in _gen_data.walks[walk]:
 			rw_tile_map.set_cell(tile_coordinate, 0, tile_atlas_coordinates[atlas_index])
 			_tile_particles.position = (tile_coordinate * 8.0)
 			tiles_placed += 1
@@ -18,4 +18,4 @@ func _activate() -> void:
 	_tile_particles.set_emitting(false)
 
 func get_center_offset() -> Vector2:
-	return Vector2(_floorplan.walks[0][0] * 8.0)
+	return Vector2(_gen_data.walks[0][0] * 8.0)

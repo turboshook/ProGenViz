@@ -3,7 +3,7 @@ extends GeneratorVisualization
 @onready var srp_tile_map: TileMapLayer = $SRPTileMap
 
 func _activate() -> void:
-	for room: Rect2i in _floorplan.rooms:
+	for room: Rect2i in _gen_data.rooms:
 		for x: int in range(room.position.x, room.position.x + room.size.x):
 			for y: int in range(room.position.y, room.position.y + room.size.y):
 				srp_tile_map.set_cell(Vector2i(x, y), 0, Vector2(1, 2))
@@ -12,7 +12,7 @@ func _activate() -> void:
 	
 	# defer this call because the particles keep showing at the origin
 	_tile_particles.set_emitting.call_deferred(true)
-	for hallway: Array[Vector2i] in _floorplan.hallways:
+	for hallway: Array[Vector2i] in _gen_data.hallways:
 		var tiles_placed: int = -1
 		for tile_coordinates: Vector2i in hallway:
 			srp_tile_map.set_cell(tile_coordinates, 0, Vector2(0, 2))
@@ -23,4 +23,4 @@ func _activate() -> void:
 	_tile_particles.set_emitting(false)
 
 func get_center_offset() -> Vector2:
-	return (_floorplan.floor_size/2 * 8.0)
+	return (_gen_data.floor_size/2 * 8.0)

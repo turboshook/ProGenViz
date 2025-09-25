@@ -34,7 +34,7 @@ func _init() -> void:
 
 func generate(parameters: Dictionary) -> void:
 	
-	_floorplan = {
+	_gen_data = {
 		"parameters": {},
 		"rooms": {},
 		"hallways": {},
@@ -43,7 +43,7 @@ func generate(parameters: Dictionary) -> void:
 			"floor_exit": NULL_TILE
 		}
 	}
-	_floorplan["parameters"] = parameters
+	_gen_data["parameters"] = parameters
 	
 	# begin generating rooms within sectors
 	var sector_key: int = 0
@@ -97,52 +97,52 @@ func generate(parameters: Dictionary) -> void:
 				var west_entrance_position: Vector2i = room_rect.position + Vector2i(-1, randi_range(0, room_rect.size.y - 1)) 
 				room_data.entrances.west.append(west_entrance_position)
 			
-			_floorplan.rooms[sector_key] = room_data
+			_gen_data.rooms[sector_key] = room_data
 			
 			# iterate ID key
 			sector_key += 1
 	
 	# start hallway generation
 	var hallway_key: int = 0
-	for sector: int in _floorplan.rooms.keys():
+	for sector: int in _gen_data.rooms.keys():
 		
 		# for each sector, define start and end points for every SOUTH and EAST hallway
-		var this_room_data: Dictionary = _floorplan.rooms[sector]
+		var this_room_data: Dictionary = _gen_data.rooms[sector]
 		if not this_room_data.entrances.south.is_empty():
-			var target_room_data: Dictionary = _floorplan.rooms[sector + 1]
+			var target_room_data: Dictionary = _gen_data.rooms[sector + 1]
 			var hallway_data: Dictionary = HALLWAY_GENERATION_DATA.duplicate(true)
 			hallway_data.start_position = this_room_data.entrances.south[0]
 			hallway_data.end_position = target_room_data.entrances.north[0]
-			_floorplan.hallways[hallway_key] = hallway_data
+			_gen_data.hallways[hallway_key] = hallway_data
 			hallway_key += 1
 
 		if not this_room_data.entrances.east.is_empty():
-			var target_room_data: Dictionary = _floorplan.rooms[sector + parameters.y_sectors]
+			var target_room_data: Dictionary = _gen_data.rooms[sector + parameters.y_sectors]
 			var hallway_data: Dictionary = HALLWAY_GENERATION_DATA.duplicate(true)
 			hallway_data.start_position = this_room_data.entrances.east[0]
 			hallway_data.end_position = target_room_data.entrances.west[0]
 			hallway_data.is_vertical = false
-			_floorplan.hallways[hallway_key] = hallway_data
+			_gen_data.hallways[hallway_key] = hallway_data
 			hallway_key += 1
 	
 	# walk every hallway
-	for key: int in _floorplan.hallways.keys():
-		_floorplan.hallways[key].tiles = GeneratorUtils.get_middle_bend_path(
-			_floorplan.hallways[key].start_position,
-			_floorplan.hallways[key].end_position,
-			_floorplan.hallways[key].is_vertical
+	for key: int in _gen_data.hallways.keys():
+		_gen_data.hallways[key].tiles = GeneratorUtils.get_middle_bend_path(
+			_gen_data.hallways[key].start_position,
+			_gen_data.hallways[key].end_position,
+			_gen_data.hallways[key].is_vertical
 		)
 	
-	var all_rooms: Array = _floorplan.rooms.keys()
+	var all_rooms: Array = _gen_data.rooms.keys()
 	var spawn_room: int = all_rooms.pick_random()
 	all_rooms.erase(spawn_room)
-	_floorplan.meta.player_spawn = spawn_room
-	_floorplan.rooms[spawn_room].meta["player_spawn"] = _get_random_tile(_floorplan.rooms[spawn_room].rect)
+	_gen_data.meta.player_spawn = spawn_room
+	_gen_data.rooms[spawn_room].meta["player_spawn"] = _get_random_tile(_gen_data.rooms[spawn_room].rect)
 	
 	var exit_room: int = all_rooms.pick_random()
 	all_rooms.erase(exit_room)
-	_floorplan.meta.floor_exit = exit_room
-	_floorplan.rooms[exit_room].meta["floor_exit"] = _get_random_tile(_floorplan.rooms[exit_room].rect)
+	_gen_data.meta.floor_exit = exit_room
+	_gen_data.rooms[exit_room].meta["floor_exit"] = _get_random_tile(_gen_data.rooms[exit_room].rect)
 
 func _get_random_tile(room_rect: Rect2i) -> Vector2i:
 	var random_x: int = range(room_rect.size.x).pick_random()

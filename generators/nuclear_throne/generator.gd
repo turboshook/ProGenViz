@@ -13,7 +13,7 @@ func _init() -> void:
 	"
 
 func generate(parameters: Dictionary) -> void:
-	_floorplan = {
+	_gen_data = {
 		"map_size": parameters.map_size,
 		"walker_steps": [], # Ordered list of every step taken by any walkers active during a given update
 		"tile_set": {} # O(1) lookup for unique tile coordinates.
@@ -27,10 +27,10 @@ func generate(parameters: Dictionary) -> void:
 		"step_direction": step_directions.pick_random(),
 		"active": true
 	}]
-	_floorplan.walker_steps = [[walkers[0].position]]
+	_gen_data.walker_steps = [[walkers[0].position]]
 	
 	var total_tiles: int = parameters.map_size.x * parameters.map_size.y
-	while (float(_floorplan.tile_set.size())/float(total_tiles) < parameters.map_fill_target_proportion):
+	while (float(_gen_data.tile_set.size())/float(total_tiles) < parameters.map_fill_target_proportion):
 		var steps: Array[Vector2i] = []
 		for i: int in range(walkers.size()):
 			var walker: Dictionary = walkers[i]
@@ -45,10 +45,10 @@ func generate(parameters: Dictionary) -> void:
 			steps.append(walker.position)
 			
 			# break from this loop using outer loop condition if the map fill target is reached mid-update
-			if (float(_floorplan.tile_set.size())/float(total_tiles) >= parameters.map_fill_target_proportion): break
+			if (float(_gen_data.tile_set.size())/float(total_tiles) >= parameters.map_fill_target_proportion): break
 			
 			# count only unique tiles toward the map fill target
-			if not _floorplan.tile_set.has(walker.position): _floorplan.tile_set[walker.position] = null
+			if not _gen_data.tile_set.has(walker.position): _gen_data.tile_set[walker.position] = null
 			
 			# subwalker maintenance
 			if i == 0 and randf() < parameters.subwalker_spawn_chance:
@@ -61,7 +61,7 @@ func generate(parameters: Dictionary) -> void:
 				walker.active = false
 		
 		# record every step taken this update
-		_floorplan.walker_steps.append(steps)
+		_gen_data.walker_steps.append(steps)
 
 func _next_step_out_of_bounds(walker: Dictionary, map_rect: Rect2i) -> bool:
 	var target_position: Vector2i = walker.position + walker.step_direction

@@ -3,7 +3,7 @@ extends FloorGenerator
 const NULL_ROOM: Rect2i = Rect2i(0, 0, -1, -1)
 
 	# Template Data #
-const EMPTY_FLOORPLAN: Dictionary = {
+const EMPTY_gen_data: Dictionary = {
 	"start_room": -1,
 	"end_room": -1,
 	"dead_ends": [],
@@ -33,15 +33,15 @@ func _init() -> void:
 
 func generate(parameters: Dictionary) -> void:
 	
-	_floorplan = EMPTY_FLOORPLAN.duplicate(true)
-	_floorplan["parameters"] = parameters
+	_gen_data = EMPTY_gen_data.duplicate(true)
+	_gen_data["parameters"] = parameters
 	
 	var rooms_placed: int = 0 # account for starting room
 	var starting_room_position: Vector2i = Vector2i(3, 3)
 	var starting_room_rect: Rect2i = Rect2i(starting_room_position, Vector2i(1, 1))
-	_floorplan["start_room"] = starting_room_rect
-	_floorplan["rooms"].append(EMPTY_ROOM_DICTIONARY.duplicate(true))
-	_floorplan.rooms[rooms_placed].rect = starting_room_rect
+	_gen_data["start_room"] = starting_room_rect
+	_gen_data["rooms"].append(EMPTY_ROOM_DICTIONARY.duplicate(true))
+	_gen_data.rooms[rooms_placed].rect = starting_room_rect
 	var room_queue: Array[Rect2i] = [starting_room_rect]
 	var current_give_ups: int = 0
 	
@@ -53,49 +53,49 @@ func generate(parameters: Dictionary) -> void:
 		for exit_coordinate: Vector2i in exit_coordinates:
 			
 			# initialize this exit to point to null room so that the exit is present in the floorplan
-			_floorplan.rooms[rooms_placed].neighbors[exit_coordinate] = NULL_ROOM
+			_gen_data.rooms[rooms_placed].neighbors[exit_coordinate] = NULL_ROOM
 			
-			if rooms_placed >= _floorplan.parameters.room_count: continue
+			if rooms_placed >= _gen_data.parameters.room_count: continue
 			
 			var new_room_rect: Rect2i = Rect2i(exit_coordinate, Vector2i(1, 1))
 			
 			# how TBoI does it, rooms cannot be placed in cells where they would already have more
 			# than one neighbor. I want to allow that eventually, but it involves more neighbor
 			# checks that could make this loop stupid if I don't have a litte think about it.
-			if _rect_is_obstructed(new_room_rect, _floorplan.rooms):
+			if _rect_is_obstructed(new_room_rect, _gen_data.rooms):
 				#placed_hallway_rooms += 1
 				continue
 			
 			# random chance to give up creating a neighbor for this room, constrained to max_give_ups
-			if randf() >= 0.5 and current_give_ups < _floorplan.parameters.max_give_ups:
+			if randf() >= 0.5 and current_give_ups < _gen_data.parameters.max_give_ups:
 				current_give_ups += 1
 				continue
 			
 			# update floorplan with new additions
-			_floorplan.rooms[rooms_placed].neighbors[exit_coordinate] = new_room_rect
+			_gen_data.rooms[rooms_placed].neighbors[exit_coordinate] = new_room_rect
 			rooms_placed += 1
 			
-			_floorplan["rooms"].append(EMPTY_ROOM_DICTIONARY.duplicate(true))
-			_floorplan.rooms[rooms_placed].rect = new_room_rect
+			_gen_data["rooms"].append(EMPTY_ROOM_DICTIONARY.duplicate(true))
+			_gen_data.rooms[rooms_placed].rect = new_room_rect
 			# come back to this
-			#_floorplan["rooms"][rooms_placed]["neighbors"][_get_corresponding_exit(exit_key)] = current_room_coordinate
+			#_gen_data["rooms"][rooms_placed]["neighbors"][_get_corresponding_exit(exit_key)] = current_room_coordinate
 			
 			# loop maintenance
 			room_queue.append(new_room_rect)
 			
 	
 	# Do a pass to conclusively determine dead ends once the 
-	for room_key: int in range(_floorplan.rooms.size()):
-		#if room == _floorplan["start_room"]:
+	for room_key: int in range(_gen_data.rooms.size()):
+		#if room == _gen_data["start_room"]:
 			#continue
 		var neighbor_count: int = 0
-		for exit_coordinates: Vector2i in _floorplan.rooms[room_key].neighbors:
-			if _floorplan.rooms[room_key].neighbors[exit_coordinates] != NULL_ROOM:
+		for exit_coordinates: Vector2i in _gen_data.rooms[room_key].neighbors:
+			if _gen_data.rooms[room_key].neighbors[exit_coordinates] != NULL_ROOM:
 				neighbor_count += 1
 		if neighbor_count <= 1:
-			_floorplan.dead_ends.append(room_key)
+			_gen_data.dead_ends.append(room_key)
 	
-	_floorplan.end_room = _floorplan.dead_ends.pop_back()
+	_gen_data.end_room = _gen_data.dead_ends.pop_back()
 
 func _get_exit_coordinates(room: Rect2i) -> Array[Vector2i]:
 	var exits: Array[Vector2i] = []

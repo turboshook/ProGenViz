@@ -18,7 +18,7 @@ func generate(parameters: Dictionary) -> void:
 	var init_coord_1: Vector2i = center_coordinate + Vector2i.DOWN
 	var init_coord_2: Vector2i = center_coordinate + Vector2i.LEFT
 	var init_coord_3: Vector2i = center_coordinate + Vector2i.RIGHT
-	_floorplan = {
+	_gen_data = {
 		"map_size": parameters.map_size,
 		"tile_coordinates": [
 			center_coordinate,
@@ -49,7 +49,7 @@ func generate(parameters: Dictionary) -> void:
 		}
 	
 	# simulate until we have placed the maximum allowable number of tiles 
-	while (_floorplan.tile_coordinates.size() < parameters.max_tiles_placed):
+	while (_gen_data.tile_coordinates.size() < parameters.max_tiles_placed):
 		for particle: Dictionary in particles:
 			if not particle.active: continue # skip inactive particles
 			
@@ -58,15 +58,15 @@ func generate(parameters: Dictionary) -> void:
 			
 			if not _particle_has_inactive_neighbor(particle.position): continue
 			# partlce has joined the aggregation, place a tile
-			_floorplan.tile_coordinates.append(particle.position)
-			_floorplan.coordinate_set[particle.position] = null
+			_gen_data.tile_coordinates.append(particle.position)
+			_gen_data.coordinate_set[particle.position] = null
 			particle.active = false
 			
 			# if placed the maximum allowable tiles, stop processing particles (will also end while loop)
-			if _floorplan.tile_coordinates.size() >= parameters.max_tiles_placed: break
+			if _gen_data.tile_coordinates.size() >= parameters.max_tiles_placed: break
 			
 			# if all current particles have been resolved or the last tile placed is at the edge of the active rect
-			if _floorplan.tile_coordinates.size() != particles.size() and \
+			if _gen_data.tile_coordinates.size() != particles.size() and \
 			not _point_on_rect_perimeter(particle.position, particle_active_rect): continue
 			# expand active particle region if last particle hit the boundary
 			if particle_active_rect.size == parameters.map_size: continue
@@ -84,10 +84,10 @@ func generate(parameters: Dictionary) -> void:
 			particles = particles + new_particles
 		
 		# alternatively, end simulation if we have reached the maximum update count
-		_floorplan.updates += 1
-		if _floorplan.updates >= parameters.max_updates: break
+		_gen_data.updates += 1
+		if _gen_data.updates >= parameters.max_updates: break
 	
-	_floorplan.particles = particles # used to visualize unresolved particles
+	_gen_data.particles = particles # used to visualize unresolved particles
 
 func _get_in_bounds_step(particle_position: Vector2i, active_region: Rect2i) -> Vector2i:
 	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
@@ -100,10 +100,10 @@ func _get_in_bounds_step(particle_position: Vector2i, active_region: Rect2i) -> 
 
 func _particle_has_inactive_neighbor(particle_position: Vector2i) -> bool:
 	return (
-		_floorplan.coordinate_set.has(particle_position + Vector2i.UP) or 
-		_floorplan.coordinate_set.has(particle_position + Vector2i.DOWN) or 
-		_floorplan.coordinate_set.has(particle_position + Vector2i.LEFT) or 
-		_floorplan.coordinate_set.has(particle_position + Vector2i.RIGHT)
+		_gen_data.coordinate_set.has(particle_position + Vector2i.UP) or 
+		_gen_data.coordinate_set.has(particle_position + Vector2i.DOWN) or 
+		_gen_data.coordinate_set.has(particle_position + Vector2i.LEFT) or 
+		_gen_data.coordinate_set.has(particle_position + Vector2i.RIGHT)
 	)
 
 func _pick_random_point(rect: Rect2i) -> Vector2i:

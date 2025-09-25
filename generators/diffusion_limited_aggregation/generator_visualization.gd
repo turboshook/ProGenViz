@@ -5,8 +5,8 @@ extends GeneratorVisualization
 
 func _activate() -> void:
 	
-	for x_coordinate: int in range(_floorplan.map_size.x):
-		for y_coordinate: int in range(_floorplan.map_size.y):
+	for x_coordinate: int in range(_gen_data.map_size.x):
+		for y_coordinate: int in range(_gen_data.map_size.y):
 			floor_tile_map.set_cell(Vector2i(x_coordinate, y_coordinate), 0, Vector2i.ZERO)
 	
 	var tile_atlas_coordinates: Array[Vector2i] = [Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)]
@@ -14,7 +14,7 @@ func _activate() -> void:
 	tile_atlas_coordinates.erase(floor_tile_atlas_coordinates)
 	var tiles_placed: int = -1
 	_tile_particles.set_emitting(true)
-	for tile_coordinate: Vector2i in _floorplan.tile_coordinates:
+	for tile_coordinate: Vector2i in _gen_data.tile_coordinates:
 		floor_tile_map.set_cell(tile_coordinate, 0, floor_tile_atlas_coordinates)
 		_tile_particles.position = (tile_coordinate * 8.0)
 		tiles_placed += 1
@@ -23,9 +23,9 @@ func _activate() -> void:
 	_tile_particles.set_emitting(false)
 	
 	# visualize particles that never resolved
-	for particle: Dictionary in _floorplan.particles:
-		if _floorplan.coordinate_set.has(particle.position): continue
+	for particle: Dictionary in _gen_data.particles:
+		if _gen_data.coordinate_set.has(particle.position): continue
 		particle_tile_map.set_cell(particle.position, 0, tile_atlas_coordinates.pick_random())
 
 func get_center_offset() -> Vector2:
-	return Vector2((_floorplan.map_size/2) * floor_tile_map.tile_set.tile_size)
+	return Vector2((_gen_data.map_size/2) * floor_tile_map.tile_set.tile_size)

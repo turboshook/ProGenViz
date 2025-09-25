@@ -15,7 +15,7 @@ func _init() -> void:
 	"
 
 func generate(parameters: Dictionary) -> void:
-	_floorplan = {
+	_gen_data = {
 		"walks": [], # Ordered list of tile coordinate per walker. Used in the visualizer
 		"tile_set": {} # O(1) lookup for unique tile coordinates.
 	}
@@ -26,13 +26,13 @@ func generate(parameters: Dictionary) -> void:
 		].pick_random() 
 		var walk: Array[Vector2i] = []
 		for _step: int in range(parameters.walker_lifetime):
-			if not _floorplan.tile_set.has(walker_coordinate):
-				_floorplan.tile_set[walker_coordinate] = null # some dummy value
+			if not _gen_data.tile_set.has(walker_coordinate):
+				_gen_data.tile_set[walker_coordinate] = null # some dummy value
 				walk.append(walker_coordinate)
 			if randf() < parameters.walker_turn_chance:
 				step_direction = _handle_turn(step_direction)
 			walker_coordinate += step_direction
-		_floorplan.walks.append(walk)
+		_gen_data.walks.append(walk)
 
 func _handle_turn(step_direction: Vector2i) -> Vector2i:
 	if step_direction.x == 0: return Vector2i([-1, 1].pick_random(), 0)
