@@ -3,17 +3,26 @@ extends GeneratorVisualization
 @onready var tile_map: TileMapLayer = $TileMapLayer
 
 func _activate() -> void:
+	
+	for partitions: Array in _gen_data.partition_history:
+		for partition: Dictionary in partitions:
+			for x: int in range(partition.rect.position.x, partition.rect.position.x + partition.rect.size.x):
+				for y: int in range(partition.rect.position.y, partition.rect.position.y + partition.rect.size.y):
+					tile_map.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
+			for _frame: int in range(8): await get_tree().physics_frame
+		tile_map.clear()
+	 
 	for partition: Dictionary in _gen_data.partitions:
 		var room_data: Dictionary = partition.room
 		
 		# draw partition
-		for x: int in range(partition.origin.x, partition.origin.x + partition.width):
-			for y: int in range(partition.origin.y, partition.origin.y + partition.height):
+		for x: int in range(partition.rect.position.x, partition.rect.position.x + partition.rect.size.x):
+			for y: int in range(partition.rect.position.y, partition.rect.position.y + partition.rect.size.y):
 				tile_map.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
 		
 		# draw room
-		for x: int in range(room_data.origin.x, room_data.origin.x + room_data.width):
-			for y: int in range(room_data.origin.y, room_data.origin.y + room_data.height):
+		for x: int in range(room_data.rect.position.x, room_data.rect.position.x + room_data.rect.size.x):
+			for y: int in range(room_data.rect.position.y, room_data.rect.position.y + room_data.rect.size.y):
 				tile_map.set_cell(Vector2i(x, y), 0, Vector2i(1, 2))
 		
 		AudioManager.play_sound("tap")

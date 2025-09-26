@@ -2,41 +2,37 @@ extends MapGenerator
 
 	# Template Data #
 const PARTITION_DICTIONARY: Dictionary = {
-	"origin": Vector2i(-1, -1),
-	"height": 0,
-	"width": 0,
+	"rect": Rect2i(0, 0, 0, 0),
 	"neighbors": {
-		"north": -1,
-		"south": -1,
-		"east": -1,
-		"west": -1
+		Vector2i.UP: -1,
+		Vector2i.DOWN: -1,
+		Vector2i.RIGHT: -1,
+		Vector2i.LEFT: -1
 	},
 	"room": {}
 }
+
 const ROOM_DICTIONARY: Dictionary = {
-	"origin": Vector2i(-1, -1),
-	"height": 0,
-	"width": 0,
+	"rect": Rect2i(0, 0, 0, 0),
 	"entrances": { # support multiple entrances?
-		"north": {
+		Vector2i.UP: {
 			"position": Vector2i(-1, -1),
 			"is_connected": false 
 		},
-		"south": {
+		Vector2i.DOWN: {
 			"position": Vector2i(-1, -1),
 			"is_connected": false 
 		},
-		"east": {
+		Vector2i.RIGHT: {
 			"position": Vector2i(-1, -1),
 			"is_connected": false 
 		},
-		"west": {
+		Vector2i.LEFT: {
 			"position": Vector2i(-1, -1),
 			"is_connected": false 
 		} 
 	},
-	"tag": "",
-	"prefab": ""
+	"tag": ""
 }
 
 const HALLWAY_DICTIONARY: Dictionary = {
@@ -50,7 +46,7 @@ func _init() -> void:
 		"floor_tile_height": 36,
 		"partition_border": Vector2i(3, 3),
 		"max_partition_depth": 4, 
-		"min_partition_size": Vector2i(4, 4),
+		"min_partition_size": Vector2i(8, 8),
 		"split_chance": 0.5,
 		"base_partition_variance": 4,
 		"min_room_size": Vector2i(3, 3)
@@ -72,14 +68,15 @@ func generate(parameters: Dictionary) -> void:
 	
 	# init partitions Dictionary with a partition representing the entire floor
 	partitions.append(PARTITION_DICTIONARY.duplicate(true))
-	partitions[0].origin = Vector2i.ZERO
-	partitions[0].width = parameters.floor_tile_width
-	partitions[0].height = parameters.floor_tile_height
+	partitions[0].rect = Rect2i(
+		Vector2i.ZERO,
+		Vector2i(parameters.floor_tile_width, parameters.floor_tile_height)
+	)
 	
 	# delete old partitions and create new ones until some partition reaches the max depth
 	var current_partition_depth: int = 0
-	var previous_partitions: Array[Dictionary]
-	var horizontal_split: bool = bool(randi_range(0, 1))
+	var previous_partitions: Array[Dictionary] = []
+	
 	while (current_partition_depth < parameters.max_partition_depth):
 		previous_partitions = partitions
 		partitions = []
@@ -88,154 +85,132 @@ func generate(parameters: Dictionary) -> void:
 		# check every partition for a split
 		var splits: int = 0
 		for partition: Dictionary in previous_partitions:
+			
 			# continue if partition fails the split roll
 			var roll: float = randf()
-			if roll < 0.5 and current_partition_depth > 3:
+			if roll > parameters.split_chance: 
 				partitions.append(partition)
-				partition_rects.append(Rect2i(partition.origin, Vector2i(partition.width, partition.height)))
-				horizontal_split = not horizontal_split
+				partition_rects.append(partition.rect)
 				continue
 			
+			# this section is experimental
+			var possible_splits: Array[bool] = []
+			if partition.rect.size.y > parameters.min_partition_size.y:
+				possible_splits.append(true)
+			if partition.rect.size.x > parameters.min_partition_size.x:
+				possible_splits.append(false)
+			if possible_splits.is_empty():
+				partitions.append(partition)
+				partition_rects.append(partition.rect)
+				continue
+			
+			#var horizontal_split: bool = true
+			#
+			#if partition.rect.size.y > partition.rect.size.x and partition.rect.size.y > parameters.min_partition_size.y:
+				#
+			
+			var horizontal_split: bool = possible_splits.pick_random()
+			
 			# The split is successful, begin by duplicating the partition
-			# TODO rename these, split_0 and split_1
-			var partition_0: Dictionary = partition.duplicate(true)
-			var partition_1: Dictionary = partition_0.duplicate(true)
-			var can_split: bool = false
+			var split_0: Dictionary = partition.duplicate(true)
+			var split_1: Dictionary = partition.duplicate(true)
 			
 			# Resize both partitions based one whether they are split along their x or y axis
-			# TODO
-			# this can be refactored and made so much nicer
-			# 1 - determine can_split based on min_partition_size constraints
-			# 2 - determine horizontal or vertical split 
-			# 3 - use partition's center coordinate to derive position and size for partition_0 and partition_1
-			if horizontal_split and partition_0.height / 2 > parameters.min_partition_size.y:
-				can_split = true
-				var slice_position: int = partition_0.height / 2 
-				var base_height_min: int = max(parameters.min_partition_size.y, slice_position - parameters.base_partition_variance)
-				var base_height_max: int = min(partition_0.height - parameters.min_partition_size.y, slice_position + parameters.base_partition_variance)
-				partition_0.height = randi_range(base_height_min, base_height_max)
-				partition_1.origin = Vector2i(partition_0.origin.x, partition_0.origin.y + partition_0.height)
-				partition_1.height = partition_1.height - partition_0.height
-			elif not horizontal_split and partition_0.width / 2 > parameters.min_partition_size.x:
-				can_split = true
-				var slice_position: int = partition_0.width / 2 
-				var base_width_min: int = max(parameters.min_partition_size.x, slice_position - parameters.base_partition_variance)
-				var base_width_max: int = min(partition_0.width - parameters.min_partition_size.x, slice_position + parameters.base_partition_variance)
-				partition_0.width = randi_range(base_width_min, base_width_max)
-				partition_1.origin = Vector2i(partition_0.origin.x + partition_0.width, partition_0.origin.y)
-				partition_1.width = partition_1.width - partition_0.width
+			var split_position: Vector2i = partition.rect.get_center()
+			var size_adjust: Vector2i = split_position - partition.rect.position
+			if horizontal_split:
+				split_0.rect.size.y = partition.rect.size.y - size_adjust.y
+				split_1.rect.size = split_0.rect.size
+				split_1.rect.position.y = split_position.y
+			else:
+				split_0.rect.size.x = partition.rect.size.x - size_adjust.x
+				split_1.rect.size = split_0.rect.size
+				split_1.rect.position.x = split_position.x
 			
-			# Append new partitions if we can split, re-append the old partition if we can't
-			if can_split:
-				partitions.append(partition_0)
-				partitions.append(partition_1)
-				partition_rects.append(Rect2i(partition_0["origin"], Vector2i(partition_0["width"], partition_0["height"])))
-				partition_rects.append(Rect2i(partition_1["origin"], Vector2i(partition_1["width"], partition_1["height"])))
-				splits += 1
-			else: # TODO move this up and continue the loop earlier if we can't split
-				partitions.append(partition)
-				partition_rects.append(Rect2i(partition["origin"], Vector2i(partition["width"], partition["height"])))
-		
-		# continue loop if some split has occurred...
-		if splits > 0:
-			current_partition_depth += 1
+			# Append new partitions 
+			partitions.append(split_0)
+			partitions.append(split_1)
+			partition_rects.append(split_0.rect)
+			partition_rects.append(split_1.rect)
 			horizontal_split = not horizontal_split
+			splits += 1
+		
+		_gen_data.partition_history.append(partitions)
+		# increment partition depth if a split ocurred
+		if splits > 0: 
+			current_partition_depth += 1
 			continue
-		# ... or if no splitting happened at a relatively shallow depth (I chose 2)
-		elif current_partition_depth < 2:
-			partitions = previous_partitions
-			continue
-		# alternatively, break from loop if no splits occurred after a sufficient depth
+		# If no splits occurred, end with the last batch of partitions
+		elif current_partition_depth < 2: continue
 		break
 	
 	# Calculate partition neighbors
-	for i: int in range(partition_rects.size()):
-		var current_rect: Rect2i = partition_rects[i]
+	for partition_key: int in range(partition_rects.size()):
+		var current_rect: Rect2i = partition_rects[partition_key]
 		var center: Vector2i = current_rect.get_center()
+		var check_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 		
-		# Find and assign neighbors in the four cardinal directions
-		for n in range(partition_rects.size()):
-			@warning_ignore("integer_division")
-			if partition_rects[n].has_point(center - Vector2i(0, current_rect.size.y/2 + 2)):
-				partitions[i]["neighbors"]["north"] = n
-				break
-		for s in range(partition_rects.size()):
-			@warning_ignore("integer_division")
-			if partition_rects[s].has_point(center + Vector2i(0, current_rect.size.y/2 + 2)):
-				partitions[i]["neighbors"]["south"] = s
-				break
-		for e in range(partition_rects.size()):
-			@warning_ignore("integer_division")
-			if partition_rects[e].has_point(center + Vector2i(current_rect.size.x/2 + 2, 0)):
-				partitions[i]["neighbors"]["east"] = e
-				break
-		for w in range(partition_rects.size()):
-			@warning_ignore("integer_division")
-			if partition_rects[w].has_point(center - Vector2i(current_rect.size.x/2 + 2, 0)):
-				partitions[i]["neighbors"]["west"] = w
-				break
+		for neighbor_key: int in range(partition_rects.size()):
+			for direction: Vector2i in check_directions:
+				if partition_rects[neighbor_key].has_point(center + (direction * current_rect.size)):
+					partitions[partition_key].neighbors[direction] = neighbor_key
 	
 	# Create one room in every partition
-	for i in range(partitions.size()):
+	for i: int in range(partitions.size()):
 		
 		# generate room spatial data
 		var room: Dictionary = ROOM_DICTIONARY.duplicate(true)
-		# TODO put rect here
-		room["width"] = randi_range(parameters.min_room_size.x, partitions[i]["width"] - parameters.partition_border.x)
-		room["height"] = randi_range(parameters.min_room_size.y, partitions[i]["height"] - parameters.partition_border.y)
-		room["origin"] = Vector2i(
-			partitions[i]["origin"].x + randi_range(0, (partitions[i]["width"] - room["width"]) - parameters.partition_border.x),
-			partitions[i]["origin"].y + randi_range(0, (partitions[i]["height"] - room["height"]) - parameters.partition_border.y)
+		var room_size: Vector2i = Vector2i(
+			randi_range(parameters.min_room_size.x, partitions[i].rect.size.x - parameters.partition_border.x),
+			randi_range(parameters.min_room_size.y, partitions[i].rect.size.y - parameters.partition_border.y)
 		)
-		partitions[i]["room"] = room
-		# rooms can have coordinates that are outside their partition if the partitions become too small, this is a bug
-		# which way should the constraint go?
+		var room_origin: Vector2i = Vector2i(
+			partitions[i].rect.position.x + randi_range(0, (partitions[i].rect.size.x - room_size.x) - parameters.partition_border.x),
+			partitions[i].rect.position.y + randi_range(0, (partitions[i].rect.size.y - room_size.y) - parameters.partition_border.y)
+		)
+		room.rect = Rect2i(room_origin, room_size)
+		partitions[i].room = room
 		
 		# generate room entrances based on shared partition neighbor data
-		for direction_string in partitions[i]["neighbors"].keys():
-			var neighbor_id: int = partitions[i]["neighbors"][direction_string]
+		for direction: Vector2i in partitions[i].neighbors.keys():
+			var neighbor_id: int = partitions[i].neighbors[direction]
 			if neighbor_id == -1:
 				continue
-			# TODO refactor this once face strings are replaced with unit vectors
-			var opposite_direction_string: String = _get_opposite_direction(direction_string)
-			if partitions[neighbor_id]["neighbors"][opposite_direction_string] != i:
-				partitions[i]["neighbors"][direction_string] = -1
+			if partitions[neighbor_id].neighbors[-direction] != i:
+				partitions[i].neighbors[direction] = -1
 				continue
-			# TODO this function call will go away once the above change is made and has been replaced
-			# with GeneratorUtils.get_rect_face_coordinates()
-			partitions[i]["room"]["entrances"][direction_string]["position"] = _get_random_wall_coordinate(partitions[i]["room"], direction_string)
+			# TODO reference the new room rect value
+			#var room_rect: Rect2i = Rect2i(partitions[i].room.origin, Vector2i(partitions[i].room.width, partitions[i].room.height))
+			var wall_coordinates: Array[Vector2i] = GeneratorUtils.get_rect_face_coordinates(partitions[i].rect, direction)
+			partitions[i].room.entrances[direction].position = wall_coordinates.pick_random()
 	
 	var hallways: Array[Dictionary]
 	
 	for partition_id in range(partitions.size()):
-		var this_room: Dictionary = partitions[partition_id]["room"]
-		for direction_string: String in partitions[partition_id]["neighbors"].keys():
+		var this_room: Dictionary = partitions[partition_id].room
+		for direction: Vector2i in partitions[partition_id].neighbors.keys():
 			
-			if this_room["entrances"][direction_string]["position"] == Vector2i(-1, -1):
-				continue
-			elif this_room["entrances"][direction_string]["is_connected"]:
-				continue
+			if this_room.entrances[direction].position == Vector2i(-1, -1): continue
+			elif this_room.entrances[direction].is_connected: continue
 			
 			# TODO
 			# update to refer to partition entrances via unit vectors
-			var neighbor_partition_id: int = partitions[partition_id]["neighbors"][direction_string]
-			var neighbor_room: Dictionary = partitions[neighbor_partition_id]["room"]
-			var hallway_start_position: Vector2i = this_room["entrances"][direction_string]["position"]
-			var opposite_direction_string: String = _get_opposite_direction(direction_string)
-			var hallway_end_position: Vector2i = neighbor_room["entrances"][opposite_direction_string]["position"]
+			var neighbor_partition_id: int = partitions[partition_id].neighbors[direction]
+			var neighbor_room: Dictionary = partitions[neighbor_partition_id].room
+			var hallway_start_position: Vector2i = this_room.entrances[direction].position
+			var hallway_end_position: Vector2i = neighbor_room.entrances[-direction].position
 			var hallway_dictionary: Dictionary = HALLWAY_DICTIONARY.duplicate(true)
 			
 			# TODO 
 			# replace this with GeneratorUtils hallway building functions
 			# + unit vector changes as mentioned above
-			hallway_dictionary["tile_positions"] = _get_walked_path(hallway_start_position, hallway_end_position)
-			this_room["entrances"][direction_string]["is_connected"] = true
-			neighbor_room["entrances"][opposite_direction_string]["is_connected"] = true
+			hallway_dictionary.tile_positions = _get_walked_path(hallway_start_position, hallway_end_position)
+			this_room.entrances[direction].is_connected = true
+			neighbor_room.entrances[-direction].is_connected = true
 			hallways.append(hallway_dictionary)
 	
 	_gen_data.partitions = partitions
 	_gen_data.hallways = hallways
-
 
 # this needs to be replaced with an astar path that takes room into account, no 
 # hallways overlapping with rooms (hallways overlapping with eachother is fine)
