@@ -1,5 +1,7 @@
 extends MapGenerator
 
+const TILEMAP_PATH: String = "res://generators/binary_space_partition/b_s_p_tilemap.tscn"
+
 	# Template Data #
 const PARTITION_DICTIONARY: Dictionary = {
 	"origin": Vector2i(-1, -1),
@@ -44,6 +46,9 @@ const HALLWAY_DICTIONARY: Dictionary = {
 	"tag": "" # Arbitrary data
 }
 
+var _partitions: Array[Dictionary] = []
+var _hallways: Array[Dictionary] = []
+
 func _init() -> void:
 	_default_parameters = {
 		"floor_tile_width": 36, 
@@ -60,14 +65,18 @@ func _init() -> void:
 	"
 
 func generate(parameters: Dictionary) -> void:
+	_partitions = _generate_partitions(parameters)
+	_generate_rooms(parameters)
+	_hallways = _generate_hallways()
 	_gen_data = {
-		"parameters": parameters,
-		"partition_history": [],
-		"partitions": [],
-		"hallways": []
+		"partitions": _partitions,
+		"hallways": _hallways,
+		"parameters": parameters
 	}
+
+func _generate_partitions(parameters: Dictionary) -> Array[Dictionary]:
 	
-	var partitions: Array[Dictionary] = []
+	var partitions: Array[Dictionary]
 	var partition_rects: Array[Rect2i] # temp, used for adjacency calculations
 	
 	# init partitions Dictionary with a partition representing the entire floor
@@ -175,41 +184,47 @@ func generate(parameters: Dictionary) -> void:
 				partitions[i]["neighbors"]["west"] = w
 				break
 	
+	return partitions
+
+func _generate_rooms(parameters: Dictionary) -> void:
+	
 	# Create one room in every partition
-	for i in range(partitions.size()):
+	for i in range(_partitions.size()):
 		
 		# generate room spatial data
 		var room: Dictionary = ROOM_DICTIONARY.duplicate(true)
 		# TODO put rect here
-		room["width"] = randi_range(parameters.min_room_size.x, partitions[i]["width"] - parameters.partition_border.x)
-		room["height"] = randi_range(parameters.min_room_size.y, partitions[i]["height"] - parameters.partition_border.y)
+		room["width"] = randi_range(parameters.min_room_size.x, _partitions[i]["width"] - parameters.partition_border.x)
+		room["height"] = randi_range(parameters.min_room_size.y, _partitions[i]["height"] - parameters.partition_border.y)
 		room["origin"] = Vector2i(
-			partitions[i]["origin"].x + randi_range(0, (partitions[i]["width"] - room["width"]) - parameters.partition_border.x),
-			partitions[i]["origin"].y + randi_range(0, (partitions[i]["height"] - room["height"]) - parameters.partition_border.y)
+			_partitions[i]["origin"].x + randi_range(0, (_partitions[i]["width"] - room["width"]) - parameters.partition_border.x),
+			_partitions[i]["origin"].y + randi_range(0, (_partitions[i]["height"] - room["height"]) - parameters.partition_border.y)
 		)
-		partitions[i]["room"] = room
+		_partitions[i]["room"] = room
 		# rooms can have coordinates that are outside their partition if the partitions become too small, this is a bug
 		# which way should the constraint go?
 		
 		# generate room entrances based on shared partition neighbor data
-		for direction_string in partitions[i]["neighbors"].keys():
-			var neighbor_id: int = partitions[i]["neighbors"][direction_string]
+		for direction_string in _partitions[i]["neighbors"].keys():
+			var neighbor_id: int = _partitions[i]["neighbors"][direction_string]
 			if neighbor_id == -1:
 				continue
 			# TODO refactor this once face strings are replaced with unit vectors
 			var opposite_direction_string: String = _get_opposite_direction(direction_string)
-			if partitions[neighbor_id]["neighbors"][opposite_direction_string] != i:
-				partitions[i]["neighbors"][direction_string] = -1
+			if _partitions[neighbor_id]["neighbors"][opposite_direction_string] != i:
+				_partitions[i]["neighbors"][direction_string] = -1
 				continue
 			# TODO this function call will go away once the above change is made and has been replaced
 			# with GeneratorUtils.get_rect_face_coordinates()
-			partitions[i]["room"]["entrances"][direction_string]["position"] = _get_random_wall_coordinate(partitions[i]["room"], direction_string)
+			_partitions[i]["room"]["entrances"][direction_string]["position"] = _get_random_wall_coordinate(_partitions[i]["room"], direction_string)
+
+func _generate_hallways() -> Array[Dictionary]:
 	
 	var hallways: Array[Dictionary]
 	
-	for partition_id in range(partitions.size()):
-		var this_room: Dictionary = partitions[partition_id]["room"]
-		for direction_string: String in partitions[partition_id]["neighbors"].keys():
+	for partition_id in range(_partitions.size()):
+		var this_room: Dictionary = _partitions[partition_id]["room"]
+		for direction_string: String in _partitions[partition_id]["neighbors"].keys():
 			
 			if this_room["entrances"][direction_string]["position"] == Vector2i(-1, -1):
 				continue
@@ -218,8 +233,8 @@ func generate(parameters: Dictionary) -> void:
 			
 			# TODO
 			# update to refer to partition entrances via unit vectors
-			var neighbor_partition_id: int = partitions[partition_id]["neighbors"][direction_string]
-			var neighbor_room: Dictionary = partitions[neighbor_partition_id]["room"]
+			var neighbor_partition_id: int = _partitions[partition_id]["neighbors"][direction_string]
+			var neighbor_room: Dictionary = _partitions[neighbor_partition_id]["room"]
 			var hallway_start_position: Vector2i = this_room["entrances"][direction_string]["position"]
 			var opposite_direction_string: String = _get_opposite_direction(direction_string)
 			var hallway_end_position: Vector2i = neighbor_room["entrances"][opposite_direction_string]["position"]
@@ -233,9 +248,7 @@ func generate(parameters: Dictionary) -> void:
 			neighbor_room["entrances"][opposite_direction_string]["is_connected"] = true
 			hallways.append(hallway_dictionary)
 	
-	_gen_data.partitions = partitions
-	_gen_data.hallways = hallways
-
+	return hallways
 
 # this needs to be replaced with an astar path that takes room into account, no 
 # hallways overlapping with rooms (hallways overlapping with eachother is fine)

@@ -1,10 +1,26 @@
-[gd_scene load_steps=3 format=3 uid="uid://kisyf33qyicm"]
+[gd_scene load_steps=5 format=3 uid="uid://kisyf33qyicm"]
 
 [ext_resource type="Script" uid="uid://cot83uh373eo5" path="res://main/generators/binary_space_partition/generator_visualization.gd" id="1_6lret"]
-[ext_resource type="PackedScene" uid="uid://cc1e7ndw6p6j7" path="res://main/generators/binary_space_partition/b_s_p_tilemap.tscn" id="2_lkp51"]
+[ext_resource type="Texture2D" uid="uid://cl7vg0jbfeaot" path="res://import/textures/tiles.png" id="2_vh60r"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eluea"]
+texture = ExtResource("2_vh60r")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+1:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_0cevs"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_eluea")
 
 [node name="GeneratorVisualization" type="Node2D"]
 script = ExtResource("1_6lret")
 metadata/_custom_type_script = "uid://lvmunabsg24w"
 
-[node name="BSPTilemap" parent="." instance=ExtResource("2_lkp51")]
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_0cevs")
+metadata/_edit_lock_ = true

@@ -82,7 +82,6 @@ static func get_rect_random_point(rect: Rect2i) -> Vector2i:
 	)
 
 static func get_rect_face_coordinates(rect: Rect2i, face: Vector2i) -> Array[Vector2i]:
-	
 	var coordinates: Array[Vector2i] = []
 	match face:
 		Vector2i.UP:
