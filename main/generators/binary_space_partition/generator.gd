@@ -117,16 +117,14 @@ func generate(parameters: Dictionary) -> void:
 			var split_1: Dictionary = partition.duplicate(true)
 			
 			# Resize both partitions based one whether they are split along their x or y axis
-			var split_position: Vector2i = partition.rect.get_center()
-			var size_adjust: Vector2i = split_position - partition.rect.position
 			if horizontal_split:
-				split_0.rect.size.y = partition.rect.size.y - size_adjust.y
-				split_1.rect.size = split_0.rect.size
-				split_1.rect.position.y = split_position.y
+				split_0.rect.size.y = partition.rect.size.y/2
+				split_1.rect.size.y = partition.rect.size.y - split_0.rect.size.y
+				split_1.rect.position.y += split_0.rect.size.y
 			else:
-				split_0.rect.size.x = partition.rect.size.x - size_adjust.x
-				split_1.rect.size = split_0.rect.size
-				split_1.rect.position.x = split_position.x
+				split_0.rect.size.x = partition.rect.size.x/2
+				split_1.rect.size.x = partition.rect.size.x - split_0.rect.size.x
+				split_1.rect.position.x += split_0.rect.size.x
 			
 			# Append new partitions 
 			partitions.append(split_0)
@@ -167,7 +165,7 @@ func generate(parameters: Dictionary) -> void:
 			),
 			randi_range(
 				parameters.min_room_size.y, 
-				min(parameters.min_room_size.y, partitions[i].rect.size.y - parameters.partition_border.y)
+				min(parameters.max_room_size.y, partitions[i].rect.size.y - parameters.partition_border.y)
 			)
 		)
 		# Determine the room's origin using its size and the size of its partition
