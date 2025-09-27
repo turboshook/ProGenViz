@@ -42,14 +42,14 @@ const HALLWAY_DICTIONARY: Dictionary = {
 
 func _init() -> void:
 	_default_parameters = {
-		"floor_tile_width": 36, 
-		"floor_tile_height": 36,
+		"floor_size": Vector2i(32, 32),
 		"partition_border": Vector2i(3, 3),
 		"max_partition_depth": 4, 
 		"min_partition_size": Vector2i(8, 8),
 		"split_chance": 0.5,
 		"base_partition_variance": 4,
-		"min_room_size": Vector2i(3, 3)
+		"min_room_size": Vector2i(3, 3),
+		"max_room_size": Vector2i(12, 12)
 	}
 	_info_text = "
 		Info text here!
@@ -67,10 +67,7 @@ func generate(parameters: Dictionary) -> void:
 	
 	# init partitions Dictionary with a partition representing the entire floor
 	partitions.append(PARTITION_DICTIONARY.duplicate(true))
-	partitions[0].rect = Rect2i(
-		Vector2i.ZERO,
-		Vector2i(parameters.floor_tile_width, parameters.floor_tile_height)
-	)
+	partitions[0].rect = Rect2i(Vector2i.ZERO, parameters.floor_size)
 	
 	# delete old partitions and create new ones until some partition reaches the max depth
 	var current_partition_depth: int = 0
@@ -90,14 +87,28 @@ func generate(parameters: Dictionary) -> void:
 				partitions.append(partition)
 				continue
 			
-			# this section is experimental
+			# Define an array of bool that holds possible values for the horizontal_split variable below
 			var possible_splits: Array[bool] = []
-			if partition.rect.size.y > parameters.min_partition_size.y:
-				possible_splits.append(true)
-			if partition.rect.size.x > parameters.min_partition_size.x:
-				possible_splits.append(false)
+			
+			# Define boolean checks ahead of time for readability
+			var partition_is_square: bool = (partition.rect.size.y == partition.rect.size.x)
+			# The >= evaluation below will favor the horizontal splits where either could occur, > will favor vertical ones
+			var partition_is_vertical_rectangle: bool = (partition.rect.size.y >= partition.rect.size.x)
+			var partition_y_above_min: bool = (partition.rect.size.y > parameters.min_partition_size.y)
+			var partition_x_above_min: bool = (partition.rect.size.x > parameters.min_partition_size.x)
+			
+			# Calculate valid partition splits based on the current partition's dimensions and then choose one at random
+			if partition_is_square:
+				if partition_y_above_min: possible_splits.append(true)
+				if partition_x_above_min: possible_splits.append(false)
+			elif partition_is_vertical_rectangle and partition_y_above_min:
+				possible_splits.append(true) # can split horizontally
+			elif partition_x_above_min:
+				possible_splits.append(false) # can split vertically
+			
+			# If there is no valid split, re-append and move on to the next one
 			if possible_splits.is_empty():
-				partitions.append(partition)
+				partitions.append(partition) 
 				continue
 			var horizontal_split: bool = possible_splits.pick_random()
 			
@@ -120,11 +131,10 @@ func generate(parameters: Dictionary) -> void:
 			# Append new partitions 
 			partitions.append(split_0)
 			partitions.append(split_1)
-			horizontal_split = not horizontal_split
 			splits += 1
 		
 		_gen_data.partition_history.append(partitions)
-		# increment partition depth if a split ocurred
+		# Increment partition depth if a split ocurred
 		if splits > 0: 
 			current_partition_depth += 1
 			continue
@@ -149,10 +159,18 @@ func generate(parameters: Dictionary) -> void:
 		
 		# generate room spatial data
 		var room: Dictionary = ROOM_DICTIONARY.duplicate(true)
+		# Room max dimensions are constrained by the min of the max room size parameter and the allowable build space in a partition 
 		var room_size: Vector2i = Vector2i(
-			randi_range(parameters.min_room_size.x, partitions[i].rect.size.x - parameters.partition_border.x),
-			randi_range(parameters.min_room_size.y, partitions[i].rect.size.y - parameters.partition_border.y)
+			randi_range(
+				parameters.min_room_size.x, 
+				min(parameters.max_room_size.x, partitions[i].rect.size.x - parameters.partition_border.x)
+			),
+			randi_range(
+				parameters.min_room_size.y, 
+				min(parameters.min_room_size.y, partitions[i].rect.size.y - parameters.partition_border.y)
+			)
 		)
+		# Determine the room's origin using its size and the size of its partition
 		var room_origin: Vector2i = Vector2i(
 			partitions[i].rect.position.x + randi_range(0, (partitions[i].rect.size.x - room_size.x) - parameters.partition_border.x),
 			partitions[i].rect.position.y + randi_range(0, (partitions[i].rect.size.y - room_size.y) - parameters.partition_border.y)

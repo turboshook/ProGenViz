@@ -7,26 +7,18 @@
 [ext_resource type="Script" uid="uid://cura5q3mxleax" path="res://main/utils/generator_parameter_table/generator_parameter_definition/generator_vector2i_parameter.gd" id="4_1bo8x"]
 [ext_resource type="Script" uid="uid://bfmg8o7qs7thl" path="res://main/utils/generator_parameter_table/generator_parameter_definition/generator_float_parameter.gd" id="5_63rbi"]
 
-[sub_resource type="Resource" id="Resource_hfjv8"]
-script = ExtResource("3_63rbi")
-value = 32
-value_min = 16
-value_max = 128
-name = "floor_tile_width"
-metadata/_custom_type_script = "uid://cn1osy2eiovo4"
-
-[sub_resource type="Resource" id="Resource_8v50f"]
-script = ExtResource("3_63rbi")
-value = 32
-value_min = 16
-value_max = 128
-name = "floor_tile_height"
-metadata/_custom_type_script = "uid://cn1osy2eiovo4"
+[sub_resource type="Resource" id="Resource_7flc2"]
+script = ExtResource("4_1bo8x")
+value = Vector2i(32, 32)
+value_min = Vector2i(16, 16)
+value_max = Vector2i(128, 128)
+name = "floor_size"
+metadata/_custom_type_script = "uid://cura5q3mxleax"
 
 [sub_resource type="Resource" id="Resource_4kpvj"]
 script = ExtResource("1_mqf6r")
 name = "Floor"
-parameters = Array[ExtResource("2_a8lfq")]([SubResource("Resource_hfjv8"), SubResource("Resource_8v50f")])
+parameters = Array[ExtResource("2_a8lfq")]([SubResource("Resource_7flc2")])
 metadata/_custom_type_script = "uid://bjevtxemkyuxs"
 
 [sub_resource type="Resource" id="Resource_gdc87"]
@@ -81,10 +73,18 @@ value_max = Vector2i(8, 8)
 name = "min_room_size"
 metadata/_custom_type_script = "uid://cura5q3mxleax"
 
+[sub_resource type="Resource" id="Resource_xwjtn"]
+script = ExtResource("4_1bo8x")
+value = Vector2i(12, 12)
+value_min = Vector2i(8, 8)
+value_max = Vector2i(24, 24)
+name = "max_room_size"
+metadata/_custom_type_script = "uid://cura5q3mxleax"
+
 [sub_resource type="Resource" id="Resource_pbh6t"]
 script = ExtResource("1_mqf6r")
 name = "Room"
-parameters = Array[ExtResource("2_a8lfq")]([SubResource("Resource_gllx3")])
+parameters = Array[ExtResource("2_a8lfq")]([SubResource("Resource_gllx3"), SubResource("Resource_xwjtn")])
 metadata/_custom_type_script = "uid://bjevtxemkyuxs"
 
 [resource]

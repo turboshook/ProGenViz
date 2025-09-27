@@ -42,8 +42,5 @@ func _activate() -> void:
 
 func get_center_offset() -> Vector2:
 	return (
-		Vector2(
-			_gen_data.parameters.floor_tile_width,
-			_gen_data.parameters.floor_tile_height
-		) * 8.0
-	)/2.0
+		Vector2(_gen_data.parameters.floor_size) * 8.0
+	) / 2.0
