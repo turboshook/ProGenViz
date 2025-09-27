@@ -64,7 +64,6 @@ func generate(parameters: Dictionary) -> void:
 	}
 	
 	var partitions: Array[Dictionary] = []
-	var partition_rects: Array[Rect2i] # temp, used for adjacency calculations
 	
 	# init partitions Dictionary with a partition representing the entire floor
 	partitions.append(PARTITION_DICTIONARY.duplicate(true))
@@ -80,7 +79,6 @@ func generate(parameters: Dictionary) -> void:
 	while (current_partition_depth < parameters.max_partition_depth):
 		previous_partitions = partitions
 		partitions = []
-		partition_rects = []
 		
 		# check every partition for a split
 		var splits: int = 0
@@ -90,7 +88,6 @@ func generate(parameters: Dictionary) -> void:
 			var roll: float = randf()
 			if roll > parameters.split_chance: 
 				partitions.append(partition)
-				partition_rects.append(partition.rect)
 				continue
 			
 			# this section is experimental
@@ -101,14 +98,7 @@ func generate(parameters: Dictionary) -> void:
 				possible_splits.append(false)
 			if possible_splits.is_empty():
 				partitions.append(partition)
-				partition_rects.append(partition.rect)
 				continue
-			
-			#var horizontal_split: bool = true
-			#
-			#if partition.rect.size.y > partition.rect.size.x and partition.rect.size.y > parameters.min_partition_size.y:
-				#
-			
 			var horizontal_split: bool = possible_splits.pick_random()
 			
 			# The split is successful, begin by duplicating the partition
@@ -130,8 +120,6 @@ func generate(parameters: Dictionary) -> void:
 			# Append new partitions 
 			partitions.append(split_0)
 			partitions.append(split_1)
-			partition_rects.append(split_0.rect)
-			partition_rects.append(split_1.rect)
 			horizontal_split = not horizontal_split
 			splits += 1
 		
@@ -145,14 +133,15 @@ func generate(parameters: Dictionary) -> void:
 		break
 	
 	# Calculate partition neighbors
-	for partition_key: int in range(partition_rects.size()):
-		var current_rect: Rect2i = partition_rects[partition_key]
+	for partition_key: int in range(partitions.size()):
+		var current_rect: Rect2i = partitions[partition_key].rect
 		var center: Vector2i = current_rect.get_center()
 		var check_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 		
-		for neighbor_key: int in range(partition_rects.size()):
+		for neighbor_key: int in range(partitions.size()):
 			for direction: Vector2i in check_directions:
-				if partition_rects[neighbor_key].has_point(center + (direction * current_rect.size)):
+				var search_offset: Vector2i = (direction * 2) + ((current_rect.size/2) * direction)
+				if partitions[neighbor_key].rect.has_point(center + search_offset):
 					partitions[partition_key].neighbors[direction] = neighbor_key
 	
 	# Create one room in every partition
@@ -174,18 +163,20 @@ func generate(parameters: Dictionary) -> void:
 		# generate room entrances based on shared partition neighbor data
 		for direction: Vector2i in partitions[i].neighbors.keys():
 			var neighbor_id: int = partitions[i].neighbors[direction]
-			if neighbor_id == -1:
-				continue
+			if neighbor_id == -1: continue
+			
+			# if the other partition does not recognize this one as a neighbor, no hallway will be built
 			if partitions[neighbor_id].neighbors[-direction] != i:
 				partitions[i].neighbors[direction] = -1
 				continue
-			# TODO reference the new room rect value
-			#var room_rect: Rect2i = Rect2i(partitions[i].room.origin, Vector2i(partitions[i].room.width, partitions[i].room.height))
-			var wall_coordinates: Array[Vector2i] = GeneratorUtils.get_rect_face_coordinates(partitions[i].rect, direction)
-			partitions[i].room.entrances[direction].position = wall_coordinates.pick_random()
+			
+			# select an entrance coordinate along each wall of a room
+			var wall_coordinates: Array[Vector2i] = GeneratorUtils.get_rect_face_coordinates(partitions[i].room.rect, direction)
+			# room entrances are always one tile outside the perimeter (optional, just plays best with my hallway code)
+			var entrance_coordinate_adjusted: Vector2i = wall_coordinates.pick_random() + direction
+			partitions[i].room.entrances[direction].position = entrance_coordinate_adjusted
 	
 	var hallways: Array[Dictionary]
-	
 	for partition_id in range(partitions.size()):
 		var this_room: Dictionary = partitions[partition_id].room
 		for direction: Vector2i in partitions[partition_id].neighbors.keys():
@@ -193,79 +184,19 @@ func generate(parameters: Dictionary) -> void:
 			if this_room.entrances[direction].position == Vector2i(-1, -1): continue
 			elif this_room.entrances[direction].is_connected: continue
 			
-			# TODO
-			# update to refer to partition entrances via unit vectors
 			var neighbor_partition_id: int = partitions[partition_id].neighbors[direction]
 			var neighbor_room: Dictionary = partitions[neighbor_partition_id].room
 			var hallway_start_position: Vector2i = this_room.entrances[direction].position
 			var hallway_end_position: Vector2i = neighbor_room.entrances[-direction].position
 			var hallway_dictionary: Dictionary = HALLWAY_DICTIONARY.duplicate(true)
 			
-			# TODO 
-			# replace this with GeneratorUtils hallway building functions
-			# + unit vector changes as mentioned above
-			hallway_dictionary.tile_positions = _get_walked_path(hallway_start_position, hallway_end_position)
+			var is_vertical: bool = (direction.x == 0)
+			hallway_dictionary.tile_positions = GeneratorUtils.get_middle_bend_path(
+				hallway_start_position, hallway_end_position, is_vertical
+			)
 			this_room.entrances[direction].is_connected = true
 			neighbor_room.entrances[-direction].is_connected = true
 			hallways.append(hallway_dictionary)
 	
 	_gen_data.partitions = partitions
 	_gen_data.hallways = hallways
-
-# this needs to be replaced with an astar path that takes room into account, no 
-# hallways overlapping with rooms (hallways overlapping with eachother is fine)
-func _get_walked_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
-	var path: Array[Vector2i] = []
-	var current_pos: Vector2i = start
-	
-	path.append(current_pos)
-	
-	var halfway: int = (abs(end.x - start.x) + abs(end.y - start.y)) / 2
-	var steps: int = 0
-	
-	while current_pos != end:
-		if steps < halfway:
-			if current_pos.x != end.x:
-				current_pos.x += 1 if end.x > current_pos.x else -1
-			elif current_pos.y != end.y:
-				current_pos.y += 1 if end.y > current_pos.y else -1
-		else:
-			if current_pos.y != end.y:
-				current_pos.y += 1 if end.y > current_pos.y else -1
-			elif current_pos.x != end.x:
-				current_pos.x += 1 if end.x > current_pos.x else -1
-		
-		path.append(current_pos)
-		steps += 1
-	
-	return path
-
-func _get_random_wall_coordinate(room_dictionary: Dictionary, wall_face: String) -> Vector2i:
-	if wall_face.to_lower() == "north":
-		return Vector2i(
-				room_dictionary["origin"].x + randi_range(0, room_dictionary["width"] - 1),
-				room_dictionary["origin"].y - 1
-			)
-	elif wall_face.to_lower() == "south":
-		return Vector2i(
-				room_dictionary["origin"].x + randi_range(0, room_dictionary["width"] - 1),
-				room_dictionary["origin"].y + room_dictionary["height"]
-			)
-	elif wall_face.to_lower() == "east":
-		return Vector2i(
-				room_dictionary["origin"].x + room_dictionary["width"],
-				room_dictionary["origin"].y + randi_range(0, room_dictionary["height"] - 1)
-			)
-	elif wall_face.to_lower() == "west":
-		return Vector2i(
-				room_dictionary["origin"].x - 1,
-				room_dictionary["origin"].y + randi_range(0, room_dictionary["height"] - 1)
-			)
-	return Vector2i(-1, -1)
-
-func _get_opposite_direction(direction_string: String) -> String:
-	if direction_string.to_lower() == "north": return "south"
-	if direction_string.to_lower() == "south": return "north"
-	if direction_string.to_lower() == "east": return "west"
-	if direction_string.to_lower() == "west": return "east"
-	return "bad direction"
