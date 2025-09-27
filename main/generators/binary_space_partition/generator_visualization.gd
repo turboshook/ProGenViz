@@ -49,5 +49,5 @@ func _activate() -> void:
 
 func get_center_offset() -> Vector2:
 	return (
-		Vector2(_gen_data.parameters.floor_size) * 8.0
+		Vector2(_gen_data.parameters.map_size) * 8.0
 	) / 2.0

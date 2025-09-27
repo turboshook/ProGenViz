@@ -9,12 +9,12 @@ const PARTITION_DICTIONARY: Dictionary = {
 		Vector2i.RIGHT: -1,
 		Vector2i.LEFT: -1
 	},
-	"room": {}
+	"room": {} # See ROOM_DICTIONARY
 }
 
 const ROOM_DICTIONARY: Dictionary = {
 	"rect": Rect2i(0, 0, 0, 0),
-	"entrances": { # support multiple entrances?
+	"entrances": {
 		Vector2i.UP: {
 			"position": Vector2i(-1, -1),
 			"is_connected": false 
@@ -32,27 +32,27 @@ const ROOM_DICTIONARY: Dictionary = {
 			"is_connected": false 
 		} 
 	},
-	"tag": ""
+	"tag": "" # Arbitrary data
 }
 
 const HALLWAY_DICTIONARY: Dictionary = {
-	"tile_positions": [], # Array[Vector2i]
+	"tile_positions": [], # Array[Vector2i] tile coordinates in global space
 	"tag": "" # Arbitrary data
 }
 
 func _init() -> void:
 	_default_parameters = {
-		"floor_size": Vector2i(32, 32),
-		"partition_border": Vector2i(3, 3),
+		"map_size": Vector2i(32, 32),
 		"max_partition_depth": 4, 
 		"min_partition_size": Vector2i(8, 8),
+		"partition_border": Vector2i(3, 3),
 		"split_chance": 0.5,
-		"base_partition_variance": 4,
+		"split_position_variance": 4,
 		"min_room_size": Vector2i(3, 3),
 		"max_room_size": Vector2i(12, 12)
 	}
-	_info_text = "
-		Info text here!
+	_info_text = "\
+		Info text here!\
 	"
 
 func generate(parameters: Dictionary) -> void:
@@ -63,11 +63,13 @@ func generate(parameters: Dictionary) -> void:
 		"hallways": []
 	}
 	
+	# PARTITIONS #
+	
 	var partitions: Array[Dictionary] = []
 	
 	# init partitions Dictionary with a partition representing the entire floor
 	partitions.append(PARTITION_DICTIONARY.duplicate(true))
-	partitions[0].rect = Rect2i(Vector2i.ZERO, parameters.floor_size)
+	partitions[0].rect = Rect2i(Vector2i.ZERO, parameters.map_size)
 	
 	# delete old partitions and create new ones until some partition reaches the max depth
 	var current_partition_depth: int = 0
@@ -94,8 +96,8 @@ func generate(parameters: Dictionary) -> void:
 			var partition_is_square: bool = (partition.rect.size.y == partition.rect.size.x)
 			# The >= evaluation below will favor the horizontal splits where either could occur, > will favor vertical ones
 			var partition_is_vertical_rectangle: bool = (partition.rect.size.y >= partition.rect.size.x)
-			var partition_y_above_min: bool = (partition.rect.size.y > parameters.min_partition_size.y)
-			var partition_x_above_min: bool = (partition.rect.size.x > parameters.min_partition_size.x)
+			var partition_y_above_min: bool = (partition.rect.size.y >= parameters.min_partition_size.y * 2)
+			var partition_x_above_min: bool = (partition.rect.size.x >= parameters.min_partition_size.x * 2)
 			
 			# Calculate valid partition splits based on the current partition's dimensions and then choose one at random
 			if partition_is_square:
@@ -116,13 +118,26 @@ func generate(parameters: Dictionary) -> void:
 			var split_0: Dictionary = partition.duplicate(true)
 			var split_1: Dictionary = partition.duplicate(true)
 			
-			# Resize both partitions based one whether they are split along their x or y axis
+			# Resize and reposition new partitions based one whether they are split along their x or y axis
+			var split_offset: int = randi_range(-parameters.split_position_variance, parameters.split_position_variance)
 			if horizontal_split:
-				split_0.rect.size.y = partition.rect.size.y/2
+				# choose a split position along the y-axis, clamped such that both resulting rects respect the min partition size
+				var split_position: int = clamp(
+					(partition.rect.size.y / 2) + split_offset, 
+					parameters.min_partition_size.y, 
+					partition.rect.size.y - parameters.min_partition_size.y
+				)
+				split_0.rect.size.y = split_position
 				split_1.rect.size.y = partition.rect.size.y - split_0.rect.size.y
 				split_1.rect.position.y += split_0.rect.size.y
 			else:
-				split_0.rect.size.x = partition.rect.size.x/2
+				# choose a split position along the x-axis, clamped such that both resulting rects respect the min partition size
+				var split_position: int = clamp(
+					(partition.rect.size.x / 2) + split_offset, 
+					parameters.min_partition_size.x, 
+					partition.rect.size.x - parameters.min_partition_size.x
+				)
+				split_0.rect.size.x = split_position
 				split_1.rect.size.x = partition.rect.size.x - split_0.rect.size.x
 				split_1.rect.position.x += split_0.rect.size.x
 			
@@ -131,7 +146,9 @@ func generate(parameters: Dictionary) -> void:
 			partitions.append(split_1)
 			splits += 1
 		
+		# update history with all partitions from this update
 		_gen_data.partition_history.append(partitions)
+		
 		# Increment partition depth if a split ocurred
 		if splits > 0: 
 			current_partition_depth += 1
@@ -140,31 +157,40 @@ func generate(parameters: Dictionary) -> void:
 		elif current_partition_depth < 2: continue
 		break
 	
-	# Calculate partition neighbors
+	# Find any neighbors for every partition
+	var check_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 	for partition_key: int in range(partitions.size()):
 		var current_rect: Rect2i = partitions[partition_key].rect
 		var center: Vector2i = current_rect.get_center()
-		var check_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 		
+		# For every other partition 
 		for neighbor_key: int in range(partitions.size()):
+			if neighbor_key == partition_key: continue # neighbor partition is current partition
+			
+			# Calculate a point just outside of the current partition in each direction and check if its touching another partition
 			for direction: Vector2i in check_directions:
+				# I use direction * 2 because otherwise the calculated point may not leave the current partition due to integer divison rounding 
 				var search_offset: Vector2i = (direction * 2) + ((current_rect.size/2) * direction)
-				if partitions[neighbor_key].rect.has_point(center + search_offset):
+				# If the neighbor contains the point, that partition is this partition's neighbor in that face direction
+				if partitions[neighbor_key].rect.has_point(center + search_offset): 
 					partitions[partition_key].neighbors[direction] = neighbor_key
+	
+	# ROOMS #
 	
 	# Create one room in every partition
 	for i: int in range(partitions.size()):
 		
 		# generate room spatial data
 		var room: Dictionary = ROOM_DICTIONARY.duplicate(true)
-		# Room max dimensions are constrained by the min of the max room size parameter and the allowable build space in a partition 
+		# Room max dimensions are straightforward under most circumstances but the min and max are 
+		# both constrained by the "buildable space" (size - border) in their partition.
 		var room_size: Vector2i = Vector2i(
 			randi_range(
-				parameters.min_room_size.x, 
+				min(parameters.min_room_size.x, partitions[i].rect.size.x - parameters.partition_border.x), 
 				min(parameters.max_room_size.x, partitions[i].rect.size.x - parameters.partition_border.x)
 			),
 			randi_range(
-				parameters.min_room_size.y, 
+				min(parameters.min_room_size.y, partitions[i].rect.size.y - parameters.partition_border.y), 
 				min(parameters.max_room_size.y, partitions[i].rect.size.y - parameters.partition_border.y)
 			)
 		)
@@ -192,14 +218,19 @@ func generate(parameters: Dictionary) -> void:
 			var entrance_coordinate_adjusted: Vector2i = wall_coordinates.pick_random() + direction
 			partitions[i].room.entrances[direction].position = entrance_coordinate_adjusted
 	
+	# HALLWAYS #
+	
+	# Connect all entrances for all rooms
 	var hallways: Array[Dictionary]
 	for partition_id in range(partitions.size()):
 		var this_room: Dictionary = partitions[partition_id].room
 		for direction: Vector2i in partitions[partition_id].neighbors.keys():
 			
+			# Skip if this room has no entrance in this direction or the entrance is already connected
 			if this_room.entrances[direction].position == Vector2i(-1, -1): continue
 			elif this_room.entrances[direction].is_connected: continue
 			
+			# 
 			var neighbor_partition_id: int = partitions[partition_id].neighbors[direction]
 			var neighbor_room: Dictionary = partitions[neighbor_partition_id].room
 			var hallway_start_position: Vector2i = this_room.entrances[direction].position

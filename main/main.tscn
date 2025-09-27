@@ -73,7 +73,6 @@ offset_left = 896.0
 offset_top = 16.0
 offset_right = 1264.0
 offset_bottom = 656.0
-metadata/_edit_lock_ = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/GeneratorUI"]
 custom_minimum_size = Vector2(0, 32)

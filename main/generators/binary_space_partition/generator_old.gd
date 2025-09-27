@@ -57,7 +57,7 @@ func _init() -> void:
 		"max_partition_depth": 4, 
 		"min_partition_size": Vector2i(4, 4),
 		"split_chance": 0.5,
-		"base_partition_variance": 4,
+		"split_position_variance": 4,
 		"min_room_size": Vector2i(3, 3)
 	}
 	_info_text = "
@@ -120,16 +120,16 @@ func _generate_partitions(parameters: Dictionary) -> Array[Dictionary]:
 			if horizontal_split and partition_0.height / 2 > parameters.min_partition_size.y:
 				can_split = true
 				var slice_position: int = partition_0.height / 2 
-				var base_height_min: int = max(parameters.min_partition_size.y, slice_position - parameters.base_partition_variance)
-				var base_height_max: int = min(partition_0.height - parameters.min_partition_size.y, slice_position + parameters.base_partition_variance)
+				var base_height_min: int = max(parameters.min_partition_size.y, slice_position - parameters.split_position_variance)
+				var base_height_max: int = min(partition_0.height - parameters.min_partition_size.y, slice_position + parameters.split_position_variance)
 				partition_0.height = randi_range(base_height_min, base_height_max)
 				partition_1.origin = Vector2i(partition_0.origin.x, partition_0.origin.y + partition_0.height)
 				partition_1.height = partition_1.height - partition_0.height
 			elif not horizontal_split and partition_0.width / 2 > parameters.min_partition_size.x:
 				can_split = true
 				var slice_position: int = partition_0.width / 2 
-				var base_width_min: int = max(parameters.min_partition_size.x, slice_position - parameters.base_partition_variance)
-				var base_width_max: int = min(partition_0.width - parameters.min_partition_size.x, slice_position + parameters.base_partition_variance)
+				var base_width_min: int = max(parameters.min_partition_size.x, slice_position - parameters.split_position_variance)
+				var base_width_max: int = min(partition_0.width - parameters.min_partition_size.x, slice_position + parameters.split_position_variance)
 				partition_0.width = randi_range(base_width_min, base_width_max)
 				partition_1.origin = Vector2i(partition_0.origin.x + partition_0.width, partition_0.origin.y)
 				partition_1.width = partition_1.width - partition_0.width

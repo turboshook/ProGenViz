@@ -66,14 +66,18 @@ func _create_vector2i_control(parameter: GeneratorVector2iParameter) -> VBoxCont
 	hbox_container.alignment = BoxContainer.ALIGNMENT_END
 	container.add_child(hbox_container)
 	
-	hbox_container.add_child(_create_parameter_name_label("X:"))
+	var x_label: Label = _create_parameter_name_label("X:")
+	x_label.size_flags_horizontal = Control.SIZE_FILL
+	hbox_container.add_child(x_label)
 	var spin_box_x: SpinBox = SpinBox.new()
 	spin_box_x.min_value = parameter.value_min.x
 	spin_box_x.max_value = parameter.value_max.x
 	spin_box_x.value = parameter.value.x
 	hbox_container.add_child(spin_box_x)
 	
-	hbox_container.add_child(_create_parameter_name_label("Y:"))
+	var y_label: Label = _create_parameter_name_label("Y:")
+	y_label.size_flags_horizontal = Control.SIZE_FILL
+	hbox_container.add_child(y_label)
 	var spin_box_y: SpinBox = SpinBox.new()
 	spin_box_y.min_value = parameter.value_min.x
 	spin_box_y.max_value = parameter.value_max.x
@@ -89,6 +93,7 @@ func _create_vector2i_control(parameter: GeneratorVector2iParameter) -> VBoxCont
 func _create_parameter_name_label(parameter_name: String) -> Label:
 	var parameter_name_label: Label = Label.new()
 	parameter_name_label.text = parameter_name.capitalize()
+	parameter_name_label.size_flags_horizontal = Control.SIZE_EXPAND
 	return parameter_name_label
 
 func get_parameters() -> Dictionary:
