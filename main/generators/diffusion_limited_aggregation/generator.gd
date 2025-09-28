@@ -68,8 +68,9 @@ func generate(parameters: Dictionary) -> void:
 			# if all current particles have been resolved or the last tile placed is at the edge of the active rect
 			if _gen_data.tile_coordinates.size() != particles.size() and \
 			not _point_on_rect_perimeter(particle.position, particle_active_rect): continue
+			# Do not upscale the active rect if it would become larger than the map
+			if particle_active_rect.size >= (parameters.map_size - Vector2i(4, 4)): continue
 			# expand active particle region if last particle hit the boundary
-			if particle_active_rect.size == parameters.map_size: continue
 			var prev_rect: Rect2i = particle_active_rect
 			particle_active_rect = particle_active_rect.grow(4)
 			
