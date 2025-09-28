@@ -81,6 +81,7 @@ func generate(parameters: Dictionary) -> void:
 		
 		# check every partition for a split
 		var splits: int = 0
+		var updated_partitions: Dictionary = {}
 		for partition: Dictionary in previous_partitions:
 			
 			# continue if partition fails the split roll
@@ -144,10 +145,11 @@ func generate(parameters: Dictionary) -> void:
 			# Append new partitions 
 			partitions.append(split_0)
 			partitions.append(split_1)
+			updated_partitions[partition] = [split_0, split_1]
 			splits += 1
 		
 		# update history with all partitions from this update
-		_gen_data.partition_history.append(partitions)
+		_gen_data.partition_history.append(updated_partitions)
 		
 		# Increment partition depth if a split ocurred
 		if splits > 0: 

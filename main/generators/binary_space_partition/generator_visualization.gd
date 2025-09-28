@@ -8,13 +8,14 @@ func _activate() -> void:
 	tile_atlas_coordinates.shuffle()
 	var atlas_index: int = 0
 	
-	for partitions: Array in _gen_data.partition_history:
-		for partition: Dictionary in partitions:
-			for x: int in range(partition.rect.position.x, partition.rect.position.x + partition.rect.size.x):
-				for y: int in range(partition.rect.position.y, partition.rect.position.y + partition.rect.size.y):
-					tile_map.set_cell(Vector2i(x, y), 0, tile_atlas_coordinates[atlas_index])
-			for _frame: int in range(8): await get_tree().physics_frame
-			atlas_index = atlas_index + 1 if atlas_index < tile_atlas_coordinates.size() - 1 else 0
+	for partition_update: Dictionary in _gen_data.partition_history:
+		for original_partition: Dictionary in partition_update.keys():
+			for new_partition: Dictionary in partition_update[original_partition]:
+				for x: int in range(new_partition.rect.position.x, new_partition.rect.position.x + new_partition.rect.size.x):
+					for y: int in range(new_partition.rect.position.y, new_partition.rect.position.y + new_partition.rect.size.y):
+						tile_map.set_cell(Vector2i(x, y), 0, tile_atlas_coordinates[atlas_index])
+				for _frame: int in range(6): await get_tree().physics_frame
+				atlas_index = atlas_index + 1 if atlas_index < tile_atlas_coordinates.size() - 1 else 0
 	 
 	for partition: Dictionary in _gen_data.partitions:
 		var room_data: Dictionary = partition.room
