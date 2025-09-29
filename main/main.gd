@@ -19,7 +19,9 @@ const GENERATORS: Array[String] = [
 @onready var info_button: Button = $CanvasLayer/UI/AppUI/InfoButton
 @onready var app_settings_menu: AppSettingsMenu = $CanvasLayer/UI/AppSettingsMenu
 @onready var info_text_display: InfoTextDisplay = $CanvasLayer/UI/InfoTextDisplay
+@onready var name_label: Label = $CanvasLayer/UI/Signature/Name
 @onready var version_label: Label = $CanvasLayer/UI/Signature/Version
+@onready var credit_label: Label = $CanvasLayer/UI/Signature/Credit
 
 # Generator UI
 @onready var algorithm_selection_button: OptionButton = $CanvasLayer/UI/GeneratorUI/HBoxContainer/AlgorithmSelectionButton
@@ -39,7 +41,9 @@ func _ready() -> void:
 	info_text_display.set_text(
 		"Welcome to ProcGenToy! Select a generation algorithm from the dropdown menu to get started."
 	)
+	name_label.text = str(ProjectSettings.get_setting("application/config/name"))
 	version_label.text = str("[v", ProjectSettings.get_setting("application/config/version"), "]")
+	credit_label.text = "by turboshook"
 	
 	settings_button.pressed.connect(_on_settings_button_pressed)
 	info_button.pressed.connect(_on_info_button_pressed)

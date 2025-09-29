@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="ProcGenToy"
-config/version="0.1.4-beta"
+config/name="ProGenViz"
+config/version="0.1.5-beta"
 run/main_scene="uid://fq4dg2mjn4d"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
