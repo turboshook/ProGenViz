@@ -17,7 +17,7 @@ func _activate() -> void:
 			# e.g., 12 cells will result in 3 TileMapLayers with opacities of 3/3, 2/3, and 1/3
 	
 	# Initialize tile atlas parameters
-	var tile_atlas_coordinates: Array[Vector2i] = [Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)]
+	var tile_atlas_coordinates: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
 	tile_atlas_coordinates.shuffle()
 	var atlas_index: int = 0
 	var tile_map_index: int = 0

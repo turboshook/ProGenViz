@@ -13,7 +13,7 @@ func _activate() -> void:
 		for y_coordinate: int in range(_gen_data.map_size.y):
 			tile_map.set_cell(Vector2i(x_coordinate, y_coordinate), 0, Vector2i.ZERO)
 	
-	var tile_atlas_coordinates: Array[Vector2i] = [Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)]
+	var tile_atlas_coordinates: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
 	tile_atlas_coordinates.shuffle()
 	var tiles_placed: int = -1
 	_tile_particles.set_emitting(true)

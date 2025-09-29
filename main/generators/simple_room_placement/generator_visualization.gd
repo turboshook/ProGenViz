@@ -3,17 +3,22 @@ extends GeneratorVisualization
 @onready var tile_map: TileMapLayer = $TileMapLayer
 
 func _activate() -> void:
+	var tile_atlas_coordinates: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
+	var atlas_index: int = randi_range(0, tile_atlas_coordinates.size() - 1)
+	
 	for room: Rect2i in _gen_data.rooms:
 		for x: int in range(room.position.x, room.position.x + room.size.x):
 			for y: int in range(room.position.y, room.position.y + room.size.y):
-				tile_map.set_cell(Vector2i(x, y), 0, Vector2(1, 2))
+				tile_map.set_cell(Vector2i(x, y), 0, tile_atlas_coordinates[atlas_index])
 		AudioManager.play_sound("tap")
 		for _i: int in range(4): await get_tree().physics_frame
+	
+	atlas_index = atlas_index + 1 if atlas_index < tile_atlas_coordinates.size() - 1 else 0
 	
 	for hallway: Array[Vector2i] in _gen_data.hallways:
 		var tiles_placed: int = -1
 		for tile_coordinates: Vector2i in hallway:
-			tile_map.set_cell(tile_coordinates, 0, Vector2(0, 2))
+			tile_map.set_cell(tile_coordinates, 0, tile_atlas_coordinates[atlas_index])
 			_tile_particles.position = (tile_coordinates * 8.0)
 			if !_tile_particles.emitting: _tile_particles.set_emitting(true)
 			tiles_placed += 1

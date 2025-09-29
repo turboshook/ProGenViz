@@ -4,7 +4,7 @@ extends GeneratorVisualization
 
 func _activate() -> void:
 	
-	var tile_atlas_coordinates: Array[Vector2i] = [Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)]
+	var tile_atlas_coordinates: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
 	var room_tile_atlas_coordinates: Vector2i = tile_atlas_coordinates.pick_random()
 	tile_atlas_coordinates.erase(room_tile_atlas_coordinates)
 	
