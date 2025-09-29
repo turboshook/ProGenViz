@@ -1,6 +1,6 @@
 extends GeneratorVisualization
 
-@onready var md_tilemap: TileMapLayer = $MDTilemap
+@onready var tile_map: TileMapLayer = $TileMapLayer
 
 func _activate() -> void:
 	
@@ -14,12 +14,12 @@ func _activate() -> void:
 		# draw sector
 		for x: int in range(room_data.sector.position.x, room_data.sector.position.x + room_data.sector.size.x):
 			for y: int in range(room_data.sector.position.y, room_data.sector.position.y + room_data.sector.size.y):
-				md_tilemap.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
+				tile_map.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
 		
 		# draw room
 		for x: int in range(room_data.rect.position.x, room_data.rect.position.x + room_data.rect.size.x):
 			for y: int in range(room_data.rect.position.y, room_data.rect.position.y + room_data.rect.size.y):
-				md_tilemap.set_cell(Vector2i(x, y), 0, room_tile_atlas_coordinates)
+				tile_map.set_cell(Vector2i(x, y), 0, room_tile_atlas_coordinates)
 		
 		AudioManager.play_sound("tap")
 		for _frame: int in range(4): await get_tree().physics_frame
@@ -31,7 +31,7 @@ func _activate() -> void:
 	for hallway_key: int in _gen_data.hallways:
 		var hallway_data: Dictionary = _gen_data.hallways[hallway_key]
 		for tile_coordinates: Vector2i in hallway_data.tiles:
-			md_tilemap.set_cell(tile_coordinates, 0, hallway_tile_atlas_coordinates)
+			tile_map.set_cell(tile_coordinates, 0, hallway_tile_atlas_coordinates)
 			_tile_particles.position = (tile_coordinates * 8.0)
 			if !_tile_particles.emitting: _tile_particles.set_emitting(true)
 			tiles_placed += 1

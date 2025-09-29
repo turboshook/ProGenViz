@@ -6,6 +6,19 @@
 [ext_resource type="Script" uid="uid://cura5q3mxleax" path="res://main/utils/generator_parameter_table/generator_parameter_definition/generator_vector2i_parameter.gd" id="3_egidb"]
 [ext_resource type="Script" uid="uid://cn1osy2eiovo4" path="res://main/utils/generator_parameter_table/generator_parameter_definition/generator_int_parameter.gd" id="3_vnv4d"]
 
+[sub_resource type="Resource" id="Resource_7vbbo"]
+script = ExtResource("3_vnv4d")
+value = 12
+value_max = 32
+name = "retry_threshold"
+metadata/_custom_type_script = "uid://cn1osy2eiovo4"
+
+[sub_resource type="Resource" id="Resource_4vj2n"]
+script = ExtResource("1_kh8kw")
+name = "General"
+parameters = Array[ExtResource("2_mnt8f")]([SubResource("Resource_7vbbo")])
+metadata/_custom_type_script = "uid://bjevtxemkyuxs"
+
 [sub_resource type="Resource" id="Resource_2jmfh"]
 script = ExtResource("3_egidb")
 value = Vector2i(60, 60)
@@ -57,20 +70,7 @@ name = "Rooms"
 parameters = Array[ExtResource("2_mnt8f")]([SubResource("Resource_vnv4d"), SubResource("Resource_hhdoo")])
 metadata/_custom_type_script = "uid://bjevtxemkyuxs"
 
-[sub_resource type="Resource" id="Resource_7vbbo"]
-script = ExtResource("3_vnv4d")
-value = 12
-value_max = 32
-name = "retry_threshold"
-metadata/_custom_type_script = "uid://cn1osy2eiovo4"
-
-[sub_resource type="Resource" id="Resource_4vj2n"]
-script = ExtResource("1_kh8kw")
-name = "Misc"
-parameters = Array[ExtResource("2_mnt8f")]([SubResource("Resource_7vbbo")])
-metadata/_custom_type_script = "uid://bjevtxemkyuxs"
-
 [resource]
 script = ExtResource("2_3roo8")
-categories = Array[ExtResource("1_kh8kw")]([SubResource("Resource_egidb"), SubResource("Resource_2hlvt"), SubResource("Resource_4vj2n")])
+categories = Array[ExtResource("1_kh8kw")]([SubResource("Resource_4vj2n"), SubResource("Resource_egidb"), SubResource("Resource_2hlvt")])
 metadata/_custom_type_script = "uid://h3r21fqhv0bo"

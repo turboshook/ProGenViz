@@ -25,6 +25,7 @@ script = ExtResource("1_b4cw0")
 [node name="Tap0" type="Node" parent="Tap"]
 script = ExtResource("2_veri3")
 _player_count = 3
+_random_pitch_scale_range = 0.1
 metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap0"]
@@ -34,6 +35,7 @@ volume_db = 6.0
 [node name="Tap1" type="Node" parent="Tap"]
 script = ExtResource("2_veri3")
 _player_count = 3
+_random_pitch_scale_range = 0.1
 metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap1"]
@@ -43,6 +45,7 @@ volume_db = 6.0
 [node name="Tap2" type="Node" parent="Tap"]
 script = ExtResource("2_veri3")
 _player_count = 3
+_random_pitch_scale_range = 0.1
 metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap2"]
@@ -52,6 +55,7 @@ volume_db = 6.0
 [node name="Tap3" type="Node" parent="Tap"]
 script = ExtResource("2_veri3")
 _player_count = 3
+_random_pitch_scale_range = 0.1
 metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap3"]
@@ -61,6 +65,7 @@ volume_db = 6.0
 [node name="Tap4" type="Node" parent="Tap"]
 script = ExtResource("2_veri3")
 _player_count = 3
+_random_pitch_scale_range = 0.1
 metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap4"]
@@ -70,6 +75,7 @@ volume_db = 6.0
 [node name="Tap5" type="Node" parent="Tap"]
 script = ExtResource("2_veri3")
 _player_count = 3
+_random_pitch_scale_range = 0.1
 metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Tap/Tap5"]
@@ -83,6 +89,7 @@ metadata/_custom_type_script = "uid://b8lksse3ohtem"
 [node name="Footstep0" type="Node" parent="Footstep"]
 script = ExtResource("2_veri3")
 _player_count = 2
+_random_pitch_scale_range = 0.15
 metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Footstep/Footstep0"]
@@ -91,6 +98,7 @@ stream = ExtResource("11_2d5ut")
 [node name="Footstep1" type="Node" parent="Footstep"]
 script = ExtResource("2_veri3")
 _player_count = 2
+_random_pitch_scale_range = 0.15
 metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Footstep/Footstep1"]
@@ -99,6 +107,7 @@ stream = ExtResource("12_yt718")
 [node name="Footstep2" type="Node" parent="Footstep"]
 script = ExtResource("2_veri3")
 _player_count = 2
+_random_pitch_scale_range = 0.15
 metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Footstep/Footstep2"]
@@ -107,6 +116,7 @@ stream = ExtResource("13_ljgh5")
 [node name="Footstep3" type="Node" parent="Footstep"]
 script = ExtResource("2_veri3")
 _player_count = 2
+_random_pitch_scale_range = 0.15
 metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Footstep/Footstep3"]
