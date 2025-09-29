@@ -14,7 +14,7 @@ config/name="ProGenViz"
 config/version="0.1.6-beta"
 run/main_scene="uid://fq4dg2mjn4d"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://dmd604738r3h0"
 
 [autoload]
 
