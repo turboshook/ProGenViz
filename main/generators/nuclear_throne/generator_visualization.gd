@@ -1,12 +1,17 @@
 extends GeneratorVisualization
 
-@onready var tile_map_layer: TileMapLayer = $TileMapLayer
+@onready var tile_map: TileMapLayer = $TileMapLayer
+var _subwalker_tile_map: TileMapLayer
 
 func _activate() -> void:
 	
+	_subwalker_tile_map = tile_map.duplicate()
+	_subwalker_tile_map.z_index = -1
+	add_child(_subwalker_tile_map)
+	
 	for x_coordinate: int in range(_gen_data.map_size.x):
 		for y_coordinate: int in range(_gen_data.map_size.y):
-			tile_map_layer.set_cell(Vector2i(x_coordinate, y_coordinate), 0, Vector2i.ZERO)
+			tile_map.set_cell(Vector2i(x_coordinate, y_coordinate), 0, Vector2i.ZERO)
 	
 	var tile_atlas_coordinates: Array[Vector2i] = [Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)]
 	tile_atlas_coordinates.shuffle()
@@ -14,7 +19,8 @@ func _activate() -> void:
 	_tile_particles.set_emitting(true)
 	for steps: Array in _gen_data.walker_steps:
 		for i: int in range(steps.size()):
-			tile_map_layer.set_cell(steps[i], 0, tile_atlas_coordinates[i % 3])
+			if i == 0: tile_map.set_cell(steps[i], 0, tile_atlas_coordinates[i % 3])
+			else: _subwalker_tile_map.set_cell(steps[i], 0, tile_atlas_coordinates[i % 3])
 			_tile_particles.position = (steps[i] * 8.0)
 			tiles_placed += 1
 			if tiles_placed % 4 == 0: AudioManager.play_sound("footstep")

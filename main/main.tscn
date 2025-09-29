@@ -162,7 +162,7 @@ text = "by turboshook"
 metadata/_edit_lock_ = true
 
 [node name="FloorVisualContainer" type="Node2D" parent="."]
-position = Vector2(448, 352)
+position = Vector2(448, 360)
 metadata/_edit_lock_ = true
 
 [node name="CameraTarget" type="Node2D" parent="."]
@@ -172,5 +172,3 @@ metadata/_edit_lock_ = true
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(640, 360)
 metadata/_edit_lock_ = true
-
-[node name="Node3D" type="Node3D" parent="."]
