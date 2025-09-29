@@ -2,9 +2,9 @@ extends MapGenerator
 
 func _init() -> void:
 	_default_parameters = {
-		"walker_count": 1,
-		"walker_lifetime": 128,
-		"walker_turn_chance": 0.25
+		"walker_count": 1,			# The amount of walkers to be simulated.
+		"walker_lifetime": 128,		# The amount of steps a walker will take before the simulation ends.
+		"walker_turn_chance": 0.25	# The chance for a walker to turn left or right before taking a step.
 	}
 	_info_text = "\
 		A simple, minimally-constrained random walk. When turning, walkers will either veer left or \

@@ -2,17 +2,17 @@ extends MapGenerator
 
 func _init() -> void:
 	_default_parameters = {
-		"map_size": Vector2i(32, 32),
-		"max_tiles_placed": 128,
-		"particle_spawn_density": 3,
-		"max_updates": 150
+		"map_size": Vector2i(32, 32),	# Total map size.
+		"max_tiles_placed": 128,		# The target number of tiles placed before ending the simulation.
+		"particle_spawn_density": 3,	# Used to calculate the number of new particles to be created when the active simulation rect is grown. Smaller numbers mean more particles.
+		"max_updates": 150				# The maximum number of updates the generator will simulate before forcing an end to the loop.
 	}
 	_info_text = "
 		Info text here!
 	"
 
 func generate(parameters: Dictionary) -> void:
-	# Initialize center with cross shape to attempt to force more particle interactions sooner
+	# Initialize center with cross shape to attempt to force more particle interactions sooner.
 	var center_coordinate: Vector2i = parameters.map_size/2
 	var init_coord_0: Vector2i = center_coordinate + Vector2i.UP
 	var init_coord_1: Vector2i = center_coordinate + Vector2i.DOWN
@@ -48,33 +48,33 @@ func generate(parameters: Dictionary) -> void:
 			"active": true
 		}
 	
-	# simulate until we have placed the maximum allowable number of tiles 
+	# Simulate until we have placed the maximum allowable number of tiles .
 	while (_gen_data.tile_coordinates.size() < parameters.max_tiles_placed):
 		for particle: Dictionary in particles:
-			if not particle.active: continue # skip inactive particles
+			if not particle.active: continue # Skip particles that have resolved to tiles.
 			
-			# constrain particle movement
+			# Constrain particle movement to the active rect.
 			particle.position += _get_in_bounds_step(particle.position, particle_active_rect)
 			
 			if not _particle_has_inactive_neighbor(particle.position): continue
-			# partlce has joined the aggregation, place a tile
+			# Partlce has joined the aggregation, place a tile.
 			_gen_data.tile_coordinates.append(particle.position)
 			_gen_data.coordinate_set[particle.position] = null
 			particle.active = false
 			
-			# if placed the maximum allowable tiles, stop processing particles (will also end while loop)
+			# If placed the maximum allowable tiles, stop processing particles (will also end while loop).
 			if _gen_data.tile_coordinates.size() >= parameters.max_tiles_placed: break
 			
-			# if all current particles have been resolved or the last tile placed is at the edge of the active rect
+			# If all current particles have been resolved or the last tile placed is at the edge of the active rect.
 			if _gen_data.tile_coordinates.size() != particles.size() and \
 			not _point_on_rect_perimeter(particle.position, particle_active_rect): continue
-			# Do not upscale the active rect if it would become larger than the map
+			# Do not upscale the active rect if it would become larger than the map.
 			if particle_active_rect.size >= (parameters.map_size - Vector2i(4, 4)): continue
-			# expand active particle region if last particle hit the boundary
+			# Expand active particle region if last particle hit the boundary.
 			var prev_rect: Rect2i = particle_active_rect
 			particle_active_rect = particle_active_rect.grow(4)
 			
-			# spawn new particles in the newly-expanded active rect, excluding points intersected by the old rect
+			# Spawn new particles in the newly-expanded active rect, excluding points intersected by the old rect.
 			var new_particles: Array[Dictionary] = []
 			new_particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/(parameters.particle_spawn_density * 2))
 			for i: int in range(new_particles.size()):
@@ -84,11 +84,11 @@ func generate(parameters: Dictionary) -> void:
 				}
 			particles = particles + new_particles
 		
-		# alternatively, end simulation if we have reached the maximum update count
+		# Alternatively, end simulation if we have reached the maximum update count.
 		_gen_data.updates += 1
 		if _gen_data.updates >= parameters.max_updates: break
 	
-	_gen_data.particles = particles # used to visualize unresolved particles
+	_gen_data.particles = particles # Used to visualize unresolved particles.
 
 func _get_in_bounds_step(particle_position: Vector2i, active_region: Rect2i) -> Vector2i:
 	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
@@ -134,12 +134,12 @@ func _get_point_excluding(from: Rect2i, excluding: Rect2i) -> Vector2i:
 		var left_width: int = intersection.position.x - from.position.x
 		var right_width: int = (from.position.x + from.size.x) - (intersection.position.x + intersection.size.x)
 		if left_width > 0 and (right_width == 0 or randf() < float(left_width) / float(left_width + right_width)):
-			# pick from left band
+			# Pick from left band.
 			return Vector2i(
 				randi_range(from.position.x, intersection.position.x - 1), 
 				randi_range(from.position.y, from.position.y + from.size.y - 1)
 			)
-		# pick from right band
+		# Pick from right band.
 		return Vector2i(
 			randi_range(intersection.position.x + intersection.size.x, from.position.x + from.size.x - 1),
 			randi_range(from.position.y, from.position.y + from.size.y - 1)
@@ -148,12 +148,12 @@ func _get_point_excluding(from: Rect2i, excluding: Rect2i) -> Vector2i:
 	var top_height: int = intersection.position.y - from.position.y
 	var bottom_height: int = (from.position.y + from.size.y) - (intersection.position.y + intersection.size.y)
 	if top_height > 0 and (bottom_height == 0 or randf() < float(top_height) / float(top_height + bottom_height)):
-		# pick from top band
+		# Pick from top band.
 		return Vector2i(
 			randi_range(from.position.x, from.position.x + from.size.x - 1),
 			randi_range(from.position.y, intersection.position.y - 1)
 		)
-	# pick from bottom band
+	# Pick from bottom band.
 	return Vector2i(
 		randi_range(from.position.x, from.position.x + from.size.x - 1),
 		randi_range(intersection.position.y + intersection.size.y, from.position.y + from.size.y - 1)

@@ -27,8 +27,8 @@ func _init() -> void:
 		"room_count": 8,
 		"max_give_ups": 3
 	}
-	_info_text = "
-		Info text here!
+	_info_text = "\
+		Info text here!\
 	"
 
 func generate(parameters: Dictionary) -> void:
@@ -52,26 +52,26 @@ func generate(parameters: Dictionary) -> void:
 		
 		for exit_coordinate: Vector2i in exit_coordinates:
 			
-			# initialize this exit to point to null room so that the exit is present in the floorplan
+			# Initialize this exit to point to null room so that the exit is present in the floorplan.
 			_gen_data.rooms[rooms_placed].neighbors[exit_coordinate] = NULL_ROOM
 			
 			if rooms_placed >= _gen_data.parameters.room_count: continue
 			
 			var new_room_rect: Rect2i = Rect2i(exit_coordinate, Vector2i(1, 1))
 			
-			# how TBoI does it, rooms cannot be placed in cells where they would already have more
+			# How TBoI does it, rooms cannot be placed in cells where they would already have more
 			# than one neighbor. I want to allow that eventually, but it involves more neighbor
 			# checks that could make this loop stupid if I don't have a litte think about it.
 			if _rect_is_obstructed(new_room_rect, _gen_data.rooms):
 				#placed_hallway_rooms += 1
 				continue
 			
-			# random chance to give up creating a neighbor for this room, constrained to max_give_ups
+			# Random chance to give up creating a neighbor for this room, constrained to max_give_ups.
 			if randf() >= 0.5 and current_give_ups < _gen_data.parameters.max_give_ups:
 				current_give_ups += 1
 				continue
 			
-			# update floorplan with new additions
+			# Update floorplan with new additions.
 			_gen_data.rooms[rooms_placed].neighbors[exit_coordinate] = new_room_rect
 			rooms_placed += 1
 			
@@ -80,14 +80,12 @@ func generate(parameters: Dictionary) -> void:
 			# come back to this
 			#_gen_data["rooms"][rooms_placed]["neighbors"][_get_corresponding_exit(exit_key)] = current_room_coordinate
 			
-			# loop maintenance
+			# Loop maintenance.
 			room_queue.append(new_room_rect)
 			
 	
-	# Do a pass to conclusively determine dead ends once the 
+	# Do a pass to conclusively determine dead ends. 
 	for room_key: int in range(_gen_data.rooms.size()):
-		#if room == _gen_data["start_room"]:
-			#continue
 		var neighbor_count: int = 0
 		for exit_coordinates: Vector2i in _gen_data.rooms[room_key].neighbors:
 			if _gen_data.rooms[room_key].neighbors[exit_coordinates] != NULL_ROOM:
@@ -102,19 +100,19 @@ func _get_exit_coordinates(room: Rect2i) -> Array[Vector2i]:
 	var x_end: int = room.position.x + room.size.x - 1
 	var y_end: int = room.position.y + room.size.y - 1
 
-	# Top edge (above the room)
+	# Top edge (above the room).
 	for x: int in range(room.position.x, x_end + 1):
 		exits.append(Vector2i(x, room.position.y - 1))
 
-	# Bottom edge (below the room)
+	# Bottom edge (below the room).
 	for x: int in range(room.position.x, x_end + 1):
 		exits.append(Vector2i(x, y_end + 1))
 
-	# Left edge (to the left of the room)
+	# Left edge (to the left of the room).
 	for y: int in range(room.position.y, y_end + 1):
 		exits.append(Vector2i(room.position.x - 1, y))
 
-	# Right edge (to the right of the room)
+	# Right edge (to the right of the room).
 	for y: int in range(room.position.y, y_end + 1):
 		exits.append(Vector2i(x_end + 1, y))
 

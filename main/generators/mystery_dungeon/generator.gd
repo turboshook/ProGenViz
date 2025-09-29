@@ -40,7 +40,7 @@ func _init() -> void:
 		
 		These games often apply post-processing steps before generating hallways that can change the \
 		feel of the layouts, such as transforming some rooms into 1x1 spaces (creating very long \
-		hallways) or merging rooms from adjacent partitions into gigantic areas. \
+		hallways) or merging rooms from adjacent partitions into gigantic areas.\
 	"
 
 func generate(parameters: Dictionary) -> void:
@@ -55,37 +55,37 @@ func generate(parameters: Dictionary) -> void:
 		}
 	}
 	
-	# begin generating rooms within sectors
+	# Begin generating rooms within sectors.
 	var sector_key: int = 0
 	for x_sector: int in range(parameters.x_sectors):
 		for y_sector: int in range(parameters.y_sectors):
 			
-			# define the sector in 2D tile space
+			# Define the sector in 2D tile space.
 			var sector_origin: Vector2i = Vector2i(
 				x_sector * (parameters.sector_size.x + parameters.sector_border),
 				y_sector * (parameters.sector_size.y + parameters.sector_border)
 			)
 			var sector_rect: Rect2i = Rect2i(sector_origin, parameters.sector_size)
 			
-			# determine the size of the room
+			# Determine the size of the room.
 			var room_rect: Rect2i = Rect2i(0, 0, 0, 0)
 			room_rect.size.x = randi_range(parameters.room_size_min.x, parameters.sector_size.x)
 			room_rect.size.y = randi_range(parameters.room_size_min.y, parameters.sector_size.y)
 			
-			# determine the room's origin (top left coordinate) given available space in sector
+			# Determine the room's origin (top left coordinate) given available space in sector.
 			var room_margin: Vector2i = sector_rect.size - room_rect.size
 			room_rect.position = Vector2i(
 				randi_range(sector_rect.position.x, sector_rect.position.x + room_margin.x),
 				randi_range(sector_rect.position.y, sector_rect.position.y + room_margin.y)
 			)
 			
-			# create and initialize instance of DungeonRoomData to store in floorplan
+			# Create and initialize instance of DungeonRoomData to store in floorplan.
 			var room_data: Dictionary = ROOM_GENERATION_DATA.duplicate(true)
 			
-			# add entrances to rooms
+			# Add entrances to rooms.
 			room_data.rect = room_rect
 			room_data.sector = sector_rect
-			# TODO below could be accomplished with a loop
+			# TODO below could probably be accomplished with a loop...
 			if y_sector > 0:
 				var north_entrance_position: Vector2i = room_rect.position + Vector2i(randi_range(0, room_rect.size.x - 1), -1)
 				room_data.entrances.north.append(north_entrance_position)
@@ -129,10 +129,10 @@ func generate(parameters: Dictionary) -> void:
 			
 			_gen_data.rooms[sector_key] = room_data
 			
-			# iterate ID key
+			# Iterate ID key.
 			sector_key += 1
 	
-	# room post processing
+	# Room post processing.
 	var floor_mod_roll: float = randf()
 	if (parameters.x_sectors < 3 or parameters.y_sectors < 3) and floor_mod_roll < 0.5:
 		var random_room_key: int = _gen_data.rooms.keys().pick_random()
@@ -145,11 +145,11 @@ func generate(parameters: Dictionary) -> void:
 		_crunch_room(_gen_data.rooms[room_keys[0]])
 		_crunch_room(_gen_data.rooms[room_keys[1]])
 	
-	# start hallway generation
+	# Start hallway generation.
 	var hallway_key: int = 0
 	for sector: int in _gen_data.rooms.keys():
 		
-		# for each sector, define start and end points for every SOUTH and EAST hallway
+		# For each sector, define start and end points for every SOUTH and EAST hallway.
 		var this_room_data: Dictionary = _gen_data.rooms[sector]
 		if not this_room_data.entrances.south.is_empty():
 			var target_room_data: Dictionary = _gen_data.rooms[sector + 1]
@@ -159,6 +159,7 @@ func generate(parameters: Dictionary) -> void:
 			_gen_data.hallways[hallway_key] = hallway_data
 			hallway_key += 1
 			
+			# If there are multiple entrances, roll to determine what additional hallways are created.
 			var roll: float = randf()
 			if roll < 0.25 and this_room_data.entrances.south.size() > 1:
 				var extra_hallway_data: Dictionary = HALLWAY_GENERATION_DATA.duplicate(true)
@@ -198,7 +199,7 @@ func generate(parameters: Dictionary) -> void:
 				_gen_data.hallways[hallway_key] = extra_hallway_data
 				hallway_key += 1
 	
-	# walk every hallway
+	# Walk every hallway.
 	for key: int in _gen_data.hallways.keys():
 		_gen_data.hallways[key].tiles = GeneratorUtils.get_middle_bend_path(
 			_gen_data.hallways[key].start_position,

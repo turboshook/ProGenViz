@@ -2,11 +2,11 @@ extends MapGenerator
 
 func _init() -> void:
 	_default_parameters = {
-		"map_size": Vector2i(32, 32),
-		"map_fill_target_proportion": 0.15,
-		"walker_turn_chance": 0.75,
-		"subwalker_spawn_chance": 0.3,
-		"subwalker_kill_chance": 0.3
+		"map_size": Vector2i(32, 32),		# Total size of the map.
+		"map_fill_target_proportion": 0.15,	# The proportion of map coordinates that must become tiles before the simulation can end.
+		"walker_turn_chance": 0.75,			# The chance a walker will turn left or right.
+		"subwalker_spawn_chance": 0.3,		# The chance for the primary walker to create a subwalker at its position on a given step.
+		"subwalker_kill_chance": 0.3		# The chance a subwalker is deleted after it completes its current step.
 	}
 	_info_text = "
 		Info text here!
@@ -15,12 +15,11 @@ func _init() -> void:
 func generate(parameters: Dictionary) -> void:
 	_gen_data = {
 		"map_size": parameters.map_size,
-		"walker_steps": [], # Ordered list of every step taken by any walkers active during a given update
+		"walker_steps": [], # Ordered list of every step taken by any walkers active during a given update.
 		"tile_set": {} # O(1) lookup for unique tile coordinates.
 	}
 	
 	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
-	
 	var map_rect: Rect2i = Rect2i(Vector2i.ZERO, parameters.map_size)
 	var walkers: Array[Dictionary] = [{
 		"position": map_rect.get_center(),
@@ -35,22 +34,22 @@ func generate(parameters: Dictionary) -> void:
 		for i: int in range(walkers.size()):
 			var walker: Dictionary = walkers[i]
 			
-			# walker at index 0 is always active
+			# Walker at index 0 is always active.
 			if i != 0 and !walker.active: continue
 			
-			# handle turn and step updates
+			# Handle turn and step updates.
 			if randf() < parameters.walker_turn_chance or _next_step_out_of_bounds(walker, map_rect):
 				walker.step_direction = _get_new_step_direction(walker, map_rect)
 			walker.position += walkers[i].step_direction
 			steps.append(walker.position)
 			
-			# break from this loop using outer loop condition if the map fill target is reached mid-update
+			# Break from this loop using outer loop condition if the map fill target is reached mid-update.
 			if (float(_gen_data.tile_set.size())/float(total_tiles) >= parameters.map_fill_target_proportion): break
 			
-			# count only unique tiles toward the map fill target
+			# Count only unique tiles toward the map fill target.
 			if not _gen_data.tile_set.has(walker.position): _gen_data.tile_set[walker.position] = null
 			
-			# subwalker maintenance
+			# Subwalker maintenance.
 			if i == 0 and randf() < parameters.subwalker_spawn_chance:
 				walkers.append({
 					"position": walker.position,
@@ -60,7 +59,7 @@ func generate(parameters: Dictionary) -> void:
 			elif randf() < parameters.subwalker_kill_chance:
 				walker.active = false
 		
-		# record every step taken this update
+		# Record every step taken this update.
 		_gen_data.walker_steps.append(steps)
 
 func _next_step_out_of_bounds(walker: Dictionary, map_rect: Rect2i) -> bool:

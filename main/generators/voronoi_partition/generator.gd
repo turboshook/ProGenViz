@@ -2,8 +2,8 @@ extends MapGenerator
 
 func _init() -> void:
 	_default_parameters = {
-		"map_size": Vector2i(32, 32),
-		"cell_count": 16
+		"map_size": Vector2i(32, 32),	# Total map size.
+		"cell_count": 16				# The number of cells that will be generated within the map.
 	}
 	_info_text = "\
 		This algorithm creates partitions in a plane of a given size. A number of coordinates within \
@@ -17,9 +17,9 @@ func _init() -> void:
 @warning_ignore("unused_parameter")
 func generate(parameters: Dictionary) -> void:
 	_gen_data = {
-		"map_size": parameters.map_size, # used to calculate the center position offset 
-		"cells": [], # Array of dictionaries describing a cell by its origin and what tiles belong to them
-		"tiles": [] # Array of dictionaries describing tiles by their position and what cell they belong to
+		"map_size": parameters.map_size, 	# Used to calculate the center position offset.
+		"cells": [], 						# Array of dictionaries describing a cell by its origin and what tiles belong to them.
+		"tiles": [] 						# Array of dictionaries describing tiles by their position and what cell they belong to.
 	}
 	# This implementation records cells and tiles simultaneously in order to more easily support 
 	# generalized use cases, but the visualization does not use _gen_data.tiles.

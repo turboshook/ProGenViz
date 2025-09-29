@@ -2,12 +2,12 @@ extends MapGenerator
 
 func _init() -> void:
 	_default_parameters = {
-		"floor_size": Vector2i(60, 60),
-		"max_room_count": 12,
-		"min_room_size": Vector2i(4, 4),
-		"max_room_size": Vector2i(8, 8),
-		"room_padding": Vector2i(1, 1),
-		"retry_threshold": 6 
+		"floor_size": Vector2i(60, 60),		# Total size of the map.
+		"max_room_count": 12,				# The maximum number of rooms that will be placed.
+		"min_room_size": Vector2i(4, 4),	# The smallest dimensions a room can have.
+		"max_room_size": Vector2i(8, 8),	# The largest dimensions a room can have.
+		"room_padding": Vector2i(1, 1),		# The amount of empty space that needs to be preserved around a room.
+		"retry_threshold": 6 				# The number of times the generator will remove a placed rooms due to overlaps before forcing the loop to end.
 	}
 	_info_text = "\
 		This is one of the oldest and simplest styles of dungeon generation. Rectangular rooms are \
