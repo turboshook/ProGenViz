@@ -16,14 +16,14 @@ func generate_from_default() -> void:
 
 func get_parameter_table() -> GeneratorParameterTable:
 	var param_table_path: String = get_script().resource_path.get_base_dir() + "/parameter_table.tres"
-	if !FileAccess.file_exists(param_table_path):
+	if !FileAccess.file_exists(param_table_path) and !FileAccess.file_exists(param_table_path + ".remap"):
 		printerr("MapGenerator @ get_parameter_table(): ", param_table_path, " not found. Returning empty GeneratorParameterTable.")
 		return GeneratorParameterTable.new()
 	return load(param_table_path)
 
 func get_visualizer() -> Node2D:
 	var visualization_scene_path: String = get_script().resource_path.get_base_dir() + "/generator_visualization.tscn"
-	if !FileAccess.file_exists(visualization_scene_path):
+	if !FileAccess.file_exists(visualization_scene_path) and !FileAccess.file_exists(visualization_scene_path + ".remap"):
 		printerr("MapGenerator @ get_visualizer(): ", visualization_scene_path, " not found. Returning empty visualizer.")
 		return GeneratorVisualization.new()
 	var visualization: GeneratorVisualization 
