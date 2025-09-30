@@ -21,8 +21,8 @@ func _activate() -> void:
 			for y: int in range(room_data.rect.position.y, room_data.rect.position.y + room_data.rect.size.y):
 				tile_map.set_cell(Vector2i(x, y), 0, room_tile_atlas_coordinates)
 		
-		AudioManager.play_sound("tap")
-		for _frame: int in range(4): await get_tree().physics_frame
+		AudioManager.play_sound("segment")
+		for _frame: int in range(6): await get_tree().physics_frame
 	
 	var hallway_tile_atlas_coordinates: Vector2i = tile_atlas_coordinates.pick_random()
 	

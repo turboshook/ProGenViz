@@ -15,6 +15,7 @@ func _ready() -> void:
 	elif not get_child(0) is AudioStreamPlayer:
 		push_warning("Child node is not instance of AudioStreamPlayer, this SoundQueue will not function.")
 		return
+	if Engine.is_editor_hint(): return
 	
 	var stream_player: AudioStreamPlayer = get_child(0)
 	stream_player.set_bus("SFX")

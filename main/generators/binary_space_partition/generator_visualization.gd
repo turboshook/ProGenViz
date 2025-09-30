@@ -8,7 +8,7 @@ func _activate() -> void:
 	tile_atlas_coordinates.shuffle()
 	var atlas_index: int = 0
 	
-	# Animate partition split history, drawing a border of background grid tiles at the border of each partition
+	# Animate partition split history, drawing a border of background grid tiles along the perimeter of each partition
 	for partition_update: Dictionary in _gen_data.partition_history:
 		for original_partition: Dictionary in partition_update.keys():
 			for new_partition: Dictionary in partition_update[original_partition]:
@@ -18,6 +18,7 @@ func _activate() -> void:
 						or y == (new_partition.rect.position.y) or y == (new_partition.rect.position.y + new_partition.rect.size.y - 1): 
 							tile_map.set_cell(Vector2i(x, y), 0, Vector2i.ZERO)
 						else: tile_map.set_cell(Vector2i(x, y), 0, tile_atlas_coordinates[atlas_index])
+				AudioManager.play_sound("segment")
 				for _frame: int in range(6): await get_tree().physics_frame
 				atlas_index = atlas_index + 1 if atlas_index < tile_atlas_coordinates.size() - 1 else 0
 	 

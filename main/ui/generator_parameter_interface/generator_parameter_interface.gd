@@ -31,6 +31,8 @@ func _create_category_container(category_name: String) -> FoldableContainer:
 	parameter_container.add_theme_constant_override("separation", 0)
 	category_container.title = category_name
 	category_container.fold()
+	category_container.mouse_entered.connect(func(): if category_container.is_folded(): AudioManager.play_sound("hover"))
+	category_container.folding_changed.connect(func(_is_folded: bool): AudioManager.play_sound("click"))
 	return category_container
 
 func _create_int_control(parameter: GeneratorIntParameter) -> HBoxContainer:

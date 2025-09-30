@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dp86ktquhlmuu"]
+[gd_scene load_steps=19 format=3 uid="uid://dp86ktquhlmuu"]
 
 [ext_resource type="Script" uid="uid://d1b8hl0wrj3ce" path="res://main/autoload/audio_manager/audio_manager.gd" id="1_b4cw0"]
 [ext_resource type="PackedScene" uid="uid://np4y8vwrjgh1" path="res://main/components/sound/sound_pool.tscn" id="2_1ir50"]
@@ -14,6 +14,10 @@
 [ext_resource type="AudioStream" uid="uid://24j1jascpxe4" path="res://import/sfx/Footstep_Dirt_03.ogg" id="12_yt718"]
 [ext_resource type="AudioStream" uid="uid://dxm6nige6n7u4" path="res://import/sfx/Footstep_Dirt_04.ogg" id="13_ljgh5"]
 [ext_resource type="AudioStream" uid="uid://cnenycfom1doy" path="res://import/sfx/Footstep_Dirt_08.ogg" id="14_7gwo0"]
+[ext_resource type="AudioStream" uid="uid://cw0tfi7bdqu5q" path="res://import/sfx/click65.wav" id="15_dvk57"]
+[ext_resource type="AudioStream" uid="uid://ddbomnjrr5023" path="res://import/sfx/click5_trimmed.ogg" id="15_jftiy"]
+[ext_resource type="AudioStream" uid="uid://pi1fnsmo2maf" path="res://import/sfx/click11.wav" id="15_pkhh1"]
+[ext_resource type="AudioStream" uid="uid://bow8luxxd51ro" path="res://import/sfx/click4.wav" id="16_0uxhd"]
 
 [node name="AudioManager" type="Node"]
 script = ExtResource("1_b4cw0")
@@ -121,3 +125,44 @@ metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Footstep/Footstep3"]
 stream = ExtResource("14_7gwo0")
+
+[node name="Segment" type="Node" parent="."]
+script = ExtResource("2_veri3")
+_player_count = 4
+_random_pitch_scale_range = 0.1
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Segment"]
+stream = ExtResource("15_dvk57")
+volume_db = -8.0
+pitch_scale = 1.2
+
+[node name="Click" type="Node" parent="."]
+script = ExtResource("2_veri3")
+_player_count = 4
+_random_pitch_scale_range = 0.05
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Click"]
+stream = ExtResource("15_jftiy")
+volume_db = -6.0
+
+[node name="Hover" type="Node" parent="."]
+script = ExtResource("2_veri3")
+_player_count = 4
+_random_pitch_scale_range = 0.1
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Hover"]
+stream = ExtResource("16_0uxhd")
+volume_db = -16.0
+
+[node name="Open" type="Node" parent="."]
+script = ExtResource("2_veri3")
+_player_count = 2
+_random_pitch_scale_range = 0.1
+metadata/_custom_type_script = "uid://dxxxe0ggiv3th"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Open"]
+stream = ExtResource("15_pkhh1")
+volume_db = -8.0

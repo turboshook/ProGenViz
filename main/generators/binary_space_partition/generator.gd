@@ -59,7 +59,7 @@ func _init() -> void:
 		These rooms can be connected be a simple sequential hallway, but this implementation uses a \
 		post-processing step to determine every partitions neighbors in order build explicit room \
 		connections. This approach yields maps that are potentially more compliant with modern \
-		games in the roguelike style and can create some interesting emergent loops.\
+		games in the roguelike style and can create some interesting emergent loops and dead ends.\
 	"
 
 func generate(parameters: Dictionary) -> void:
