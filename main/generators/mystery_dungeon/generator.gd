@@ -46,10 +46,10 @@ func _init() -> void:
 func generate(parameters: Dictionary) -> void:
 	
 	_gen_data = {
-		"parameters": parameters,
-		"rooms": {},
-		"hallways": {},
-		"meta": {
+		"parameters": parameters,			# Copy of parameters Dictionary.
+		"rooms": {},						# Array of ROOM_GENERATION_DATA.
+		"hallways": {},						# Array of HALLWAY_GENERATION_DATA.
+		"meta": {							# Example of arbitrary data to meet certain gameplay needs.
 			"player_spawn": NULL_TILE,
 			"floor_exit": NULL_TILE
 		}

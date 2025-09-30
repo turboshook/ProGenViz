@@ -23,8 +23,8 @@ func _init() -> void:
 func generate(parameters: Dictionary) -> void:
 	_gen_data = {
 		"floor_size": parameters.floor_size,
-		"rooms": [],
-		"hallways": []
+		"rooms": [],							# Array of Rect2i rooms placed on the map.
+		"hallways": []							# Array of Vector2i tile coordinates that make up the hallway connecting each room.
 	}
 	
 	# Initialize rooms array with one random room

@@ -42,7 +42,7 @@ var floor_generator: MapGenerator
 func _ready() -> void:
 	algorithm_selection_button.initialize(GENERATORS)
 	info_text_display.set_text(
-		"Welcome to ProcGenToy! Select a generation algorithm from the dropdown menu to get started."
+		"Welcome to ProGenViz! Select a generation algorithm from the dropdown menu to get started."
 	)
 	name_label.text = str(ProjectSettings.get_setting("application/config/name"))
 	version_label.text = str("[v", ProjectSettings.get_setting("application/config/version"), "]")
@@ -69,6 +69,10 @@ func _process(delta: float) -> void:
 	if camera.position == camera_target.position: return
 	camera.position = camera.position.lerp(camera_target.position, delta * 4.0)
 	reset_camera_button.visible = (camera_target.position != Vector2(640.0, 360.0))
+
+func _input(event: InputEvent) -> void:
+	if not OS.is_debug_build(): return
+	if event.is_action_pressed("screenshot"): _screenshot()
 
 func _on_settings_button_pressed() -> void:
 	AudioManager.play_sound("click")
@@ -122,3 +126,26 @@ func generate() -> void:
 	var visual_representation: GeneratorVisualization = floor_generator.get_visualizer()
 	floor_visual_container.add_child(visual_representation)
 	visual_representation.position -= visual_representation.get_center_offset()
+
+func _screenshot() -> void:
+	return # screenshots turned off for now
+	@warning_ignore("unreachable_code")
+	if not DirAccess.dir_exists_absolute("res://share_content/"):
+		DirAccess.make_dir_absolute("res://share_content/")
+	var file_path: String = "res://share_content/"
+	var datetime_string: String = Time.get_datetime_string_from_system().replace(":", "-")
+	var file_name: String = "screenshot-" + datetime_string + ".png"
+	await RenderingServer.frame_post_draw
+	var image: Image = get_viewport().get_texture().get_image()
+	var window_width_override: int = ProjectSettings.get_setting("display/window/size/window_width_override")
+	var window_height_override: int = ProjectSettings.get_setting("display/window/size/window_height_override")
+	@warning_ignore("integer_division")
+	var scale_factor_x: int = max(1, (window_width_override / image.get_width()))
+	@warning_ignore("integer_division")
+	var scale_factor_y: int = max(1, (window_height_override / image.get_height()))
+	image.resize(
+		image.get_width() * scale_factor_x, 
+		image.get_height() * scale_factor_y, 
+		Image.INTERPOLATE_NEAREST
+	)
+	image.save_png(file_path + file_name)

@@ -16,8 +16,8 @@ func _init() -> void:
 
 func generate(parameters: Dictionary) -> void:
 	_gen_data = {
-		"walks": [], # Array of walked tile coordinates per walker. Order preserved for the visualizer.
-		"tile_set": {} # Fast lookup for unique tile coordinates.
+		"walks": [], 	# Array of walked tile coordinates per walker. Order preserved for the visualizer.
+		"tile_set": {} 	# Fast lookup for unique tile coordinates.
 	}
 	
 	# For every walker

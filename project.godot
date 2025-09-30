@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ProGenViz"
-config/version="0.1.7-beta"
+config/version="0.1.8"
 run/main_scene="uid://fq4dg2mjn4d"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://dmd604738r3h0"
@@ -52,6 +52,11 @@ input_left={
 input_right={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":68,"key_label":0,"unicode":100,"location":0,"echo":false,"script":null)
+]
+}
+screenshot={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194326,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
 

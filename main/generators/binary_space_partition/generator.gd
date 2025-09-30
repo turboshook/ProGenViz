@@ -64,10 +64,10 @@ func _init() -> void:
 
 func generate(parameters: Dictionary) -> void:
 	_gen_data = {
-		"parameters": parameters,
-		"partition_history": [],
-		"partitions": [],
-		"hallways": []
+		"parameters": parameters,	# Copy of the parameters passed into this generator.
+		"partition_history": [],	# Array of Dictionaries that describe what partitions split each iterations and partitions that result from the split.
+		"partitions": [],			# Array of PARTITION_DICTIONARY
+		"hallways": []				# Array of HALLWAY_DICTIONARY
 	}
 	
 	# PARTITIONS #

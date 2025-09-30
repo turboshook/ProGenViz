@@ -24,11 +24,14 @@ const DUNGEON_ROOM_SIZES: Array[Vector2i] = [
 
 func _init() -> void:
 	_default_parameters = {
-		"room_count": 8,
-		"max_give_ups": 3
+		"room_count": 8,		# Maximum number of rooms to be placed.
+		"max_give_ups": 3		# The number of times the algorithm will delete a room it cannot place before ending the loop.
 	}
 	_info_text = "\
-		Info text here!\
+		This is a method of map generation similar to what is used in The Binding of Isaac. It is \
+		similar to a naive room placement algorithm but rooms are constrained to an implied grid \
+		structure and are all directly connected to their neighbors, which means that no hallways \
+		need to be generated to connect them.\
 	"
 
 func generate(parameters: Dictionary) -> void:

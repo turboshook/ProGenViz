@@ -25,6 +25,7 @@ func initialize(algorithm_dictionary: Dictionary) -> void:
 		for generator_name: String in _algorithm_dictionary[category].keys():
 			add_item(generator_name)
 	_popup_menu = get_popup()
+	select(-1)
 
 func _on_item_selected(index: int) -> void:
 	var generator_name: String = get_item_text(index)

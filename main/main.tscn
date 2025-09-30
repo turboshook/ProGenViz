@@ -135,6 +135,21 @@ layout_mode = 2
 text = "x"
 metadata/_edit_lock_ = true
 
+[node name="ThumbnailTitleLabel" type="Label" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 0
+offset_left = 336.0
+offset_top = 338.0
+offset_right = 560.0
+offset_bottom = 386.0
+theme_override_colors/font_outline_color = Color(0.1254902, 0.1882353, 0.36078432, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 48
+text = "ProGenViz"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
 [node name="FloorVisualContainer" type="Node2D" parent="."]
 position = Vector2(448, 360)
 metadata/_edit_lock_ = true

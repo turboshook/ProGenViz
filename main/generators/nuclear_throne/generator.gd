@@ -8,15 +8,21 @@ func _init() -> void:
 		"subwalker_spawn_chance": 0.3,		# The chance for the primary walker to create a subwalker at its position on a given step.
 		"subwalker_kill_chance": 0.3		# The chance a subwalker is deleted after it completes its current step.
 	}
-	_info_text = "
-		Info text here!
+	_info_text = "\
+		This method is similar to what is used to generate the maps in Nuclear Throne. The approach \
+		is very similar to a random walk, but is constrained by a world map and resolves when a \
+		specified proportion of the total world map area is filled with walkable tiles. Additionally, \
+		it features one primary walker that has a chance to create what I am calling 'subwalkers' at \
+		its current position after every step it takes. These subwalkers will each travel independently \
+		and can randomly be destroyed after any of their steps. The resulting structure is often more \
+		linear than a purely random walk.\
 	"
 
 func generate(parameters: Dictionary) -> void:
 	_gen_data = {
 		"map_size": parameters.map_size,
-		"walker_steps": [], # Ordered list of every step taken by any walkers active during a given update.
-		"tile_set": {} # O(1) lookup for unique tile coordinates.
+		"walker_steps": [], 			# Ordered list of every step taken by any walkers active during a given update.
+		"tile_set": {} 					# Dictionary of tile coordinate keys for fast lookup.
 	}
 	
 	var step_directions: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]

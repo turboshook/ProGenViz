@@ -24,7 +24,7 @@ func generate(parameters: Dictionary) -> void:
 	# This implementation records cells and tiles simultaneously in order to more easily support 
 	# generalized use cases, but the visualization does not use _gen_data.tiles.
 	
-	# Initialize the generation data dictionary with empty cells with random origins
+	# Initialize the generation data dictionary with empty cells with random origins.
 	for _i: int in range(parameters.cell_count):
 		var cell_origin: Vector2i = GeneratorUtils.get_rect_random_point(Rect2i(Vector2i.ZERO, parameters.map_size))
 		
@@ -46,10 +46,10 @@ func generate(parameters: Dictionary) -> void:
 			"tiles": []
 		})
 	
-	# Minor performance gain over repeated calls to Array.append()
+	# Minor performance gain over repeated calls to Array.append().
 	_gen_data.tiles.resize(parameters.map_size.x * parameters.map_size.y)
 	
-	# Calculate every tile's nearest cell origin
+	# Calculate every tile's nearest cell origin.
 	for x: int in range(parameters.map_size.x):
 		for y: int in range(parameters.map_size.y):
 			var tile_position: Vector2i = Vector2i(x, y)
@@ -61,7 +61,7 @@ func generate(parameters: Dictionary) -> void:
 				minimum_distance = tile_position.distance_to(point)
 				nearest_cell_origin_key = i
 			
-			# update both parallel data structures
+			# Update both parallel data structures.
 			_gen_data.cells[nearest_cell_origin_key].tiles.append(tile_position)
 			_gen_data.tiles.append({
 				"position": tile_position,

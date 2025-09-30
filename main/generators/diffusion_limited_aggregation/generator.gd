@@ -7,8 +7,12 @@ func _init() -> void:
 		"particle_spawn_density": 3,	# Used to calculate the number of new particles to be created when the active simulation rect is grown. Smaller numbers mean more particles.
 		"max_updates": 150				# The maximum number of updates the generator will simulate before forcing an end to the loop.
 	}
-	_info_text = "
-		Info text here!
+	_info_text = "\
+		This method generates structures by simulating many randomly-walking particles. These particles \
+		stop walking and become tiles if they make contact with another tile. The resulting fractal-like \
+		structures are called Brownian trees. 
+		
+		These maps can be very dense and mazelike, resembling ancient ruins or abandoned mines.
 	"
 
 func generate(parameters: Dictionary) -> void:
@@ -20,22 +24,22 @@ func generate(parameters: Dictionary) -> void:
 	var init_coord_3: Vector2i = center_coordinate + Vector2i.RIGHT
 	_gen_data = {
 		"map_size": parameters.map_size,
-		"tile_coordinates": [
+		"tile_coordinates": [				# Array of Vector2i tile coordinates ordered chronologically by placement.
 			center_coordinate,
 			init_coord_0,
 			init_coord_1,
 			init_coord_2,
 			init_coord_3
 		],
-		"coordinate_set": {
+		"coordinate_set": {					# Dictionary of Vector2i tile coordinates for fast lookup.
 			center_coordinate: null,
 			init_coord_0: null,
 			init_coord_1: null,
 			init_coord_2: null,
 			init_coord_3: null
 		},
-		"updates": 0,
-		"particles": []
+		"updates": 0,						# The number of updates performed before the simulation ended.
+		"particles": []						# Array of particles that did not resolve to tiles before the simulation ended.
 	}
 	
 	var particle_active_rect: Rect2i = Rect2i(Vector2i.ZERO, parameters.map_size/4)

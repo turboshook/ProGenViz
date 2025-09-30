@@ -15,9 +15,9 @@ func _init() -> void:
 
 func generate(parameters: Dictionary) -> void:
 	_gen_data = {
-		"walks": [],
-		"tile_coordinates": [Vector2i(32, 32)],
-		"coordinate_set": {Vector2i(32, 32): null}
+		"walks": [],									# Array of Vector2i coordinates that each particle took during its lifetime.
+		"tile_coordinates": [Vector2i(32, 32)],			# Array of Vector2i placed tile coordinates.
+		"coordinate_set": {Vector2i(32, 32): null}		# Dictionary of Vector2i tile coordinate keys for fast lookup.
 	}
 	
 	# Initialize a particle.
