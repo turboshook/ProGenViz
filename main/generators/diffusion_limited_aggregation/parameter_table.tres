@@ -33,7 +33,7 @@ script = ExtResource("4_31v3w")
 value = 3
 value_min = 1
 value_max = 10
-name = "particle_spawn_density"
+name = "spawn_density_divisor"
 metadata/_custom_type_script = "uid://cn1osy2eiovo4"
 
 [sub_resource type="Resource" id="Resource_obvb1"]

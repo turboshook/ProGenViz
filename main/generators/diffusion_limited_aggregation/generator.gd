@@ -4,7 +4,7 @@ func _init() -> void:
 	_default_parameters = {
 		"map_size": Vector2i(32, 32),	# Total map size.
 		"max_tiles_placed": 128,		# The target number of tiles placed before ending the simulation.
-		"particle_spawn_density": 3,	# Used to calculate the number of new particles to be created when the active simulation rect is grown. Smaller numbers mean more particles.
+		"spawn_density_divisor": 3,	# Used to calculate the number of new particles to be created when the active simulation rect is grown. Smaller numbers mean more particles.
 		"max_updates": 150				# The maximum number of updates the generator will simulate before forcing an end to the loop.
 	}
 	_info_text = "\
@@ -45,7 +45,7 @@ func generate(parameters: Dictionary) -> void:
 	var particle_active_rect: Rect2i = Rect2i(Vector2i.ZERO, parameters.map_size/4)
 	particle_active_rect.position = (parameters.map_size)/2 - (particle_active_rect.size)/2
 	var particles: Array[Dictionary] = []
-	particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/parameters.particle_spawn_density)
+	particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/parameters.spawn_density_divisor)
 	for i: int in range(particles.size()):
 		particles[i] = {
 			"position": _pick_random_point(particle_active_rect),
@@ -71,22 +71,32 @@ func generate(parameters: Dictionary) -> void:
 			
 			# If all current particles have been resolved or the last tile placed is at the edge of the active rect.
 			if _gen_data.tile_coordinates.size() != particles.size() and \
-			not _point_on_rect_perimeter(particle.position, particle_active_rect): continue
-			# Do not upscale the active rect if it would become larger than the map.
-			if particle_active_rect.size >= (parameters.map_size - Vector2i(4, 4)): continue
-			# Expand active particle region if last particle hit the boundary.
+			not _point_on_expandable_rect_perimeter(particle.position, particle_active_rect, parameters): continue
+			
+			# Determine how the active rect can grow. Rect will not grow in a dimension if its size
+			# in that dimension would exceed the size of the map (increments of 4 units).
+			var size_increase: Vector2i = Vector2i.ZERO
+			if particle_active_rect.size.x <= (parameters.map_size.x - 4):
+				size_increase.x = 4
+			if particle_active_rect.size.y <= (parameters.map_size.y - 4): 
+				size_increase.y = 4
+			
+			# Handle grow active particle region.
 			var prev_rect: Rect2i = particle_active_rect
-			particle_active_rect = particle_active_rect.grow(4)
+			particle_active_rect = Rect2i(
+				(particle_active_rect.position - size_increase/2),
+				(particle_active_rect.size + size_increase)
+			)
 			
 			# Spawn new particles in the newly-expanded active rect, excluding points intersected by the old rect.
 			var new_particles: Array[Dictionary] = []
-			new_particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/(parameters.particle_spawn_density * 2))
+			new_particles.resize((particle_active_rect.size.x * particle_active_rect.size.y)/(parameters.spawn_density_divisor * 2))
 			for i: int in range(new_particles.size()):
 				new_particles[i] = {
 					"position": _get_point_excluding(particle_active_rect, prev_rect),
 					"active": true
 				}
-			particles = particles + new_particles
+			particles += new_particles
 		
 		# Alternatively, end simulation if we have reached the maximum update count.
 		_gen_data.updates += 1
@@ -111,44 +121,53 @@ func _particle_has_inactive_neighbor(particle_position: Vector2i) -> bool:
 		_gen_data.coordinate_set.has(particle_position + Vector2i.RIGHT)
 	)
 
-func _pick_random_point(rect: Rect2i) -> Vector2i:
-	return Vector2i(
-		randi_range(rect.position.x, rect.position.x + rect.size.x),
-		randi_range(rect.position.y, rect.position.y + rect.size.y)
+func _point_on_expandable_rect_perimeter(particle_position: Vector2i, active_region: Rect2i, parameters: Dictionary) -> bool:
+	# Check if the particle's position is:
+	#	a) along the perimeter of the active region, and
+	#	b) the active rect is not already the maximum allowable size in that perimeter's corresponding dimension
+	return (
+		(particle_position.x == active_region.position.x and active_region.size.x < parameters.map_size.x) or
+		(particle_position.x == (active_region.position.x + active_region.size.x) and active_region.size.x < parameters.map_size.x) or
+		(particle_position.y == active_region.position.y and active_region.size.y < parameters.map_size.y) or
+		(particle_position.y == (active_region.position.y + active_region.size.y) and active_region.size.y < parameters.map_size.y)
 	)
 
-func _point_on_rect_perimeter(particle_position: Vector2i, active_region: Rect2i) -> bool:
-	return (
-		particle_position.x == (active_region.position.x + active_region.size.x) or
-		particle_position.x == active_region.position.x or
-		particle_position.y == (active_region.position.y + active_region.size.y) or
-		particle_position.y == active_region.position.y
+func _pick_random_point(rect: Rect2i) -> Vector2i:
+	return Vector2i(
+		randi_range(rect.position.x, rect.position.x + rect.size.x - 1),
+		randi_range(rect.position.y, rect.position.y + rect.size.y - 1)
 	)
 
 func _get_point_excluding(from: Rect2i, excluding: Rect2i) -> Vector2i:
 	var intersection: Rect2i = from.intersection(excluding)
-	if intersection == Rect2i(): # no intersection, unconstrained selection
+	# No intersection, unconstrained selection.
+	if intersection == Rect2i(): return _pick_random_point(from)
+	
+	# Constrain split orientation if intersection is equal in size to original rect in some dimension.
+	if from.size.y == intersection.size.y:
+		return _get_point_horizontal_split(from, intersection)
+	elif from.size.x == intersection.size.x:
+		return _get_point_vertical_split(from, intersection)
+	
+	# Choose a random split orientation if there is room.
+	return [_get_point_horizontal_split, _get_point_vertical_split].pick_random().call(from, intersection)
+
+func _get_point_horizontal_split(from: Rect2i, intersection: Rect2i) -> Vector2i:
+	var left_width: int = intersection.position.x - from.position.x
+	var right_width: int = (from.position.x + from.size.x) - (intersection.position.x + intersection.size.x)
+	if left_width > 0 and (right_width == 0 or randf() < float(left_width) / float(left_width + right_width)):
+		# Pick from left band.
 		return Vector2i(
-			randi_range(from.position.x, from.position.x + from.size.x - 1),
+			randi_range(from.position.x, intersection.position.x - 1), 
 			randi_range(from.position.y, from.position.y + from.size.y - 1)
 		)
-	
-	# randomly choose between horizontal-first or vertical-first partitioning
-	if randf() > 0.5:
-		var left_width: int = intersection.position.x - from.position.x
-		var right_width: int = (from.position.x + from.size.x) - (intersection.position.x + intersection.size.x)
-		if left_width > 0 and (right_width == 0 or randf() < float(left_width) / float(left_width + right_width)):
-			# Pick from left band.
-			return Vector2i(
-				randi_range(from.position.x, intersection.position.x - 1), 
-				randi_range(from.position.y, from.position.y + from.size.y - 1)
-			)
-		# Pick from right band.
-		return Vector2i(
-			randi_range(intersection.position.x + intersection.size.x, from.position.x + from.size.x - 1),
-			randi_range(from.position.y, from.position.y + from.size.y - 1)
-		)
-	
+	# Pick from right band.
+	return Vector2i(
+		randi_range(intersection.position.x + intersection.size.x - 1, from.position.x + from.size.x - 1),
+		randi_range(from.position.y, from.position.y + from.size.y - 1)
+	)
+
+func _get_point_vertical_split(from: Rect2i, intersection: Rect2i) -> Vector2i:
 	var top_height: int = intersection.position.y - from.position.y
 	var bottom_height: int = (from.position.y + from.size.y) - (intersection.position.y + intersection.size.y)
 	if top_height > 0 and (bottom_height == 0 or randf() < float(top_height) / float(top_height + bottom_height)):
@@ -160,5 +179,5 @@ func _get_point_excluding(from: Rect2i, excluding: Rect2i) -> Vector2i:
 	# Pick from bottom band.
 	return Vector2i(
 		randi_range(from.position.x, from.position.x + from.size.x - 1),
-		randi_range(intersection.position.y + intersection.size.y, from.position.y + from.size.y - 1)
+		randi_range(intersection.position.y + intersection.size.y - 1, from.position.y + from.size.y - 1)
 	)

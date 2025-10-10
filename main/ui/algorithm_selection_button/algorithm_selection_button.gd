@@ -8,6 +8,7 @@ var _popup_menu: PopupMenu
 var _current_index: int = 0
 
 func _ready() -> void:
+	pressed.connect(func(): AudioManager.play_sound("click"))
 	mouse_entered.connect(func(): if not is_pressed(): AudioManager.play_sound("hover"))
 	item_selected.connect(_on_item_selected)
 
