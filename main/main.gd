@@ -46,7 +46,7 @@ func _ready() -> void:
 	)
 	name_label.text = str(ProjectSettings.get_setting("application/config/name"))
 	version_label.text = str("[v", ProjectSettings.get_setting("application/config/version"), "]")
-	credit_label.text = "by turboshook"
+	credit_label.text = ProjectSettings.get_setting("application/config/description/author")
 	
 	settings_button.mouse_entered.connect(func(): AudioManager.play_sound("hover"))
 	settings_button.pressed.connect(_on_settings_button_pressed)
@@ -57,6 +57,7 @@ func _ready() -> void:
 	generate_button.pressed.connect(_on_generate_button_pressed)
 	reset_camera_button.mouse_entered.connect(func(): AudioManager.play_sound("hover"))
 	reset_camera_button.pressed.connect(_on_reset_camera_button_pressed)
+	
 
 func _process(delta: float) -> void:
 	var scroll_vector: Vector2 = Vector2(

@@ -15,6 +15,7 @@ config/version="0.2.0"
 run/main_scene="uid://fq4dg2mjn4d"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://dmd604738r3h0"
+config/description/author=&"turboshook"
 
 [autoload]
 

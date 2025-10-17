@@ -53,13 +53,11 @@ text = "Info"
 metadata/_edit_lock_ = true
 
 [node name="AppSettingsMenu" parent="CanvasLayer/UI" instance=ExtResource("4_1bvp3")]
-visible = false
 layout_mode = 1
 offset_left = 16.0
 offset_top = 64.0
 offset_right = -1008.0
-offset_bottom = -608.0
-metadata/_edit_lock_ = true
+offset_bottom = -544.0
 
 [node name="InfoTextDisplay" parent="CanvasLayer/UI" instance=ExtResource("5_lquwl")]
 visible = false
